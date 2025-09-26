@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Conda
+        uses: s-weigand/setup-conda@v1
+      - name: Install requirements
+        run: |
+          python -m pip install -U pip
+          python -m pip install -r requirements.txt
+      - name: Run tests
+        run: |
+          python -m pytest src --cov-report term-missing --cov --cov-fail-under=100 --durations=0
+      - name: Run black
+        run: |
+          python -m black -vv --check src/

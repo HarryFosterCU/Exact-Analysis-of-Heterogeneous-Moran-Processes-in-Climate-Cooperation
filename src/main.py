@@ -5,7 +5,9 @@ This corresponds to the model described in `main.tex`
 
 TODO: Add mathematical details here.
 """
+
 import itertools
+
 
 def get_state_space(N, k):
     """

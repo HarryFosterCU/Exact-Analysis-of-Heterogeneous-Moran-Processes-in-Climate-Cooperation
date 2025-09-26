@@ -1,5 +1,6 @@
 import main
 
+
 def test_generate_state_space_for_N_eq_3_and_k_eq_2():
     """
     Given a value of $N$: the number of individuals and a value of $k$: the

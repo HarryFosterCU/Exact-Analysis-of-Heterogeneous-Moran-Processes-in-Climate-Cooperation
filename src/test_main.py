@@ -61,7 +61,7 @@ def test_generate_state_space_for_N_eq_1_and_k_eq_3():
 
 def test_get_transition_matrix_for_given_state_space():
     """
-    Given a state space S generate the transition matrix 
+    Given a state space S generate the transition matrix
 
     This tests this for N = 3, k = 2.
     """
@@ -77,17 +77,37 @@ def test_get_transition_matrix_for_given_state_space():
         (1, 1, 1),
     ]
 
-    Expected_Transition_Matrix = np.array([[1, 0, 0, 1, 1, 0, 1, 0],
-[0, 1, 0, 1, 0, 1, 1, 0],
-[0, 0, 1, 0, 1, 1, 1, 0],
-[1, 1, 0, 1, 0, 0, 0, 1],
-[1, 0, 1, 0, 1, 0, 0, 1],
-[0, 1, 1, 0, 0, 1, 0, 1],
-[1, 1, 1, 0, 0, 0, 1, 0],
-[0, 0, 0, 1, 1, 1, 0, 1]])
+    expected_transition_matrix = np.array(
+        [
+            [1, 0, 0, 1, 1, 0, 1, 0],
+            [0, 1, 0, 1, 0, 1, 1, 0],
+            [0, 0, 1, 0, 1, 1, 1, 0],
+            [1, 1, 0, 1, 0, 0, 0, 1],
+            [1, 0, 1, 0, 1, 0, 0, 1],
+            [0, 1, 1, 0, 0, 1, 0, 1],
+            [1, 1, 1, 0, 0, 0, 1, 0],
+            [0, 0, 0, 1, 1, 1, 0, 1],
+        ]
+    )
 
-    Obtained_Transition_Matrix = main.gen_transition_matrix(S)
-    assert (Obtained_Transition_Matrix == Expected_Transition_Matrix).all()
+    obtained_transition_matrix = main.gen_transition_matrix(S)
+    assert (obtained_transition_matrix == expected_transition_matrix).all()
 
 
-test_get_transition_matrix_for_given_state_space()
+def test_compute_transition_probability_for_trivial_fitness_function():
+    """"""
+    state_space = [
+        (0, 0, 1),
+        (0, 1, 0),
+        (1, 0, 0),
+        (0, 1, 1),
+        (1, 0, 1),
+        (1, 1, 0),
+        (0, 0, 0),
+        (1, 1, 1),
+    ]
+    def trivial_fitness_function(state):
+        return np.array([1 for _ in state])
+    source = np.array((0,1,0))
+    target = np.array((1,1,0))
+    assert main.compute_transition_probability(source=source, target=target) == 1/64

@@ -12,6 +12,7 @@ There is also a fitness function f: S -> $R^N$, giving us an array of the fitnes
 
 import itertools
 import numpy as np
+import sympy as sym
 
 
 def get_state_space(N, k):
@@ -30,64 +31,39 @@ def get_state_space(N, k):
     """
     return list(itertools.product(range(k), repeat=N))
 
-def fitness(S1, S2):
-    """
-    TODO
-    """
-    return 1
 
 
-def get_where_different(S1, S2):
+def compute_transition_probability(source, target, fitness_function):
     """
-    Given a pair of states, identify where they are different, and return the position of the difference
-    
-    Parameters:
-    --------------
-    S1, S2: Arrays, states from the state space
-    
-    Returns:
-    Position where arrays differ"""
+    Given two states and a fitness function, returns the transition probability.
 
-    return np.where(np.array(S1) != np.array(S2))
+    Parameters
+    ----------
+    source: numpy array: the starting state
 
-def get_transition_prob(S1, S2):
+    target: numpy array: what the source transitions to
+
+    fitness_function: function: returns the fitness of a given state
     """
-    Given two states, return the probability of transitioning from one state to the next
-
-    Parameters:
-    -----------
-    S1, S2: Arrays, states from the state space
-    """
-    Diff = get_where_different(S1, S2)[0]
-    if len(Diff) <= 1:
-        return fitness(S1, S2)
-    else:
+    different_indices = np.where(source != target)
+    if len(different_indices[0]) > 1:
         return 0
-    
-def gen_transition_matrix(S):
-    """
-    Returns the transition matrix given a state space
-    
-    Parameters:
-    -----------
+    if len(different_indices[0]) == 0:
+        return None
+    fitness = fitness_function(source)
+    denominator = fitness.sum() * len(source)
+    numerator = fitness[source == target[different_indices]].sum()
+    return numerator / denominator
 
-    N: integer, number of individuals
+def generate_transition_matrix(state_space, fitness_function):
+    """"""
+    N = len(state_space)
+    transition_matrix = np.zeros(shape=(N,N))
+    for row_index, source in enumerate(state_space):
+        for col_index, target in enumerate(state_space):
+            if row_index != col_index:
+                transition_matrix[row_index, col_index] = compute_transition_probability(source=source, target=target, fitness_function=fitness_function)
+    for diag in range(N):
+        transition_matrix[diag, diag] = 1 - np.sum(transition_matrix[diag])
+    return transition_matrix
 
-    k: integer, number of types
-
-    S: array, state space
-
-    Returns:
-    Transition matrix for the given state space
-    """
-
-
-    T_Mat = np.zeros((len(S), len(S)))
-
-    for x in range(len(S)):
-        for y in range(len(S)):
-
-            T_Mat[x,y] = get_transition_prob(S[x], S[y])
-    
-
-    return(T_Mat)

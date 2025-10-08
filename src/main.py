@@ -32,7 +32,6 @@ def get_state_space(N, k):
     return list(itertools.product(range(k), repeat=N))
 
 
-
 def compute_transition_probability(source, target, fitness_function):
     """
     Given two states and a fitness function, returns the transition probability.
@@ -55,15 +54,19 @@ def compute_transition_probability(source, target, fitness_function):
     numerator = fitness[source == target[different_indices]].sum()
     return numerator / denominator
 
+
 def generate_transition_matrix(state_space, fitness_function):
     """"""
     N = len(state_space)
-    transition_matrix = np.zeros(shape=(N,N))
+    transition_matrix = np.zeros(shape=(N, N))
     for row_index, source in enumerate(state_space):
         for col_index, target in enumerate(state_space):
             if row_index != col_index:
-                transition_matrix[row_index, col_index] = compute_transition_probability(source=source, target=target, fitness_function=fitness_function)
+                transition_matrix[row_index, col_index] = (
+                    compute_transition_probability(
+                        source=source, target=target, fitness_function=fitness_function
+                    )
+                )
     for diag in range(N):
         transition_matrix[diag, diag] = 1 - np.sum(transition_matrix[diag])
     return transition_matrix
-

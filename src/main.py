@@ -34,15 +34,27 @@ def get_state_space(N, k):
 
 def compute_transition_probability(source, target, fitness_function):
     """
-    Given two states and a fitness function, returns the transition probability.
+    Given two states and a fitness function, returns the transition probability
+
+    when moving from the source state to the target state. Must move between
+
+    states with a Hamming distance of 1. Returns 0 if Hamming distance > 1.
+
+    Returns None if Hamming distance = 0. For an absorbing state, this will
+
+    naturally return 0 for all off-diagonal entries, and None on the diagonal.
+
+    This is adressed in the get_transition_matrix function.
 
     Parameters
     ----------
-    source: numpy array: the starting state
+    source: numpy.array, the starting state
 
-    target: numpy array: what the source transitions to
+    target: numpy.array, what the source transitions to
 
-    fitness_function: function: returns the fitness of a given state
+    fitness_function: func, The fitness function which maps a state to a numpy.array 
+    
+    where each entry represents the fitness of the given individual
     """
     different_indices = np.where(source != target)
     if len(different_indices[0]) > 1:
@@ -67,6 +79,5 @@ def generate_transition_matrix(state_space, fitness_function):
                         source=source, target=target, fitness_function=fitness_function
                     )
                 )
-    for diag in range(N):
-        transition_matrix[diag, diag] = 1 - np.sum(transition_matrix[diag])
+    np.fill_diagonal(transition_matrix, 1 - transition_matrix.sum(axis=1))
     return transition_matrix

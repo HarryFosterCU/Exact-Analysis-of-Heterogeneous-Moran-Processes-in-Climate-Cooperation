@@ -52,8 +52,8 @@ def compute_transition_probability(source, target, fitness_function):
 
     target: numpy.array, what the source transitions to
 
-    fitness_function: func, The fitness function which maps a state to a numpy.array 
-    
+    fitness_function: func, The fitness function which maps a state to a numpy.array
+
     where each entry represents the fitness of the given individual
     """
     different_indices = np.where(source != target)

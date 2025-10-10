@@ -469,8 +469,8 @@ def test_generate_transition_matrix_for_symbolic_fitness_function():
         ]
     )
     np.testing.assert_array_equal(
-            main.generate_transition_matrix(
-                state_space=state_space, fitness_function=symbolic_fitness_function
-            ),
-            expected_transition_matrix
+        main.generate_transition_matrix(
+            state_space=state_space, fitness_function=symbolic_fitness_function
+        ),
+        expected_transition_matrix,
     )

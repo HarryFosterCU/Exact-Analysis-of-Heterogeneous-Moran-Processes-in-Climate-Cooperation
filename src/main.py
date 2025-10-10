@@ -74,18 +74,22 @@ def generate_transition_matrix(state_space, fitness_function):
     for row_index, source in enumerate(state_space):
         for col_index, target in enumerate(state_space):
             if row_index != col_index:
-                try:           
+                try:
                     transition_matrix[row_index, col_index] = (
                         compute_transition_probability(
-                        source=source, target=target, fitness_function=fitness_function
+                            source=source,
+                            target=target,
+                            fitness_function=fitness_function,
+                        )
                     )
-                )
                 except TypeError:
                     transition_matrix = transition_matrix.astype(object)
                     transition_matrix[row_index, col_index] = (
                         compute_transition_probability(
-                        source=source, target=target, fitness_function=fitness_function
+                            source=source,
+                            target=target,
+                            fitness_function=fitness_function,
+                        )
                     )
-                )
     np.fill_diagonal(transition_matrix, 1 - transition_matrix.sum(axis=1))
     return transition_matrix

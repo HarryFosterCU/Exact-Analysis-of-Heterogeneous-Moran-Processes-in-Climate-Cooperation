@@ -34,7 +34,7 @@ Let $h(V,U)$ denote the Hamming distance between two states V and U. We consider
     \begin{cases}
         \frac{\sum_{v_i = u_i}{f(v_i)}}{\sum_{v_i}f(v_i)} & \text{if h(V,U) = 1, differing at position i}\\
         0 & \text{if h(V,U) \textgreater 1}\\
-        1 - \sum_{U \in S \setminus \text{V}}{P(V,U)} & \text{if h(V,U) = 0}
+        1 - \sum_{U \in S \setminus \text{\{V\}}}{P(V,U)} & \text{if h(V,U) = 0}
     \end{cases}
 \end{equation}
 

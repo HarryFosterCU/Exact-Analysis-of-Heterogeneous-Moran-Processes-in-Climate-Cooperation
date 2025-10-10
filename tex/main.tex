@@ -9,19 +9,38 @@
 \date{\today}
 
 \begin{document}
-
+\maketitle
 \section{Introduction}
+
+\section{Literature Review}
+
 \section{Model}
 
-Let us assumedggdg
+
+
+In this section, we will look at the underlying model of the heterogeneous Moran process. We define the following:
 
 \begin{itemize}
     \item \(N\) \textbf{ordered} individuals
     \item \(k\) types \(A_1, A_2, \dots A_k\)
-    \item State \(v\in S = [1,\dots,k] ^ N\) so that individual \(i\) is of type \(v_i\). 
+    \item A state space S given by the set of ordered N-tuples with entries of type \(A_1, A_2, \dots A_k\). 
           Note that \(|S|=k^N\)
-    \item Fitness function \(f:S\to \mathbb{R}^N\)
+    \item A fitness function \(f:S\to \mathbb{R}^N\)
 \end{itemize}
 
-\end{document}
+Let $h(V,U)$ denote the Hamming distance between two states V and U. We consider a Markov chain, where for the transition $V = (v_1, v_2, \dots, v_N) \to U = (u_1, u_2, \dots, u_N)$, the transition probability is defined as follows:\\
+\begin{equation}
+    P(V,U) = 
+    \begin{cases}
+        \frac{\sum_{v_i = u_i}{f(v_i)}}{\sum_{v_i}f(v_i)} & \text{if h(V,U) = 1, differing at position i}\\
+        0 & \text{if h(V,U) \textgreater 1}\\
+        1 - \sum_{U \in S \setminus \text{V}}{P(V,U)} & \text{if h(V,U) = 0}
+    \end{cases}
+\end{equation}
 
+The final row is given by the following notion. V can transition to itself through the removal of any constituting individual, and the duplication of any individual which shared a type with the removed one. Thus, to calculate P(V,V) directly would require a large amount of computational time and effort. However, we can observe that a transition of some sort must occur, and so we simply take the probability of not transitioning to any \textbf{different} state as P(V,V).
+
+
+
+
+\end{document}

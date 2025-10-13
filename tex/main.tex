@@ -3,6 +3,7 @@
 \usepackage[margin=1.5cm, includefoot, footskip=30pt]{geometry}
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage{amssymb}
 
 \title{General Heterogeneous Moran Processes}
 \author{Vince Knight and Harry Foster}
@@ -28,19 +29,22 @@ In this section, we will look at the underlying model of the heterogeneous Moran
     \item A fitness function \(f:S \to \mathbb{R}^N\)
 \end{itemize}
 
-Let $h(V,U)$ denote the Hamming distance between two states V and U. We consider a Markov chain, where for the transition $V = (v_1, v_2, \dots, v_N) \to U = (u_1, u_2, \dots, u_N)$, the transition probability is defined as follows:\\
-\begin{equation}
-    P(V,U) = 
-    \begin{cases}
-        \frac{\sum_{v_i = u_i}{f(v_i)}}{\sum_{v_i}f(v_i)} & \text{if h(V,U) = 1, differing at position i}\\
-        0 & \text{if h(V,U) \textgreater 1}\\
-        1 - \sum_{U \in S \setminus \text{\{V\}}}{P(V,U)} & \text{if h(V,U) = 0}
-    \end{cases}
-\end{equation}
+Let $h(V,U)$ denote the Hamming distance between two states V and U. We consider a Markov chain, where for the transition $V = (v_1, v_2, \dots, v_N) \to U = (u_1, u_2, \dots, u_N)$, the 
+transition probability is defined as follows:\\
+\begin{large}
+    \begin{equation}
+        P(V,U) = 
+        \begin{cases}
+            \frac{\sum_{v_i = u_{i*}}{f(v_i)}}{\sum_{v_i}f(v_i)} & \text{if h(V,U) = 1, differing at position i*}\\
+            0 & \text{if h(V,U) \textgreater 1}\\
+            1 - \sum_{U \in S \setminus \text{\{V\}}}{P(V,U)} & \text{if h(V,U) = 0}
+        \end{cases}
+    \end{equation}
+\end{large}
 
 The final case is given by the following notion. V can transition to itself through the removal of any constituting individual, and the duplication of any individual which shared a type with the removed one. Thus, directly calculating P(V,V) would require a large amount of computational time and effort. However, we can observe that a transition of some sort must occur, and so we simply take the probability of not transitioning to any \textbf{different} state as P(V,V).\\
 
-An important case which proceeds from (1) is that of a transition V $\to U$ where U contains an individual of a \textit{type} not found in V. For example, the transition (0,1) $\to$ (0,2). This would be forbidden by the intuition of a Moran process - i.e the new individual being the duplication of another individual in V. However, we can see that the standard formula yields P(V,U) = 0 because no $v_i$ shares a type with $u_i$. Following this, we see that (1) correctly gives us P(V,U) = 0 for any \textbf{absorbing} V $\neq$ U.
+An important case which proceeds from (1) is that of a transition V $\to U$ where U contains an individual of a \textit{type} not found in V. For example, the transition (0,1) $\to$ (0,2). This would be forbidden by the intuition of a Moran process - i.e the new individual being the duplication of another individual in V. However, we can see that the standard formula yields P(V,U) = 0 because $\nexists v_i \in V: v_i = u_{i*}$. Following this, we see that (1) also correctly gives us P(V,U) = 0 for any \textbf{absorbing} V $\neq$ U.
 
 
 

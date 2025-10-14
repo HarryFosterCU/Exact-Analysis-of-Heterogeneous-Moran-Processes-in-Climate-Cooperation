@@ -29,10 +29,10 @@ def get_state_space(N, k):
     --------
     Array of possible states within the system
     """
-    return list(itertools.product(range(k), repeat=N))
+    return np.array(list(itertools.product(range(k), repeat=N)))
 
 
-def compute_transition_probability(source, target, fitness_function):
+def compute_transition_probability(source, target, fitness_function, **kwargs):
     """
     Given two states and a fitness function, returns the transition probability
 
@@ -44,7 +44,9 @@ def compute_transition_probability(source, target, fitness_function):
 
     naturally return 0 for all off-diagonal entries, and None on the diagonal.
 
-    This is adressed in the get_transition_matrix function.
+    This is adressed in the get_transition_matrix function. 
+
+    TODO - write formula 
 
     Parameters
     ----------
@@ -55,20 +57,38 @@ def compute_transition_probability(source, target, fitness_function):
     fitness_function: func, The fitness function which maps a state to a numpy.array
 
     where each entry represents the fitness of the given individual
+
+    Returns
+    ---------
+    Float: the transition pobability
     """
     different_indices = np.where(source != target)
     if len(different_indices[0]) > 1:
         return 0
     if len(different_indices[0]) == 0:
         return None
-    fitness = fitness_function(source)
+    fitness = fitness_function(source, **kwargs)
     denominator = fitness.sum() * len(source)
     numerator = fitness[source == target[different_indices]].sum()
     return numerator / denominator
 
 
-def generate_transition_matrix(state_space, fitness_function):
-    """"""
+def generate_transition_matrix(state_space, fitness_function, **kwargs):
+    """
+    Given a state space and a fitness function, returns the transition matrix
+    
+    for the heterogeneous Moran process.
+
+    Parameters
+    ----------
+    state_space: numpy.array, the state space for the transition matrix.
+
+    fitness_function: function, should return a size N numpy.array when passed a state
+
+    Returns
+    ----------
+    numpy.array: the transition matrix
+    """
     N = len(state_space)
     transition_matrix = np.zeros(shape=(N, N))
     for row_index, source in enumerate(state_space):
@@ -80,6 +100,7 @@ def generate_transition_matrix(state_space, fitness_function):
                             source=source,
                             target=target,
                             fitness_function=fitness_function,
+                            **kwargs,
                         )
                     )
                 except TypeError:
@@ -89,6 +110,7 @@ def generate_transition_matrix(state_space, fitness_function):
                             source=source,
                             target=target,
                             fitness_function=fitness_function,
+                            **kwargs,
                         )
                     )
     np.fill_diagonal(transition_matrix, 1 - transition_matrix.sum(axis=1))

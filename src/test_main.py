@@ -12,7 +12,7 @@ def test_generate_state_space_for_N_eq_3_and_k_eq_2():
     """
     k = 2
     N = 3
-    expected_state_space = [
+    expected_state_space = np.array([
         (0, 0, 1),
         (0, 1, 0),
         (1, 0, 0),
@@ -21,9 +21,9 @@ def test_generate_state_space_for_N_eq_3_and_k_eq_2():
         (1, 1, 0),
         (0, 0, 0),
         (1, 1, 1),
-    ]
+    ])
     obtained_state_space = main.get_state_space(N=N, k=k)
-    assert sorted(expected_state_space) == sorted(obtained_state_space)
+    np.testing.assert_array_equal(sorted(tuple(x) for x in obtained_state_space),sorted(tuple(x) for x in expected_state_space))
 
 
 def test_generate_state_space_for_N_eq_3_and_k_eq_1():
@@ -39,7 +39,7 @@ def test_generate_state_space_for_N_eq_3_and_k_eq_1():
         (0, 0, 0),
     ]
     obtained_state_space = main.get_state_space(N=N, k=k)
-    assert sorted(expected_state_space) == sorted(obtained_state_space)
+    np.testing.assert_allclose(sorted(expected_state_space),sorted(obtained_state_space))
 
 
 def test_generate_state_space_for_N_eq_1_and_k_eq_3():
@@ -57,7 +57,7 @@ def test_generate_state_space_for_N_eq_1_and_k_eq_3():
         (2,),
     ]
     obtained_state_space = main.get_state_space(N=N, k=k)
-    assert sorted(expected_state_space) == sorted(obtained_state_space)
+    np.testing.assert_allclose(sorted(expected_state_space),sorted(obtained_state_space))
 
 
 def test_compute_transition_probability_for_trivial_fitness_function():
@@ -474,3 +474,63 @@ def test_generate_transition_matrix_for_symbolic_fitness_function():
         ),
         expected_transition_matrix,
     )
+
+
+
+def test_compute_transition_probability_for_kwargs_fitness_function():
+    """
+    tests the compute_transition_probability function for 
+    
+    a fitness function which takes kwargs
+    """
+    
+    def kwargs_fitness_function(state, c, r):
+        return np.array(
+            [
+                c if individual == 1 else r
+                for individual in state
+            ]
+        )
+    
+    source = np.array((0,1,0))
+    target = np.array((1,1,0))
+    c = 2
+    r = 3
+
+    expected_transition_probability = 1 / 12
+
+    assert main.compute_transition_probability(source=source, target=target, fitness_function=kwargs_fitness_function, c=c, r=r) == expected_transition_probability
+
+
+
+
+def test_compute_transition_probability_for_kwargs_fitness_function():
+    """
+    tests the generate_transition_matrix function for 
+    
+    a fitness function which takes kwargs
+    """
+    
+    def kwargs_fitness_function(state, c, r):
+        return np.array(
+            [
+                c if individual == 1 else r
+                for individual in state
+            ]
+        )
+  
+    state_space = np.array([
+        [0,0],
+        [0,1],
+        [1,0],
+        [1,1],
+    ])
+    c = 1
+    r = 4
+    expected_transition_matrix = np.array([
+        [1, 0, 0, 0],
+        [2 / 5, 1 / 2, 0, 1 / 10],
+        [2 / 5, 0, 1 / 2, 1 / 10],
+        [0, 0, 0, 1]
+    ])
+    np.testing.assert_array_almost_equal(expected_transition_matrix, main.generate_transition_matrix(state_space=state_space,fitness_function=kwargs_fitness_function, c=c, r=r))

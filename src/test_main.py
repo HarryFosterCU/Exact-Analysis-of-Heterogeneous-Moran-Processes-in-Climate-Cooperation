@@ -514,7 +514,7 @@ def test_generate_transition_matrix_for_symbolic_fitness_function():
     )
 
 
-def test_compute_transition_probability_for_kwargs_fitness_function():
+def test_generate_transition_matrix_for_kwargs_fitness_function():
     """
     tests the generate_transition_matrix function for
 

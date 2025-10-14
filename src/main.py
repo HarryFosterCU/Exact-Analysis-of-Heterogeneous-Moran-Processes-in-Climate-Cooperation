@@ -46,7 +46,7 @@ def compute_transition_probability(source, target, fitness_function, **kwargs):
 
     This is adressed in the get_transition_matrix function. 
 
-    TODO - write formula 
+    $\frac{\sum_{v_i = u_{i*}}{f(v_i)}}{\sum_{v_i}f(v_i)}$
 
     Parameters
     ----------

@@ -298,6 +298,33 @@ def test_compute_transition_probability_for_symbolic_fitness_function():
     )
 
 
+
+def test_compute_transition_probability_for_kwargs_fitness_function():
+    """
+    tests the compute_transition_probability function for 
+    
+    a fitness function which takes kwargs
+    """
+    
+    def kwargs_fitness_function(state, c, r):
+        return np.array(
+            [
+                c if individual == 1 else r
+                for individual in state
+            ]
+        )
+    
+    source = np.array((0,1,0))
+    target = np.array((1,1,0))
+    c = 2
+    r = 3
+
+    expected_transition_probability = 1 / 12
+
+    assert main.compute_transition_probability(source=source, target=target, fitness_function=kwargs_fitness_function, c=c, r=r) == expected_transition_probability
+
+
+
 def test_generate_transition_matrix_for_trivial_fitness_function():
     """
     Tests whether generate_transition_matrix returns the correct matrix
@@ -474,32 +501,6 @@ def test_generate_transition_matrix_for_symbolic_fitness_function():
         ),
         expected_transition_matrix,
     )
-
-
-
-def test_compute_transition_probability_for_kwargs_fitness_function():
-    """
-    tests the compute_transition_probability function for 
-    
-    a fitness function which takes kwargs
-    """
-    
-    def kwargs_fitness_function(state, c, r):
-        return np.array(
-            [
-                c if individual == 1 else r
-                for individual in state
-            ]
-        )
-    
-    source = np.array((0,1,0))
-    target = np.array((1,1,0))
-    c = 2
-    r = 3
-
-    expected_transition_probability = 1 / 12
-
-    assert main.compute_transition_probability(source=source, target=target, fitness_function=kwargs_fitness_function, c=c, r=r) == expected_transition_probability
 
 
 

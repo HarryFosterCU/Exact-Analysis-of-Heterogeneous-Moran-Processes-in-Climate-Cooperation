@@ -44,7 +44,7 @@ def compute_transition_probability(source, target, fitness_function, **kwargs):
 
     naturally return 0 for all off-diagonal entries, and None on the diagonal.
 
-    This is adressed in the get_transition_matrix function. 
+    This is adressed in the get_transition_matrix function.
 
     $\frac{\sum_{v_i = u_{i*}}{f(v_i)}}{\sum_{v_i}f(v_i)}$
 
@@ -76,7 +76,7 @@ def compute_transition_probability(source, target, fitness_function, **kwargs):
 def generate_transition_matrix(state_space, fitness_function, **kwargs):
     """
     Given a state space and a fitness function, returns the transition matrix
-    
+
     for the heterogeneous Moran process.
 
     Parameters

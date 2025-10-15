@@ -12,6 +12,7 @@ There is also a fitness function f: S -> $R^N$, giving us an array of the fitnes
 
 import itertools
 import numpy as np
+import sympy as sym
 
 
 def get_state_space(N, k):
@@ -28,66 +29,89 @@ def get_state_space(N, k):
     --------
     Array of possible states within the system
     """
-    return list(itertools.product(range(k), repeat=N))
+    return np.array(list(itertools.product(range(k), repeat=N)))
 
-def fitness(S1, S2):
+
+def compute_transition_probability(source, target, fitness_function, **kwargs):
     """
-    TODO
+    Given two states and a fitness function, returns the transition probability
+
+    when moving from the source state to the target state. Must move between
+
+    states with a Hamming distance of 1. Returns 0 if Hamming distance > 1.
+
+    Returns None if Hamming distance = 0. For an absorbing state, this will
+
+    naturally return 0 for all off-diagonal entries, and None on the diagonal.
+
+    This is adressed in the get_transition_matrix function.
+
+    $\frac{\sum_{v_i = u_{i*}}{f(v_i)}}{\sum_{v_i}f(v_i)}$
+
+    Parameters
+    ----------
+    source: numpy.array, the starting state
+
+    target: numpy.array, what the source transitions to
+
+    fitness_function: func, The fitness function which maps a state to a numpy.array
+
+    where each entry represents the fitness of the given individual
+
+    Returns
+    ---------
+    Float: the transition pobability
     """
-    return 1
-
-
-def get_where_different(S1, S2):
-    """
-    Given a pair of states, identify where they are different, and return the position of the difference
-    
-    Parameters:
-    --------------
-    S1, S2: Arrays, states from the state space
-    
-    Returns:
-    Position where arrays differ"""
-
-    return np.where(np.array(S1) != np.array(S2))
-
-def get_transition_prob(S1, S2):
-    """
-    Given two states, return the probability of transitioning from one state to the next
-
-    Parameters:
-    -----------
-    S1, S2: Arrays, states from the state space
-    """
-    Diff = get_where_different(S1, S2)[0]
-    if len(Diff) <= 1:
-        return fitness(S1, S2)
-    else:
+    different_indices = np.where(source != target)
+    if len(different_indices[0]) > 1:
         return 0
-    
-def gen_transition_matrix(S):
+    if len(different_indices[0]) == 0:
+        return None
+    fitness = fitness_function(source, **kwargs)
+    denominator = fitness.sum() * len(source)
+    numerator = fitness[source == target[different_indices]].sum()
+    return numerator / denominator
+
+
+def generate_transition_matrix(state_space, fitness_function, **kwargs):
     """
-    Returns the transition matrix given a state space
-    
-    Parameters:
-    -----------
+    Given a state space and a fitness function, returns the transition matrix
 
-    N: integer, number of individuals
+    for the heterogeneous Moran process.
 
-    k: integer, number of types
+    Parameters
+    ----------
+    state_space: numpy.array, the state space for the transition matrix.
 
-    S: array, state space
+    fitness_function: function, should return a size N numpy.array when passed a state
 
-    Returns:
-    Transition matrix for the given state space
+    Returns
+    ----------
+    numpy.array: the transition matrix
     """
-
-
-    T_Mat = np.zeros((len(S), len(S)))
-
-    for x in range(len(S)):
-        for y in range(len(S)):
-
-            T_Mat[x,y] = get_transition_prob(S[x], S[y])
-    
-
-    return(T_Mat)
+    N = len(state_space)
+    transition_matrix = np.zeros(shape=(N, N))
+    for row_index, source in enumerate(state_space):
+        for col_index, target in enumerate(state_space):
+            if row_index != col_index:
+                try:
+                    transition_matrix[row_index, col_index] = (
+                        compute_transition_probability(
+                            source=source,
+                            target=target,
+                            fitness_function=fitness_function,
+                            **kwargs,
+                        )
+                    )
+                except TypeError:
+                    transition_matrix = transition_matrix.astype(object)
+                    transition_matrix[row_index, col_index] = (
+                        compute_transition_probability(
+                            source=source,
+                            target=target,
+                            fitness_function=fitness_function,
+                            **kwargs,
+                        )
+                    )
+    np.fill_diagonal(transition_matrix, 1 - transition_matrix.sum(axis=1))
+    return transition_matrix

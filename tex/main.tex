@@ -3,25 +3,69 @@
 \usepackage[margin=1.5cm, includefoot, footskip=30pt]{geometry}
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage{amssymb}
 
 \title{General Heterogeneous Moran Processes}
 \author{Vince Knight and Harry Foster}
 \date{\today}
 
 \begin{document}
-
+\maketitle
 \section{Introduction}
+
+\section{Literature Review}
+
 \section{Model}
 
-Let us assume:
+
+
+In this section, we will look at the underlying model of the heterogeneous Moran process. We define the following:
 
 \begin{itemize}
     \item \(N\) \textbf{ordered} individuals
     \item \(k\) types \(A_1, A_2, \dots A_k\)
-    \item State \(v\in S = [1,\dots,k] ^ N\) so that individual \(i\) is of type \(v_i\). 
-          Note that \(|S|=k^N\)
-    \item Fitness function \(f:S\to \mathbb{R}^N\)
+    \item A state space S given by the set of ordered \(N\)-tuples with entries of type \(A_1, A_2, \dots A_k\). 
+          Note that \(|S|=k^N\).\\
+    A state \(v = (v_1, v_2, \dots) \in S\) is called \textbf{absorbing} if \(v_i = v_j\) \(\forall\) \(i,j \in \mathbb{N^+}\) : \(i,j \le N\)
+    \item A fitness function \(f:S \to \mathbb{R}^N\)
 \end{itemize}
 
-\end{document}
+Let $h(v,u)$ denote the Hamming distance~\cite{Hamming_Distance} between two states \(v, u \in S\). We consider a Markov chain~\cite{Markov_Chain}, where for the transition $V = (v_1, v_2, \dots, v_N) \to U = (u_1, u_2, \dots, u_N)$, the 
+transition probability is defined as follows:\\
+\begin{large}
+    \begin{equation}
+        p_{v, u} = 
+        \begin{cases}
+            \frac{\sum_{v_i = u_{i^*}}{f(v_i)}}{\sum_{v_i}f(v_i)} & \text{if }h(v,u) = 1 \text{, differing at position }i^*\\
+            0 & \text{if }h(v,u) > 1\\
+            1 - \sum_{u \in S \setminus \text{\{v\}}}{P_{v,u}} & \text{if }h(v,u) = 0
+        \end{cases}
+    \label{eqn:(1)}
+    \end{equation}
+\end{large}
 
+The final case corresponds to a transition from \(v\) to itself. 
+This is possible when a given individual has their action type removed
+and any other individual with the same type is chosen for duplication. A direct computation of $P_{v,v}$ is given by:
+\begin{large}
+\begin{equation}
+    \frac{1}{N}\sum_{i=1}^{N} \frac{\sum_{v_j = v_{i}}{f(v_i)}}{\sum_{v_j}f(v_i)}
+    \label{eqn:(2)}
+\end{equation}
+\end{large}
+This would require at least \(N^2 + N\) calculations. 
+However, we can observe that a transition of some sort must occur, and so we simply take the probability of not transitioning to any \textbf{different} state as \(P_{v,v}\).\\
+
+An important case which proceeds from (\ref{eqn:(1)}) is that of a transition \(v \to u\) where \(u\) contains an individual of a \textit{type} not found in \(v\). For example, the transition (0,1) $\to$ (0,2). This would be forbidden by the intuition of a standard Moran process - i.e the new individual being the duplication of another individual in \(v\). However, we can see that the standard formula yields \(p_{v,u}\) = 0 because \(\nexists\) \(v_i \in V: v_i = u_{i^*}\). Following this, we see that (\ref{eqn:(1)}) also correctly gives us \(p_{v,u}\) = 0 for any \textbf{absorbing} \(v \neq u\).
+
+\begin{thebibliography}{9}
+\bibitem{Hamming_Distance}
+Dave K. Kythe, Prem K. Kythe (2012) - Algebraic and Stochastic Coding Theory
+\bibitem{Markov_Chain}
+William J. Stewart (2009) - Probability, Markov Chains, Queues, and Simulation: The Mathematical Basis of Performance Modeling
+
+
+\end{thebibliography}
+
+
+\end{document}

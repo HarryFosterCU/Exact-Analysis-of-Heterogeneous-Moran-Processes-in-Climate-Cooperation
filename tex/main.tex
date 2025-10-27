@@ -5,7 +5,7 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 
-\title{General Heterogeneous Moran Processes}
+\title{A Heterogeneous Moran Process for the Analysis of Public Goods Games}
 \author{Vince Knight and Harry Foster}
 \date{\today}
 
@@ -15,9 +15,13 @@
 
 \section{Literature Review}
 
-\section{Model}
+TODO: A quick summary of papers:\\
 
+1) Effect of reputation-based heterogeneous investment on cooperation in spatial public goods game: Xiaoiian Maa et al. Discusses heterogeneity in Public Goods Game as a heterogeneous quality of individuals, resulting in different contributions to the public good. Their model shows that an increased scrutiny of heterogeneous attributes can lead to emergent cooperation when said attributes are positively correlated with a cooperative individual. They also find that a high threshold for such attributes are required when they exist, in order to prevent individuals both free riding and stop cooperation from declining too much in the initial stages of a model. \cite{Maa}
 
+\section{The Model}
+
+\subsection{An Initial System}
 
 In this section, we will look at the underlying model of the heterogeneous Moran process. We define the following:
 
@@ -26,8 +30,8 @@ In this section, we will look at the underlying model of the heterogeneous Moran
     \item \(k\) types \(A_1, A_2, \dots A_k\)
     \item A state space S given by the set of ordered \(N\)-tuples with entries of type \(A_1, A_2, \dots A_k\). 
           Note that \(|S|=k^N\).\\
-    A state \(v = (v_1, v_2, \dots) \in S\) is called \textbf{absorbing} if \(v_i = v_j\) \(\forall\) \(i,j \in \mathbb{N^+}\) : \(i,j \le N\)
-    \item A fitness function \(f:S \to \mathbb{R}^N\)
+    A state \(v = (v_1, v_2, \dots) \in S\) is called \textbf{absorbing} if \(v_i = v_j\) \(\forall\) \(i,j \in \mathbb{N^+}\) : \(i,j \le N\), and the set of absorbing states is called \(S^\Gamma\)
+    \item A strictly positive fitness function \(f:S \to \mathbb{R}^N\)
 \end{itemize}
 
 Let $h(v,u)$ denote the Hamming distance~\cite{Hamming_Distance} between two states \(v, u \in S\). We consider a Markov chain~\cite{Markov_Chain}, where for the transition $V = (v_1, v_2, \dots, v_N) \to U = (u_1, u_2, \dots, u_N)$, the 
@@ -44,7 +48,9 @@ transition probability is defined as follows:\\
     \end{equation}
 \end{large}
 
-The final case corresponds to a transition from \(v\) to itself. 
+Transitioning denotes something slightly different in the heterogeneous case of the Moran process as compared with the homogeneous. While we would traditionally say an \textit{individual} was removed and a new individual was generated to replace them, we must now say an individual's \textit{action type} was removed, and replaced with a new action type. This is because the individuals themselves are ordered in the heterogeneous Moran process, and possess certain attributes specific to themselves. Therefore, we cannot say that the individual themself is replaced, but rather that their action type is replaced.\\
+
+The final case in (\ref{eqn:(1)}) corresponds to a transition from \(v\) to itself. 
 This is possible when a given individual has their action type removed
 and any other individual with the same type is chosen for duplication. A direct computation of $P_{v,v}$ is given by:
 \begin{large}
@@ -56,14 +62,116 @@ and any other individual with the same type is chosen for duplication. A direct 
 This would require at least \(N^2 + N\) calculations. 
 However, we can observe that a transition of some sort must occur, and so we simply take the probability of not transitioning to any \textbf{different} state as \(P_{v,v}\).\\
 
-An important case which proceeds from (\ref{eqn:(1)}) is that of a transition \(v \to u\) where \(u\) contains an individual of a \textit{type} not found in \(v\). For example, the transition (0,1) $\to$ (0,2). This would be forbidden by the intuition of a standard Moran process - i.e the new individual being the duplication of another individual in \(v\). However, we can see that the standard formula yields \(p_{v,u}\) = 0 because \(\nexists\) \(v_i \in V: v_i = u_{i^*}\). Following this, we see that (\ref{eqn:(1)}) also correctly gives us \(p_{v,u}\) = 0 for any \textbf{absorbing} \(v \neq u\).
+An important case which proceeds from (\ref{eqn:(1)}) is that of a transition \(v \to u\) where \(u\) contains an individual of a \textit{type} not found in \(v\). For example, the transition (0,1) $\to$ (0,2). This would be forbidden by the intuition of a standard Moran process - i.e the new individual being the duplication of another individual in \(v\). However, we can see that the standard formula yields \(p_{v,u}\) = 0 because \(\nexists\) \(v_i \in V: v_i = u_{i^*}\). Following this, we see that (\ref{eqn:(1)}) also correctly gives us \(p_{v,u}\) = 0 for any \textbf{absorbing} \(v \neq u\).\\
+
+This model allows for heterogeneity as we have a fitness function dependent on the individual, not dependent on the action taken. Therefore, we can give different individuals of the same action type a different fitness by passing different attributes to the fitness function itself. We will see examples of this in future sections.\\
+
+As this forms a Markov chain, we can therefore define a transition matrix \(T\) for any given state space. This can be used to show the transition probabilities between any two given states, and therefore can be used to find the fixation probabilities for any given starting state by the following method:\\
+
+Given a transition matrix \(T\), we can calculate the state distribution after \(k\) iterations of the Moran process using the formula \(T^k\)  \cite{Markov_Chain}. Therefore, as \(k \to \infty\), we will clearly acquire a distribution that tends towards the absorption probabilities for a given starting state, as the process will stabilise only if we enter an absorbing state (while subsets of \(S\) of states may have extremely high probabilities of transitioning to each other, the only way to have certainty of not transitioning away from a state or pair of states is to be in one of the previously defined absorbing states.)\\
+Thus, our absorption probabilities starting at are given by the non-zero entries in the matrix \(\lim_{k \to \infty} T^k\)
+
+\section{A Classic Public Goods Game}
+\subsection{The Standard Model}
+
+In this section, we shall see how this model can be applied to the classical public goods game. In this game, individuals choose whether or not to contribute to a public resource pool. In the end, the total resource is multiplied by some factor \(r > 1\) and distributed equally between each player. This model often encourages a behaviour known as ``free-riding" \cite{Climate Clubs}, where players refuse to contribute to the pool and simply take the benefit provided by other individuals' contribution. The classic problem of a public goods game is to provide an environment where such free-riding is not a profitable strategy - or rather, is less profitable than contributing to the public good.\\
+
+In our model, we can simulate a public goods game by providing the following payoff function:\\
+\begin{large}
+\begin{equation}
+    B(v_i) = \frac{r\sum_{j=1}^N{C_{v_j}}}{N} - C_{v_i}
+\end{equation}
+\end{large}\\
+(where \(C_{v_j}\) is the contribution by individual j.) 
+
+In the homogeneous public goods game, we can see that \(C_{v_j}\) can only take one of two values: some constant \(\alpha \) if individual j cooperates, and 0 if not. However, the heterogeneous game will require a more tailored \(C_{v_j}\).\\
+
+Now, \(B(v_j)\) can give us negative values. This can cause issues in our model as there is the potential for \(p_{v,u}\) to be negative for some states if we took \(B\) as our fitness function. Therefore, we must look at some transformation of \(B\) to use as our fitness function.\\
+
+A common method \cite{Nowak 2006} for this is to apply the exponential function to our payoff function. By using \(e^{\kappa B}\) as our fitness function, we do indeed guarantee ourselves a positive function, however other problems arrive. If we look at the formula for \(B(v_j)\), and consider the transition probability:
+
+\begin{large}
+    \begin{equation}
+        \frac{\sum_{v_i = u_{i^*}}{e^{\frac{r\sum_{j=1}^N{C_{v_j}}}{N} - C_{v_i}}}}{\sum_{v_i}e^{\frac{r\sum_{j=1}^N{C_{v_j}}}{N} - C_{v_i}}}
+    \end{equation}
+\end{large}\\
+
+Now, as \(e^r\) does not rely on v, we can take this out of the sum and acquire the following:
+
+\begin{large}
+    \begin{equation}
+        \frac{e^{\frac{r\sum_{j=1}^N{C_{v_j}}}{N}}\sum_{v_i = u_{i^*}}{e^{ - C_{v_i}}}}{e^{\frac{r\sum_{j=1}^N{C_{v_j}}}{N}}\sum_{v_i}e^{-C_{v_i}}} = \frac{\sum_{v_i = u_{i^*}}{e^{ - C_{v_i}}}}{\sum_{v_i}e^{-C_{v_i}}}
+    \end{equation}
+\end{large}\\
+
+Of course, this does not rely on r at all, which does not reflect the system itself. Therefore, we must find another way to create a positive transformation of \(B\). Consider the fact that we can only acquire negative values due to the contribution \(C_{v_i}\). Therefore, we can consider \(f(v_i) = B(v_i) + \alpha + 0.01 \). This guarantees a positive fitness for the \textit{homogeneous} Moran process, without largely changing the impact that payoffs have on the transition probability.
+\subsection{Numerical Examples}
+
+We will first look into the following systems in order to show how we can model a standard homogeneous public goods game:\\
+
+\begin{itemize}
+    \item[(a)] \(N\) = 4, \(\alpha \) = 5, \(r\) = 1.5
+    \item[(b)] \(N\) = 4, \(\alpha \) = 5, \(r\) = 2
+    \item[(c)] \(N\) = 4, \(\alpha \) = 8, \(r\) = 2
+\end{itemize}
+
+Using our previously defined method, we can now view the absorption probabilities of the above states. We obtain:
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+    \hline
+         System & Number of initial contributors & Probability of no contribution & Probability of full contribution\\
+         \hline
+         (a) & 1 & 0.97 & 0.03\\
+         (a) & 2 & 0.84 & 0.16\\
+         (a) & 3 & 0.55 & 0.45\\
+         \hline
+         (b) & 1 & 0.95 & 0.05\\
+         (b) & 2 & 0.8 & 0.2\\
+         (b) & 3 & 0.5 & 0.5\\
+         \hline
+         (c) & 1 & 0.95 & 0.05\\
+         (c) & 2 & 0.8 & 0.2\\
+         (c) & 3 & 0.5 & 0.5\\
+         \hline
+    \end{tabular}
+    \caption{Table of fixation probabilities (to 2 d.p.) for the states above.}
+    \label{tab:Table 1}
+\end{table}
+
+These results match our intuition; we see that as \(r\) increases, we have a higher probability of contribution as the price of contributing becomes lower, as you receive a higher return per unit invested. The interesting notion is that \(\alpha\) has little to no impact on the fixation probabilities. We see that \(f(v_j)\) cancels down as follows:
+
+\begin{large}
+    \begin{equation}
+        p_{v,u} = \frac{\sum_{v_i=u_{i^*}}B(v_i) + \alpha + 0.01}{\sum_{j=1}^{N}B(v_i) + \alpha + 0.01} = \frac{\frac{rC\alpha}{N} + 0.01}{rC\alpha + D\alpha + 0.01} = \frac{\alpha(\frac{rC}{N}) +0.01}{\alpha(rC + D) + 0.01}
+    \end{equation}
+\end{large}\\
+Where \(C\) is the number of contributors and \(D\) is the number of free-riders (we denote them as \(D\) by convention, due to the classic prisoner's dilemma "defector" label). While \(\alpha\) does have an impact on the transition probability, it is very small and nearly cancels out. This is intuitively correct, however, as we have no context to compare a value of \(\alpha\) to. We do not know if 8 units is a large or small amount compared to context, and our choice of \(\alpha\) is largely arbitrary in the homogeneous case.
+
+
+\section{Public Goods Games with Heterogeneous Returns}
+
+When we look at a public goods game, we often generalise the players to all receive the same return. However, in the real world this is often not the case. 
+
+
+
+\section{Notes}
+In the heterogeneous case how do we define such an \(\alpha\) for the fitness function? Well, for such a case we must define \(\alpha = \min_{j}(C_{v_j})\). This similarly guarantees the positive fitness function, and has similar properties to the homogeneous case. 
+
+
 
 \begin{thebibliography}{9}
+\bibitem{Maa}
+Xiaoiian Maa et al (2021) - Effect of reputation-based heterogeneous investment on cooperation in spatial public goods game
 \bibitem{Hamming_Distance}
 Dave K. Kythe, Prem K. Kythe (2012) - Algebraic and Stochastic Coding Theory
 \bibitem{Markov_Chain}
 William J. Stewart (2009) - Probability, Markov Chains, Queues, and Simulation: The Mathematical Basis of Performance Modeling
-
+\bibitem{Climate_Clubs}
+William Nordhaus (2015) - Climate Clubs: Overcoming Free-riding in International Climate Policy
+\bibitem{Nowak 2006}
+Martin A. Nowak (2006) - Evolutionary Dynamics: Exploring the Equations of Life
 
 \end{thebibliography}
 

@@ -115,3 +115,21 @@ def generate_transition_matrix(state_space, fitness_function, **kwargs):
                     )
     np.fill_diagonal(transition_matrix, 1 - transition_matrix.sum(axis=1))
     return transition_matrix
+
+def get_absorption_probability(transition_matrix, rounding_places):
+    """Given a transition matrix, returns the matrix of absorption probabilities.
+    
+    By default rounded to 5 d.p.
+    
+    Parameters
+    -------------
+    transition_matrix: np.array, an MxM matrix with rows summing to exactly 1
+    
+    rounding_places: rounds transition probability to this many places
+    
+    Returns
+    ---------
+    numpy.array: a matrix with the absorption probabilities for the given transition matrix."""
+
+
+    return np.round((np.linalg.matrix_power(transition_matrix, 100)), decimals = rounding_places)

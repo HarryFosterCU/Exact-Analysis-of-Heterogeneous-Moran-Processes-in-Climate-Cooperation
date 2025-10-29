@@ -5,7 +5,7 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 
-\title{General Heterogeneous Moran Processes}
+\title{A Heterogeneous Moran Process for the Analysis of Public Goods Games}
 \author{Vince Knight and Harry Foster}
 \date{\today}
 
@@ -14,10 +14,24 @@
 \section{Introduction}
 
 \section{Literature Review}
+Evolutionary game theory has long been at the forefront of the study of emergent cooperation, showing how a strategy that is seemingly unfavourable for the individual, but beneficial to the collective, can become dominant in systems of rational actors. This is often shown through the study of games such as the iterated prisoner's dilemma\cite{IPD1,IPD2} and the snowdrift game\cite{Snowdrift1}. These examples, however, only allow for pairwise interactions, which does not accurately represent many real-world scenarios. Therefore, we look at a common game used to model the sharing of resources and interactions between multiple people - the public goods game.\\
 
-\section{Model}
+In order to further tailor the idea of a public goods game to real world scenarios, we introduce the idea of heterogeneity to the system. Often in the study of games we consider each individual to exist in the same conditions - having the same utility and probability of transitioning to a different action type. However, this does not accurately reflect many of the interactions that occur in the real world, where individuals may have different factors affecting which strategies they are able to take. For example, in a public goods game, one player may wish to contribute \(x\) units to the public good, however they do not have enough wealth available to spare such a contribution. Heterogeneity allows us to give varying attributes to the different actors in order to simulate such situations. These attributes can be encoded into the players themselves as separate to the game, for example the reputation in \cite{Maa}, exist within the strategies of the players \cite{Lei, Flores}, or they may exist within the actual payoffs which the players receive. We will look at multiple different ways in which heterogeneity can be implemented in order to model different scenarios.\\
+
+In much of the literature, we see heterogeneous public goods game being played graphically. By this I mean that in much research, players are placed on graphs (often regular square lattices, as in \cite{Maa, Flores}) and participate in multiple public goods games at the same time, with their payoff being the combined payoff from all their games. This gives even more weight to the decision to cooperate or defect, and allows players to interact in scenarios with many different levels of these heterogeneous attributes. We also see many ideas for what these attributes could be based upon. \cite{Maa} takes the idea of that players could build a reputation through their decisions across multiple generations, with players refusing to contribute higher amounts to groups made up of those who have a reputation for defection. While this is a dynamically updating heterogeneous attribute, some have proposed static attributes based on inherent properties of the individuals, such as in \cite{Lei} where the players participate in different amounts of games, and contribute different amounts based on this factor.\\
+
+In both of the above cases, it is shown that an increased scrutiny of heterogeneous attributes in a spatial public goods game is beneficial to the emergence of cooperation, though for different reasons. In \cite{Maa}, we see that increasing such scrutiny obviously harms defectors, as they receive reduced payoffs based on their low reputation due to being unable to coerce high contributions from other players. \cite{Lei}, however, finds that if we encourage players to cooperate with those in a similar number of games to them, the high-degree defector nodes are unable to gather a large payoff, and so will be unable to spread their defection to their neighbours. If you encourage players to interact with those with different degrees, however, then middle-degree defectors will make heavy losses and be unable to survive.\\
+
+\cite{Flores} shows how the benefits of this heterogeneity are not always as pronounced as it may seem. When the contribution is not calculated by some attribute, but rather is an attribute in and of itself (essentially becoming a new strategy) then even in systems where contribution dominates, we will see low-value contributions act as a sort of defection against the most globally beneficial strategies. Therefore, we can see that the emergence of cooperation is not the end of the story in some cases, and we must look at what sort of cooperation it is that we have fostered the emergence of.\\
+
+One common theme in the spatial public goods game is the manner in which cooperation spreads. An initial ``invasion" of defectors leads to cooperation mainly existing within small clusters. These clusters, however, are much more profitable than their defecting neighbours. Therefore, the cooperating clusters will influence the nearby defectors to join in, which eventually spreads throughout the system. This relies on the ability of the clusters to resist the initial invasion of defectors - an occurrence which relies on a high enough \(r\) value (the positive multiplier of the contribution to the public good).
 
 
+
+
+\section{The Model}
+
+\subsection{An Initial System}
 
 In this section, we will look at the underlying model of the heterogeneous Moran process. We define the following:
 
@@ -26,8 +40,8 @@ In this section, we will look at the underlying model of the heterogeneous Moran
     \item \(k\) types \(A_1, A_2, \dots A_k\)
     \item A state space S given by the set of ordered \(N\)-tuples with entries of type \(A_1, A_2, \dots A_k\). 
           Note that \(|S|=k^N\).\\
-    A state \(v = (v_1, v_2, \dots) \in S\) is called \textbf{absorbing} if \(v_i = v_j\) \(\forall\) \(i,j \in \mathbb{N^+}\) : \(i,j \le N\)
-    \item A fitness function \(f:S \to \mathbb{R}^N\)
+    A state \(v = (v_1, v_2, \dots) \in S\) is called \textbf{absorbing} if \(v_i = v_j\) \(\forall\) \(i,j \in \mathbb{N^+}\) : \(i,j \le N\), and the set of absorbing states is called \(S^\Gamma\)
+    \item A strictly positive fitness function \(f:S \to \mathbb{R}^N\)
 \end{itemize}
 
 Let $h(v,u)$ denote the Hamming distance~\cite{Hamming_Distance} between two states \(v, u \in S\). We consider a Markov chain~\cite{Markov_Chain}, where for the transition $V = (v_1, v_2, \dots, v_N) \to U = (u_1, u_2, \dots, u_N)$, the 
@@ -44,7 +58,9 @@ transition probability is defined as follows:\\
     \end{equation}
 \end{large}
 
-The final case corresponds to a transition from \(v\) to itself. 
+Transitioning denotes something slightly different in the heterogeneous case of the Moran process as compared with the homogeneous. While we would traditionally say an \textit{individual} was removed and a new individual was generated to replace them, we must now say an individual's \textit{action type} was removed, and replaced with a new action type. This is because the individuals themselves are ordered in the heterogeneous Moran process, and possess certain attributes specific to themselves. Therefore, we cannot say that the individual themself is replaced, but rather that their action type is replaced.\\
+
+The final case in (\ref{eqn:(1)}) corresponds to a transition from \(v\) to itself. 
 This is possible when a given individual has their action type removed
 and any other individual with the same type is chosen for duplication. A direct computation of $P_{v,v}$ is given by:
 \begin{large}
@@ -56,14 +72,85 @@ and any other individual with the same type is chosen for duplication. A direct 
 This would require at least \(N^2 + N\) calculations. 
 However, we can observe that a transition of some sort must occur, and so we simply take the probability of not transitioning to any \textbf{different} state as \(P_{v,v}\).\\
 
-An important case which proceeds from (\ref{eqn:(1)}) is that of a transition \(v \to u\) where \(u\) contains an individual of a \textit{type} not found in \(v\). For example, the transition (0,1) $\to$ (0,2). This would be forbidden by the intuition of a standard Moran process - i.e the new individual being the duplication of another individual in \(v\). However, we can see that the standard formula yields \(p_{v,u}\) = 0 because \(\nexists\) \(v_i \in V: v_i = u_{i^*}\). Following this, we see that (\ref{eqn:(1)}) also correctly gives us \(p_{v,u}\) = 0 for any \textbf{absorbing} \(v \neq u\).
+An important case which proceeds from (\ref{eqn:(1)}) is that of a transition \(v \to u\) where \(u\) contains an individual of a \textit{type} not found in \(v\). For example, the transition (0,1) $\to$ (0,2). This would be forbidden by the intuition of a standard Moran process - i.e the new individual being the duplication of another individual in \(v\). However, we can see that the standard formula yields \(p_{v,u}\) = 0 because \(\nexists\) \(v_i \in V: v_i = u_{i^*}\). Following this, we see that (\ref{eqn:(1)}) also correctly gives us \(p_{v,u}\) = 0 for any \textbf{absorbing} \(v \neq u\).\\
+
+This model allows for heterogeneity as we have a fitness function dependent on the individual, not dependent on the action taken. Therefore, we can give different individuals of the same action type a different fitness by passing different attributes to the fitness function itself. We will see examples of this in future sections.\\
+
+As this forms a Markov chain, we can therefore define a transition matrix \(T\) for any given state space. This can be used to show the transition probabilities between any two given states, and therefore can be used to find the fixation probabilities for any given starting state by the following method:\\
+
+Given a transition matrix \(T\), we can calculate the state distribution after \(k\) iterations of the Moran process using the formula \(T^k\)  \cite{Markov_Chain}. Therefore, as \(k \to \infty\), we will clearly acquire a distribution that tends towards the absorption probabilities for a given starting state, as the process will stabilise only if we enter an absorbing state (while subsets of \(S\) of states may have extremely high probabilities of transitioning to each other, the only way to have certainty of not transitioning away from a state or pair of states is to be in one of the previously defined absorbing states.)\\
+Thus, our absorption probabilities starting at are given by the non-zero entries in the matrix \(\lim_{k \to \infty} T^k\)
+
+\section{A Classic Public Goods Game}
+\subsection{The Standard Model}
+
+In this section, we shall see how this model can be applied to the classical public goods game. In this game, individuals choose whether or not to contribute to a public resource pool. In the end, the total resource is multiplied by some factor \(r > 1\) and distributed equally between each player. This model often encourages a behaviour known as ``free-riding" \cite{Climate Clubs}, where players refuse to contribute to the pool and simply take the benefit provided by other individuals' contribution. The classic problem of a public goods game is to provide an environment where such free-riding is not a profitable strategy - or rather, is less profitable than contributing to the public good.\\
+
+In our model, we can simulate a public goods game by providing the following payoff function:\\
+\begin{large}
+\begin{equation}
+    B(v_i) = \frac{r\sum_{j=1}^N{C_{v_j}}}{N} - C_{v_i}
+\end{equation}
+\end{large}\\
+(where \(C_{v_j}\) is the contribution by individual j.) 
+
+In the homogeneous public goods game, we can see that \(C_{v_j}\) can only take one of two values: some constant \(\alpha \) if individual j cooperates, and 0 if not. However, the heterogeneous game will require a more tailored \(C_{v_j}\).\\
+
+Now, \(B(v_j)\) can give us negative values. This can cause issues in our model as there is the potential for \(p_{v,u}\) to be negative for some states if we took \(B\) as our fitness function. Therefore, we must look at some transformation of \(B\) to use as our fitness function.\\
+
+A common method \cite{Nowak 2006} for this is to apply the exponential function to our payoff function. By using \(e^{\kappa B}\) as our fitness function, we do indeed guarantee ourselves a positive function, however other problems arrive. If we look at the formula for \(B(v_j)\), and consider the transition probability:
+
+\begin{large}
+    \begin{equation}
+        \frac{\sum_{v_i = u_{i^*}}{e^{\frac{r\sum_{j=1}^N{C_{v_j}}}{N} - C_{v_i}}}}{\sum_{v_i}e^{\frac{r\sum_{j=1}^N{C_{v_j}}}{N} - C_{v_i}}}
+    \end{equation}
+\end{large}\\
+
+Now, as \(e^r\) does not rely on v, we can take this out of the sum and acquire the following:
+
+\begin{large}
+    \begin{equation}
+        \frac{e^{\frac{r\sum_{j=1}^N{C_{v_j}}}{N}}\sum_{v_i = u_{i^*}}{e^{ - C_{v_i}}}}{e^{\frac{r\sum_{j=1}^N{C_{v_j}}}{N}}\sum_{v_i}e^{-C_{v_i}}} = \frac{\sum_{v_i = u_{i^*}}{e^{ - C_{v_i}}}}{\sum_{v_i}e^{-C_{v_i}}}
+    \end{equation}
+\end{large}\\
+
+
+\subsection{Numerical Examples}
+
+
+
+\section{Public Goods Games with Heterogeneous Returns}
+
+When we look at a public goods game, we often generalise the players to all receive the same return. However, in the real world this is often not the case. 
+
+
+
+\section{Notes}
+In the heterogeneous case how do we define such an \(\alpha\) for the fitness function? Well, for such a case we must define \(\alpha = \min_{j}(C_{v_j})\). This similarly guarantees the positive fitness function, and has similar properties to the homogeneous case. 
+
+
 
 \begin{thebibliography}{9}
+\bibitem{IPD1}
+Vince Knight, Marc Harper, Nikoleta Glynatsi et al (2024) - Recognising and evaluating the effectiveness of extortion in the Iterated Prisoner’s Dilemma
+\bibitem{IPD2}
+Robert Axelrod (1980) - Effective Choice in the Prisoner’s Dilemma
+\bibitem{Snowdrift1}
+Zhenyu Wang & Nigel Goldenfeld (2011) - Theory of cooperation in a micro‑organismal snowdrift game
+\bibitem{Maa}
+Xiaoiian Maa et al (2021) - Effect of reputation-based heterogeneous investment on cooperation in spatial public goods game
+\bibitem{Lei}
+Chuang Lei et al (2010) - Heterogeneity of allocation promotes cooperation in public goods games
+\bibitem{Flores}
+Lucas S. Flores et al (2023) - Heterogeneous contributions can jeopardize cooperation in the public goods game
 \bibitem{Hamming_Distance}
 Dave K. Kythe, Prem K. Kythe (2012) - Algebraic and Stochastic Coding Theory
 \bibitem{Markov_Chain}
 William J. Stewart (2009) - Probability, Markov Chains, Queues, and Simulation: The Mathematical Basis of Performance Modeling
-
+\bibitem{Climate_Clubs}
+William Nordhaus (2015) - Climate Clubs: Overcoming Free-riding in International Climate Policy
+\bibitem{Nowak 2006}
+Martin A. Nowak (2006) - Evolutionary Dynamics: Exploring the Equations of Life
 
 \end{thebibliography}
 

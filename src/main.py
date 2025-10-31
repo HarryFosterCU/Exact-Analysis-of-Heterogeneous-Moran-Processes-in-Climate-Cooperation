@@ -153,7 +153,11 @@ def get_absorbing_states(state_space):
 
     index_array = get_absorbing_state_index(state_space=state_space)
 
-    return None if index_array is None else np.array([state_space[index] for index in index_array])
+    return (
+        None
+        if index_array is None
+        else np.array([state_space[index] for index in index_array])
+    )
 
 
 def get_absorption_probabilities(transition_matrix, state_space):
@@ -196,4 +200,7 @@ def get_absorption_probabilities(transition_matrix, state_space):
         ]
     )
 
-    return {state_index: combined_values[state_index] for state_index, state in enumerate(state_space)}
+    return {
+        state_index: combined_values[state_index]
+        for state_index, state in enumerate(state_space)
+    }

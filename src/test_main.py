@@ -642,7 +642,7 @@ def test_get_absorbing_state_index_for_symbolic_state_space():
 
 def test_get_absorbing_states_for_standard_state_space():
     """Tests the get_absorbing_states function
-    
+
     for a standard state space"""
 
     state_space = np.array(
@@ -666,12 +666,14 @@ def test_get_absorbing_states_for_standard_state_space():
         ]
     )
 
-    expected_absorbing_states = np.array([
-        [0,0],
-        [1,1],
-        [2,2],
-        [3,3],
-    ])
+    expected_absorbing_states = np.array(
+        [
+            [0, 0],
+            [1, 1],
+            [2, 2],
+            [3, 3],
+        ]
+    )
 
     np.testing.assert_array_equal(
         expected_absorbing_states,
@@ -706,9 +708,10 @@ def test_get_absorbing_states_for_no_absorbing_states():
 
     expected_absorbing_states = None
 
-    np.testing.assert_array_equal(expected_absorbing_states, main.get_absorbing_states(
-        state_space=non_absorbing_state_space
-    ))
+    np.testing.assert_array_equal(
+        expected_absorbing_states,
+        main.get_absorbing_states(state_space=non_absorbing_state_space),
+    )
 
 
 def test_get_absorbing_states_for_symbolic_state_space():
@@ -726,44 +729,49 @@ def test_get_absorbing_states_for_symbolic_state_space():
             [B, A],
         ]
     )
-    expected_absorbing_states = np.array([
-        [A,A],
-        [B,B],
-        ])
-    
+    expected_absorbing_states = np.array(
+        [
+            [A, A],
+            [B, B],
+        ]
+    )
+
     np.testing.assert_array_equal(
         expected_absorbing_states,
         main.get_absorbing_states(state_space=symbolic_state_space),
     )
 
+
 def test_get_absorption_probabilities_for_trivial_transition_matrix_and_standard_state_space():
     """Tests the get_absorption_probabilities function for a transition matrix that guarentees absorption into a certain absorbing state."""
 
-    state_space = np.array([
-        [0,0],
-        [1,0],
-        [1,1],
-        [1,0],
-    ])
+    state_space = np.array(
+        [
+            [0, 0],
+            [1, 0],
+            [1, 1],
+            [1, 0],
+        ]
+    )
 
-    transition_matrix = np.array([
-        [1, 0, 0, 0],
-        [1 / 2, 1/ 2, 0, 0],
-        [0, 0, 1, 0],
-        [0, 0, 1 / 2, 1 / 2],
-    ])
-
+    transition_matrix = np.array(
+        [
+            [1, 0, 0, 0],
+            [1 / 2, 1 / 2, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 1 / 2, 1 / 2],
+        ]
+    )
 
     expected = {
-        0:np.array([0, 1, 2, 0], dtype=float),
-        1:np.array([0, 1, 2, 0], dtype=float),
-        2:np.array([0, 0, 2, 1], dtype=float),
-        3:np.array([0, 0, 2, 1], dtype=float),
+        0: np.array([0, 1, 2, 0], dtype=float),
+        1: np.array([0, 1, 2, 0], dtype=float),
+        2: np.array([0, 0, 2, 1], dtype=float),
+        3: np.array([0, 0, 2, 1], dtype=float),
     }
 
     actual = main.get_absorption_probabilities(
-        transition_matrix=transition_matrix,
-        state_space=state_space
+        transition_matrix=transition_matrix, state_space=state_space
     )
 
     for key in expected:

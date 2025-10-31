@@ -153,13 +153,15 @@ def get_absorbing_states(state_space):
 
     index_array = get_absorbing_state_index(state_space=state_space)
 
-    return np.array([state_space[index] for index in index_array])
+    return None if index_array is None else np.array([state_space[index] for index in index_array])
 
 
 def get_absorption_probabilities(transition_matrix, state_space):
     """Given a transition matrix and a corresponding state space
 
-    generate the absorption probabilities.
+    generate the absorption probabilities. This does not yet support a
+
+    symbolic transition matrix input
 
     Parameters
     -------------
@@ -194,4 +196,4 @@ def get_absorption_probabilities(transition_matrix, state_space):
         ]
     )
 
-    return {tuple(state): combined_values[x] for x, state in enumerate(state_space)}
+    return {state_index: combined_values[state_index] for state_index, state in enumerate(state_space)}

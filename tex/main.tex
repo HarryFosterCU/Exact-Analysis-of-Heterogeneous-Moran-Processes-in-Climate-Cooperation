@@ -54,13 +54,13 @@ transition probability is defined as follows:\\
             0 & \text{if }h(v,u) > 1\\
             1 - \sum_{u \in S \setminus \text{\{v\}}}{P_{v,u}} & \text{if }h(v,u) = 0
         \end{cases}
-    \label{eqn:(1)}
+    \label{eqn:Probability Function}
     \end{equation}
 \end{large}
 
 Transitioning denotes something slightly different in the heterogeneous case of the Moran process as compared with the homogeneous. While we would traditionally say an \textit{individual} was removed and a new individual was generated to replace them, we must now say an individual's \textit{action type} was removed, and replaced with a new action type. This is because the individuals themselves are ordered in the heterogeneous Moran process, and possess certain attributes specific to themselves. Therefore, we cannot say that the individual themself is replaced, but rather that their action type is replaced.\\
 
-The final case in (\ref{eqn:(1)}) corresponds to a transition from \(v\) to itself. 
+The final case in (\ref{eqn:Probability Function}) corresponds to a transition from \(v\) to itself. 
 This is possible when a given individual has their action type removed
 and any other individual with the same type is chosen for duplication. A direct computation of $P_{v,v}$ is given by:
 \begin{large}
@@ -72,7 +72,7 @@ and any other individual with the same type is chosen for duplication. A direct 
 This would require at least \(N^2 + N\) calculations. 
 However, we can observe that a transition of some sort must occur, and so we simply take the probability of not transitioning to any \textbf{different} state as \(P_{v,v}\).\\
 
-An important case which proceeds from (\ref{eqn:(1)}) is that of a transition \(v \to u\) where \(u\) contains an individual of a \textit{type} not found in \(v\). For example, the transition (0,1) $\to$ (0,2). This would be forbidden by the intuition of a standard Moran process - i.e the new individual being the duplication of another individual in \(v\). However, we can see that the standard formula yields \(p_{v,u}\) = 0 because \(\nexists\) \(v_i \in V: v_i = u_{i^*}\). Following this, we see that (\ref{eqn:(1)}) also correctly gives us \(p_{v,u}\) = 0 for any \textbf{absorbing} \(v \neq u\).\\
+An important case which proceeds from (\ref{eqn:Probability Function}) is that of a transition \(v \to u\) where \(u\) contains an individual of a \textit{type} not found in \(v\). For example, the transition (0,1) $\to$ (0,2). This would be forbidden by the intuition of a standard Moran process - i.e the new individual being the duplication of another individual in \(v\). However, we can see that the standard formula yields \(p_{v,u}\) = 0 because \(\nexists\) \(v_i \in V: v_i = u_{i^*}\). Following this, we see that (\ref{eqn:(1)}) also correctly gives us \(p_{v,u}\) = 0 for any \textbf{absorbing} \(v \neq u\).\\
 
 This model allows for heterogeneity as we have a fitness function dependent on the individual, not dependent on the action taken. Therefore, we can give different individuals of the same action type a different fitness by passing different attributes to the fitness function itself. We will see examples of this in future sections.\\
 
@@ -81,8 +81,8 @@ As this forms a Markov chain, we can therefore define a transition matrix \(T\) 
 Given a transition matrix \(T\), we can calculate the state distribution after \(k\) iterations of the Moran process using the formula \(T^k\)  \cite{Markov_Chain}. Therefore, as \(k \to \infty\), we will clearly acquire a distribution that tends towards the absorption probabilities for a given starting state, as the process will stabilise only if we enter an absorbing state (while subsets of \(S\) of states may have extremely high probabilities of transitioning to each other, the only way to have certainty of not transitioning away from a state or pair of states is to be in one of the previously defined absorbing states.)\\
 Thus, our absorption probabilities starting at are given by the non-zero entries in the matrix \(\lim_{k \to \infty} T^k\)
 
-\section{A Classic Public Goods Game}
-\subsection{The Standard Model}
+\section{The General Heterogenous Public Goods Game}
+\subsection{The Standard Model and Transformations}
 
 In this section, we shall see how this model can be applied to the classical public goods game. In this game, individuals choose whether or not to contribute to a public resource pool. In the end, the total resource is multiplied by some factor \(r > 1\) and distributed equally between each player. This model often encourages a behaviour known as ``free-riding" \cite{Climate Clubs}, where players refuse to contribute to the pool and simply take the benefit provided by other individuals' contribution. The classic problem of a public goods game is to provide an environment where such free-riding is not a profitable strategy - or rather, is less profitable than contributing to the public good.\\
 
@@ -90,29 +90,33 @@ In our model, we can simulate a public goods game by providing the following pay
 \begin{large}
 \begin{equation}
     B(v_i) = \frac{r\sum_{j=1}^N{C_{v_j}}}{N} - C_{v_i}
+    \label{eqn:General Model}
 \end{equation}
 \end{large}\\
 (where \(C_{v_j}\) is the contribution by individual j.) 
 
 In the homogeneous public goods game, we can see that \(C_{v_j}\) can only take one of two values: some constant \(\alpha \) if individual j cooperates, and 0 if not. However, the heterogeneous game will require a more tailored \(C_{v_j}\).\\
 
-Now, \(B(v_j)\) can give us negative values. This can cause issues in our model as there is the potential for \(p_{v,u}\) to be negative for some states if we took \(B\) as our fitness function. Therefore, we must look at some transformation of \(B\) to use as our fitness function.\\
+Note that \(B(v_j)\) can be negative which would then not lead to sensible probability values as needed in~\ref{eqn:Probability Function}. Therefore, we must look at some transformation of \(B\) to use as our fitness function.\\
 
-A common method \cite{Nowak 2006} for this is to apply the exponential function to our payoff function. By using \(e^{\kappa B}\) as our fitness function, we do indeed guarantee ourselves a positive function, however other problems arrive. If we look at the formula for \(B(v_j)\), and consider the transition probability:
-
-\begin{large}
-    \begin{equation}
-        \frac{\sum_{v_i = u_{i^*}}{e^{\frac{r\sum_{j=1}^N{C_{v_j}}}{N} - C_{v_i}}}}{\sum_{v_i}e^{\frac{r\sum_{j=1}^N{C_{v_j}}}{N} - C_{v_i}}}
-    \end{equation}
-\end{large}\\
-
-Now, as \(e^r\) does not rely on v, we can take this out of the sum and acquire the following:
+A common method \cite{Nowak 2006} for this is to apply the exponential function to our payoff function. By using \(e^{\kappa B}\) as our fitness function we will have positive values, however this particular approach  gives:
 
 \begin{large}
     \begin{equation}
-        \frac{e^{\frac{r\sum_{j=1}^N{C_{v_j}}}{N}}\sum_{v_i = u_{i^*}}{e^{ - C_{v_i}}}}{e^{\frac{r\sum_{j=1}^N{C_{v_j}}}{N}}\sum_{v_i}e^{-C_{v_i}}} = \frac{\sum_{v_i = u_{i^*}}{e^{ - C_{v_i}}}}{\sum_{v_i}e^{-C_{v_i}}}
+        \frac{\sum_{v_i = u_{i^*}}{e^{\frac{\kappa r\sum_{j=1}^N{C_{v_j}}}{N} - C_{v_i}}}}{\sum_{v_i}e^{\frac{\kappa r\sum_{j=1}^N{C_{v_j}}}{N} - C_{v_i}}}
     \end{equation}
 \end{large}\\
+
+Now, as \(e^r\) does not rely on \(v\), we can take this out of the sum and acquire the following:
+
+\begin{large}
+    \begin{equation}
+        \frac{e^{\frac{\kappa r\sum_{j=1}^N{C_{v_j}}}{N}}\sum_{v_i = u_{i^*}}{e^{ - C_{v_i}}}}{e^{\frac{\kappa r\sum_{j=1}^N{C_{v_j}}}{N}}\sum_{v_i}e^{-C_{v_i}}} = \frac{\sum_{v_i = u_{i^*}}{e^{ - C_{v_i}}}}{\sum_{v_i}e^{-C_{v_i}}}
+    \end{equation}
+\end{large}\\
+
+and we see that in this case, \(p_{v,u}\) would not rely on \(r\). Therefore, let us consider some other methods of guarenteeing a positive fitness function.
+
 
 
 \subsection{Numerical Examples}

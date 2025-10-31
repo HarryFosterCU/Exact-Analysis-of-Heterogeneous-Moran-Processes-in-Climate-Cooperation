@@ -548,3 +548,93 @@ def test_generate_transition_matrix_for_kwargs_fitness_function():
             state_space=state_space, fitness_function=kwargs_fitness_function, c=c, r=r
         ),
     )
+
+
+def test_get_absorbing_state_index_for_N_eq_2_k_eq_4():
+    """
+    Tests that get_absorbing_state_index correctly identifies
+
+    the absorbing states in a standard state space"""
+
+    state_space = np.array(
+        [
+            [0, 0],
+            [0, 1],
+            [0, 2],
+            [0, 3],
+            [1, 0],
+            [1, 1],
+            [1, 2],
+            [1, 3],
+            [2, 0],
+            [2, 1],
+            [2, 2],
+            [2, 3],
+            [3, 0],
+            [3, 1],
+            [3, 2],
+            [3, 3],
+        ]
+    )
+
+    expected_absorbing_states = np.array([0, 5, 10, 15])
+
+    np.testing.assert_array_equal(
+        expected_absorbing_states,
+        main.get_absorbing_state_index(state_space=state_space),
+    )
+
+
+def test_get_absorbing_state_index_for_no_absorbing_states():
+    """
+    Tests that get_absorbing_state_index correctly identifies
+
+    that there are no absorbing states in a given state
+
+    space"""
+
+    non_absorbing_state_space = np.array(
+        [
+            [0, 1],
+            [0, 2],
+            [0, 3],
+            [1, 0],
+            [1, 2],
+            [1, 3],
+            [2, 0],
+            [2, 1],
+            [2, 3],
+            [3, 0],
+            [3, 1],
+            [3, 2],
+        ]
+    )
+
+    expected_absorbing_states = None
+
+    assert expected_absorbing_states == main.get_absorbing_state_index(
+        state_space=non_absorbing_state_space
+    )
+
+
+def test_get_absorbing_state_index_for_symbolic_state_space():
+    """Tests the get_absorbing_state_index function for
+    a symbolic state space."""
+
+    A = sym.Symbol("A")
+    B = sym.Symbol("B")
+
+    symbolic_state_space = np.array(
+        [
+            [A, B],
+            [A, A],
+            [B, B],
+            [B, A],
+        ]
+    )
+
+    expected_absorbing_states = np.array([1, 2])
+    np.testing.assert_array_equal(
+        expected_absorbing_states,
+        main.get_absorbing_state_index(state_space=symbolic_state_space),
+    )

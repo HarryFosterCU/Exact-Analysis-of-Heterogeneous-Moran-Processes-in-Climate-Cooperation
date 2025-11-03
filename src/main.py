@@ -27,7 +27,9 @@ def get_state_space(N, k):
 
     Returns:
     --------
-    Array of possible states within the system
+    Array of possible states within the system, sorted based on the
+
+    total values of the rows, in order to ensure a consistent result 
     """
     unsorted_state_space = np.array(list(itertools.product(range(k), repeat=N)))
 
@@ -160,7 +162,7 @@ def get_absorbing_states(state_space):
     )
 
 
-def get_absorption_probabilities(transition_matrix, state_space):
+def get_absorption_probabilities(transition_matrix, state_space, exponent_coefficient):
     """Given a transition matrix and a corresponding state space
 
     generate the absorption probabilities. This does not yet support a
@@ -178,20 +180,14 @@ def get_absorption_probabilities(transition_matrix, state_space):
     dictionary of values: tuple([starting state]): [[absorbing state 1, absorption probability 1], [absorbing state 2, absorption probability 2]]
     """
 
-    # get absorption indexes
-    # get absorption probabilities per index per starting state
-    # formulate dictionary
-
     absorption_index = get_absorbing_state_index(state_space=state_space)
-    absorbing_states = get_absorbing_states(state_space=state_space)
 
-    absorbing_transition_matrix = np.linalg.matrix_power(transition_matrix, 50)
-    # this method of getting absorption probabilities will change, but we need to set up benchmarks first
+    absorbing_transition_matrix = np.linalg.matrix_power(transition_matrix, exponent_coefficient)
+    # TODO this method of getting absorption probabilities will change, but we need to set up benchmarks first
 
     absorbing_collums = np.array(
         [absorbing_transition_matrix[:, index] for index in absorption_index]
     )
-    # returns a numpy.array of the absorption probabilities for each absorbing state
 
     combined_values = np.array(
         [

@@ -4,6 +4,8 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{graphicx}
+\graphicspath{{../Figures/}}
 
 \title{A Heterogeneous Moran Process for the Analysis of Public Goods Games}
 \author{Vince Knight and Harry Foster}
@@ -44,7 +46,7 @@ In this section, we will look at the underlying model of the heterogeneous Moran
     \item A strictly positive fitness function \(f:S \to \mathbb{R}^N\)
 \end{itemize}
 
-Let $h(v,u)$ denote the Hamming distance~\cite{Hamming_Distance} between two states \(v, u \in S\). We consider a Markov chain~\cite{Markov_Chain}, where for the transition $V = (v_1, v_2, \dots, v_N) \to U = (u_1, u_2, \dots, u_N)$, the 
+Let $h(v,u)$ denote the Hamming distance~\cite{Hamming_Distance} between two states \(v, u \in S\). We consider a Markov chain~\cite{Markov_Chain}, where for the transition $v = (v_1, v_2, \dots, v_N) \to u = (u_1, u_2, \dots, u_N)$, the 
 transition probability is defined as follows:\\
 \begin{large}
     \begin{equation}
@@ -54,7 +56,7 @@ transition probability is defined as follows:\\
             0 & \text{if }h(v,u) > 1\\
             1 - \sum_{u \in S \setminus \text{\{v\}}}{P_{v,u}} & \text{if }h(v,u) = 0
         \end{cases}
-    \label{eqn:Probability Function}
+    \label{eqn:Probability_Function}
     \end{equation}
 \end{large}
 
@@ -72,7 +74,7 @@ and any other individual with the same type is chosen for duplication. A direct 
 This would require at least \(N^2 + N\) calculations. 
 However, we can observe that a transition of some sort must occur, and so we simply take the probability of not transitioning to any \textbf{different} state as \(P_{v,v}\).\\
 
-An important case which proceeds from (\ref{eqn:Probability Function}) is that of a transition \(v \to u\) where \(u\) contains an individual of a \textit{type} not found in \(v\). For example, the transition (0,1) $\to$ (0,2). This would be forbidden by the intuition of a standard Moran process - i.e the new individual being the duplication of another individual in \(v\). However, we can see that the standard formula yields \(p_{v,u}\) = 0 because \(\nexists\) \(v_i \in V: v_i = u_{i^*}\). Following this, we see that (\ref{eqn:(1)}) also correctly gives us \(p_{v,u}\) = 0 for any \textbf{absorbing} \(v \neq u\).\\
+An important case which proceeds from (\ref{eqn:Probability Function}) is that of a transition \(v \to u\) where \(u\) contains an individual of a \textit{type} not found in \(v\). For example, the transition (0,1) $\to$ (0,2). This would be forbidden by the intuition of a standard Moran process - i.e the new individual being the duplication of another individual in \(v\). However, we can see that the standard formula yields \(p_{v,u}\) = 0 because \(\nexists\) \(v_i \in V: v_i = u_{i^*}\). Following this, we see that (\ref{eqn:Probability}) also correctly gives us \(p_{v,u}\) = 0 for any \textbf{absorbing} \(v \neq u\).\\
 
 This model allows for heterogeneity as we have a fitness function dependent on the individual, not dependent on the action taken. Therefore, we can give different individuals of the same action type a different fitness by passing different attributes to the fitness function itself. We will see examples of this in future sections.\\
 
@@ -89,7 +91,7 @@ In this section, we shall see how this model can be applied to the classical pub
 In our model, we can simulate a public goods game by providing the following payoff function:\\
 \begin{large}
 \begin{equation}
-    B(v_i) = \frac{r\sum_{j=1}^N{C_{v_j}}}{N} - C_{v_i}
+    \sigma(v_i) = \frac{r\sum_{j=1}^N{C_{v_j}}}{N} - C_{v_i}
     \label{eqn:General Model}
 \end{equation}
 \end{large}\\
@@ -97,9 +99,9 @@ In our model, we can simulate a public goods game by providing the following pay
 
 In the homogeneous public goods game, we can see that \(C_{v_j}\) can only take one of two values: some constant \(\alpha \) if individual j cooperates, and 0 if not. However, the heterogeneous game will require a more tailored \(C_{v_j}\).\\
 
-Note that \(B(v_j)\) can be negative which would then not lead to sensible probability values as needed in~\ref{eqn:Probability Function}. Therefore, we must look at some transformation of \(B\) to use as our fitness function.\\
+Note that \(\sigma(v_j)\) can be negative which would then not lead to sensible probability values as needed in~\ref{eqn:Probability Function}. Therefore, we must look at some transformation of \(\sigma\) to use as our fitness function.\\
 
-A common method \cite{Nowak 2006} for this is to apply the exponential function to our payoff function. By using \(e^{\kappa B}\) as our fitness function we will have positive values, however this particular approach  gives:
+A common method \cite{Nowak 2006} for this is to apply the exponential function to our payoff function. By using \(e^{\kappa \sigma}\) as our fitness function we will have positive values, however this particular approach  gives:
 
 \begin{large}
     \begin{equation}
@@ -115,25 +117,77 @@ Now, as \(e^r\) does not rely on \(v\), we can take this out of the sum and acqu
     \end{equation}
 \end{large}\\
 
-and we see that in this case, \(p_{v,u}\) would not rely on \(r\). Therefore, let us consider some other methods of guarenteeing a positive fitness function.
+and we see that in this case, \(p_{v,u}\) would not rely on \(r\). 
+Therefore, let us consider some other methods of guaranteeing a positive fitness function.\\
+
+The first of these is known as the "shifted linear" transformation. We take, for some small tunable \(\epsilon\):
+\begin{large}
+    \begin{equation}
+        f(v_i) = \sigma(v_i) - \min_{v_j \in v} \sigma(v_j) + \epsilon
+    \end{equation}
+    \label{eqn:Shifted_linear}
+\end{large}
+This guarantees a positive value, with the lowest fitness taking the value \(\epsilon\), a parameter that can be chosen based on the system in question.\\
+
+Another type of mapping that we can use is the ``Affine-linear mapping". In this, for some tunable \(\epsilon\), we take the following:\\
+
+\begin{large}
+    \begin{equation}
+        f(v_i) = 1 + \epsilon\sigma(v_i)
+    \end{equation}
+    \label{eqn:Affine-linear}
+\end{large}\\
 
 
 
-\subsection{Numerical Examples}
 
+\subsection{The Homogeneous Case}
+The most common type of public goods game is the homogeneous public goods game.
+In this game, we consider that we have a constant \(C_{v_i} = \alpha\) for all players \(v_i\).
+In this case, we take the payoff function:
+\begin{large}
+    \begin{equation}
+        \sigma(v_i) = \frac{r\sum_{j=1}^N{k_j\alpha}}{N} - k_i\alpha = (Kr-k_i)\alpha
+    \end{equation}
+    \label{eqn:Homogeneous_fitness}
+\end{large}\\
+Where \(k_j = 1\) if j contributes and 0 if not, and \(K\) is the fraction of the population who contribute.\\
 
+However, we cannot use \ref{eqn:Shifted_linear} transformation or else we once again run into a problem with too many factors cancelling down and becoming unreliant on \(r\):
 
+\begin{large}
+    \begin{equation}
+        \begin{split}
+        (K * r - k_i)\alpha - \min_j(K * r  - k_j)\alpha + \epsilon 
+        = (1 - k_i)\alpha + \epsilon = \begin{cases}
+            \epsilon & \text{if \(v_i\) contributes}\\
+            \alpha + \epsilon & \text{if not}
+        \end{cases}
+        \end{split}
+    \end{equation}
+    \label{eqn:Homogeneous_fitness}
+\end{large}\\
+
+Not only does our choice of \(\epsilon\) become too powerful, but also we cancel out all reliance on \(r\)\\
+
+Therefore, we take the affine-linear mapping shown in \ref{eqn:Affine-linear} in order to see our fixation probabilities.
+
+We will begin by looking at the state space with \(N=4\) and see how cooperation emerges based on different values of \(r \text{ and } \alpha\).
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=1\linewidth]{Homogeneous_Fixation_Probabilities_Both.png}
+    \caption{Fixation probabilities in the homogeneous case. Here we take }
+    \label{fig:Homogeneous_Fixation_Probability_Examples}
+\end{figure}
+
+\newpage
 \section{Public Goods Games with Heterogeneous Returns}
 
 When we look at a public goods game, we often generalise the players to all receive the same return. However, in the real world this is often not the case. 
 
 
-
-\section{Notes}
-In the heterogeneous case how do we define such an \(\alpha\) for the fitness function? Well, for such a case we must define \(\alpha = \min_{j}(C_{v_j})\). This similarly guarantees the positive fitness function, and has similar properties to the homogeneous case. 
-
-
-
+\newpage
 \begin{thebibliography}{9}
 \bibitem{IPD1}
 Vince Knight, Marc Harper, Nikoleta Glynatsi et al (2024) - Recognising and evaluating the effectiveness of extortion in the Iterated Prisoner’s Dilemma
@@ -151,7 +205,7 @@ Lucas S. Flores et al (2023) - Heterogeneous contributions can jeopardize cooper
 Dave K. Kythe, Prem K. Kythe (2012) - Algebraic and Stochastic Coding Theory
 \bibitem{Markov_Chain}
 William J. Stewart (2009) - Probability, Markov Chains, Queues, and Simulation: The Mathematical Basis of Performance Modeling
-\bibitem{Climate_Clubs}
+\bibitem{Climate Clubs}
 William Nordhaus (2015) - Climate Clubs: Overcoming Free-riding in International Climate Policy
 \bibitem{Nowak 2006}
 Martin A. Nowak (2006) - Evolutionary Dynamics: Exploring the Equations of Life

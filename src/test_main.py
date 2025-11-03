@@ -706,12 +706,8 @@ def test_get_absorbing_states_for_no_absorbing_states():
         ]
     )
 
-    expected_absorbing_states = None
 
-    np.testing.assert_array_equal(
-        expected_absorbing_states,
-        main.get_absorbing_states(state_space=non_absorbing_state_space),
-    )
+    assert main.get_absorbing_states(state_space=non_absorbing_state_space) is None
 
 
 def test_get_absorbing_states_for_symbolic_state_space():
@@ -771,7 +767,9 @@ def test_get_absorption_probabilities_for_trivial_transition_matrix_and_standard
     }
 
     actual = main.get_absorption_probabilities(
-        transition_matrix=transition_matrix, state_space=state_space
+        transition_matrix=transition_matrix, 
+        state_space=state_space,
+        exponent_coefficient=50,
     )
 
     for key in expected:

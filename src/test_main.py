@@ -706,7 +706,6 @@ def test_get_absorbing_states_for_no_absorbing_states():
         ]
     )
 
-
     assert main.get_absorbing_states(state_space=non_absorbing_state_space) is None
 
 
@@ -767,7 +766,7 @@ def test_get_absorption_probabilities_for_trivial_transition_matrix_and_standard
     }
 
     actual = main.get_absorption_probabilities(
-        transition_matrix=transition_matrix, 
+        transition_matrix=transition_matrix,
         state_space=state_space,
         exponent_coefficient=50,
     )

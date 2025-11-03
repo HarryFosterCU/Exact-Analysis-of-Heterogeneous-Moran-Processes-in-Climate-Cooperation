@@ -29,7 +29,7 @@ def get_state_space(N, k):
     --------
     Array of possible states within the system, sorted based on the
 
-    total values of the rows, in order to ensure a consistent result 
+    total values of the rows, in order to ensure a consistent result
     """
     unsorted_state_space = np.array(list(itertools.product(range(k), repeat=N)))
 
@@ -182,7 +182,9 @@ def get_absorption_probabilities(transition_matrix, state_space, exponent_coeffi
 
     absorption_index = get_absorbing_state_index(state_space=state_space)
 
-    absorbing_transition_matrix = np.linalg.matrix_power(transition_matrix, exponent_coefficient)
+    absorbing_transition_matrix = np.linalg.matrix_power(
+        transition_matrix, exponent_coefficient
+    )
     # TODO this method of getting absorption probabilities will change, but we need to set up benchmarks first
 
     absorbing_collums = np.array(

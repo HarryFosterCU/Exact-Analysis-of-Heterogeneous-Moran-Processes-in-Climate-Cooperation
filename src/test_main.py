@@ -952,11 +952,11 @@ def test_extract_R_symbolic_for_purely_symbolic_transition_matrix():
     )
 
 
-def test_generate_absorption_matrix_for_numeric_transition_matrix():
+def test_generate_absorption_matrix_numerical_for_numeric_transition_matrix():
     """
-    Tests the generate_absorption_matrix function for an entirely numeric
+    Tests the generate_absorption_matrix_numerical function for an entirely 
 
-    transition matrix"""
+    numeric transition matrix"""
 
     transition_matrix = np.array(
         [
@@ -977,7 +977,7 @@ def test_generate_absorption_matrix_for_numeric_transition_matrix():
 
 def test_generate_absorption_matrix_symbolic_for_symbolic_transition_matrix():
     """
-    Tests the generate_absorption_matrix function for an entirely numeric
+    Tests the generate_absorption_matrix_symbolic function for an symbolic
 
     transition matrix"""
 
@@ -999,4 +999,53 @@ def test_generate_absorption_matrix_symbolic_for_symbolic_transition_matrix():
     np.testing.assert_array_almost_equal(
         expected_absorption_matrix,
         main.generate_absorption_matrix_symbolic(transition_matrix=transition_matrix),
+    )
+
+
+def test_generate_absorption_matrix_for_numeric_transition_matrix():
+    """
+    Tests the generate_absorption_matrix function for an entirely 
+
+    numeric transition matrix"""
+
+    transition_matrix = np.array(
+        [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0.25, 0.75, 0],
+            [0.3, 0, 0, 0.7],
+        ]
+    )
+
+    expected_absorption_matrix = np.array([[0, 1], [1, 0]])
+
+    np.testing.assert_array_almost_equal(
+        expected_absorption_matrix,
+        main.generate_absorption_matrix(transition_matrix=transition_matrix),
+    )
+
+def test_generate_absorption_matrix_for_symbolic_transition_matrix():
+    """
+    Tests the generate_absorption_matrix function for a symbolic
+
+    transition matrix"""
+
+    A = sym.Symbol("A")
+    B = sym.Symbol("B")
+    C = sym.Symbol("C")
+
+    transition_matrix = np.array(
+        [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, A, B, 0],
+            [C, C, 0, 0],
+        ]
+    )
+
+    expected_absorption_matrix = np.array([[0, A / (1 - B)], [C, C]])
+
+    np.testing.assert_array_almost_equal(
+        expected_absorption_matrix,
+        main.generate_absorption_matrix(transition_matrix=transition_matrix, symbolic=True),
     )

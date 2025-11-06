@@ -13,6 +13,7 @@ There is also a fitness function f: S -> $R^N$, giving us an array of the fitnes
 import itertools
 import numpy as np
 import sympy as sym
+import scipy
 
 
 def get_state_space(N, k):
@@ -31,13 +32,9 @@ def get_state_space(N, k):
 
     total values of the rows, in order to ensure a consistent result
     """
-    unsorted_state_space = np.array(list(itertools.product(range(k), repeat=N)))
+    state_space = np.array(list(itertools.product(range(k), repeat=N)))
 
-    sorted_state_space = unsorted_state_space[
-        np.argsort(unsorted_state_space.sum(axis=1))
-    ]
-
-    return sorted_state_space
+    return state_space
 
 
 def compute_transition_probability(source, target, fitness_function, **kwargs):
@@ -162,7 +159,9 @@ def get_absorbing_states(state_space):
     )
 
 
-def get_absorption_probabilities(transition_matrix, state_space, exponent_coefficient):
+def get_absorption_probabilities(
+    transition_matrix, state_space, exponent_coefficient=50
+):
     """Given a transition matrix and a corresponding state space
 
     generate the absorption probabilities. This does not yet support a
@@ -185,6 +184,7 @@ def get_absorption_probabilities(transition_matrix, state_space, exponent_coeffi
     absorbing_transition_matrix = np.linalg.matrix_power(
         transition_matrix, exponent_coefficient
     )
+
     # TODO this method of getting absorption probabilities will change, but we need to set up benchmarks first
 
     absorbing_collums = np.array(
@@ -202,3 +202,157 @@ def get_absorption_probabilities(transition_matrix, state_space, exponent_coeffi
         state_index: combined_values[state_index]
         for state_index, state in enumerate(state_space)
     }
+
+
+def extract_Q(transition_matrix):
+    """
+    For a transition matrix, compute the corresponding matrix Q
+
+    Parameters
+    ----------
+    transition_matrix: numpy.array, the transition matrix
+
+    Returns
+    -------
+    np.array, the matrix Q
+    """
+    indices_without_1_in_diagonal = np.where(transition_matrix.diagonal() != 1)[0]
+    Q = transition_matrix[
+        indices_without_1_in_diagonal.reshape(-1, 1), indices_without_1_in_diagonal
+    ]
+    return Q
+
+
+def extract_R_numerical(transition_matrix):
+    """
+    For a transition matrix, compute the corresponding matrix R
+
+    Parameters
+    ----------
+    transition_matrix: numpy.array, the transition matrix
+
+    Returns
+    ----------
+    np.array, the matrix R
+    """
+
+    absorbing_states = np.isclose(np.diag(transition_matrix), 1.0)
+    non_absorbing_states = ~absorbing_states
+    R = transition_matrix[np.ix_(non_absorbing_states, absorbing_states)]
+
+    return R
+
+
+def extract_R_symbolic(transition_matrix):
+
+    n = transition_matrix.shape[0]
+
+    absorbing_states = np.array(
+        [sym.simplify(transition_matrix[i, i] - 1) == 0 for i in range(n)], dtype=bool
+    )
+
+    non_absorbing_states = ~absorbing_states
+
+    R = transition_matrix[np.ix_(non_absorbing_states, absorbing_states)]
+
+    return R
+
+
+def generate_absorption_matrix_numerical(transition_matrix):
+    """
+    Given a transition matrix, NOT allowing for symbolic values,
+
+    returns the absorption matrix
+
+
+    Parameters:
+    ------------
+
+    transition_matrix: numpy.array: a transition matrix with no symbolic values
+
+
+    Returns:
+    -----------
+
+    numpy.array: the probability of transitioning from
+
+    each transitive state (row) to each absorbing state(column).
+    """
+
+    Q = extract_Q(transition_matrix=transition_matrix)
+
+    R = extract_R_numerical(transition_matrix=transition_matrix)
+
+    B = scipy.linalg.solve(np.eye(Q.shape[0]) - Q, R)
+
+    return B
+
+
+def generate_absorption_matrix_symbolic(transition_matrix):
+    """
+    Given a transition matrix, allowing for symbolic values,
+
+    returns the absorption matrix
+
+
+    Parameters:
+    ------------
+
+    transition_matrix: numpy.array: a transition matrix allowing for symbolic
+
+    values, that has at least 1 symbolic value.
+
+    symbolic: boolean, states whether symbolic values appear in the matrix
+
+
+    Returns:
+    -----------
+
+    numpy.array: the probability of transitioning from
+
+    each transitive state (row) to each absorbing state(column).
+    """
+
+    Q = extract_Q(transition_matrix=transition_matrix)
+
+    R = extract_R_symbolic(transition_matrix=transition_matrix)
+
+    Q_symbolic = sym.Matrix(Q)
+    R_symbolic = sym.Matrix(R)
+
+    I = sym.eye(Q_symbolic.shape[0])
+    B = (I - Q_symbolic).inv() * R_symbolic
+
+    return np.array(B)
+
+
+def generate_absorption_matrix(transition_matrix, symbolic=False):
+    """
+    Given a transition matrix, calls the correct function for finding
+
+    the absorption matrix.
+
+    Parameters:
+    --------------
+
+    transition_matrix: numpy.array, the transition matrix
+
+    symbolic: bool, whether or not the transition matrix has any symbolic
+
+    (sympy) values
+
+    Returns:
+    ------------
+
+    numpy.array, the absorption probabilities in the form:
+
+    entry i,j = probability of transitive state i being absorbed into
+
+    absorbing state j
+    """
+
+    if symbolic == False:
+
+        return generate_absorption_matrix_numerical(transition_matrix=transition_matrix)
+
+    return generate_absorption_matrix_symbolic(transition_matrix=transition_matrix)

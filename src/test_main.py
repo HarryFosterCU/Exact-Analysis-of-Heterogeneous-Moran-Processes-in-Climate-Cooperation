@@ -3,72 +3,6 @@ import numpy as np
 import sympy as sym
 
 
-def test_generate_state_space_for_N_eq_3_and_k_eq_2():
-    """
-    Given a value of $N$: the number of individuals and a value of $k$: the
-    number of types generate $S = [1, ..., k] ^ N$.
-
-    This tests this for N = 3, k = 2.
-    """
-    k = 2
-    N = 3
-    expected_state_space = np.array(
-        [
-            (0, 0, 1),
-            (0, 1, 0),
-            (1, 0, 0),
-            (0, 1, 1),
-            (1, 0, 1),
-            (1, 1, 0),
-            (0, 0, 0),
-            (1, 1, 1),
-        ]
-    )
-    obtained_state_space = main.get_state_space(N=N, k=k)
-    np.testing.assert_array_equal(
-        sorted(tuple(x) for x in obtained_state_space),
-        sorted(tuple(x) for x in expected_state_space),
-    )
-
-
-def test_generate_state_space_for_N_eq_3_and_k_eq_1():
-    """
-    Given a value of $N$: the number of individuals and a value of $k$: the
-    number of types generate $S = [1, ..., k] ^ N$.
-
-    This tests this for N = 3, k = 1.
-    """
-    k = 1
-    N = 3
-    expected_state_space = [
-        (0, 0, 0),
-    ]
-    obtained_state_space = main.get_state_space(N=N, k=k)
-    np.testing.assert_allclose(
-        sorted(expected_state_space), sorted(obtained_state_space)
-    )
-
-
-def test_generate_state_space_for_N_eq_1_and_k_eq_3():
-    """
-    Given a value of $N$: the number of individuals and a value of $k$: the
-    number of types generate $S = [1, ..., k] ^ N$.
-
-    This tests this for N = 1, k = 3.
-    """
-    k = 3
-    N = 1
-    expected_state_space = [
-        (0,),
-        (1,),
-        (2,),
-    ]
-    obtained_state_space = main.get_state_space(N=N, k=k)
-    np.testing.assert_allclose(
-        sorted(expected_state_space), sorted(obtained_state_space)
-    )
-
-
 def test_compute_transition_probability_for_trivial_fitness_function():
     """
     Tests whether the compute_transition_probability
@@ -333,6 +267,72 @@ def test_compute_transition_probability_for_kwargs_fitness_function():
             r=r,
         )
         == expected_transition_probability
+    )
+
+
+def test_generate_state_space_for_N_eq_3_and_k_eq_2():
+    """
+    Given a value of $N$: the number of individuals and a value of $k$: the
+    number of types generate $S = [1, ..., k] ^ N$.
+
+    This tests this for N = 3, k = 2.
+    """
+    k = 2
+    N = 3
+    expected_state_space = np.array(
+        [
+            (0, 0, 1),
+            (0, 1, 0),
+            (1, 0, 0),
+            (0, 1, 1),
+            (1, 0, 1),
+            (1, 1, 0),
+            (0, 0, 0),
+            (1, 1, 1),
+        ]
+    )
+    obtained_state_space = main.get_state_space(N=N, k=k)
+    np.testing.assert_array_equal(
+        sorted(tuple(x) for x in obtained_state_space),
+        sorted(tuple(x) for x in expected_state_space),
+    )
+
+
+def test_generate_state_space_for_N_eq_3_and_k_eq_1():
+    """
+    Given a value of $N$: the number of individuals and a value of $k$: the
+    number of types generate $S = [1, ..., k] ^ N$.
+
+    This tests this for N = 3, k = 1.
+    """
+    k = 1
+    N = 3
+    expected_state_space = [
+        (0, 0, 0),
+    ]
+    obtained_state_space = main.get_state_space(N=N, k=k)
+    np.testing.assert_allclose(
+        sorted(expected_state_space), sorted(obtained_state_space)
+    )
+
+
+def test_generate_state_space_for_N_eq_1_and_k_eq_3():
+    """
+    Given a value of $N$: the number of individuals and a value of $k$: the
+    number of types generate $S = [1, ..., k] ^ N$.
+
+    This tests this for N = 1, k = 3.
+    """
+    k = 3
+    N = 1
+    expected_state_space = [
+        (0,),
+        (1,),
+        (2,),
+    ]
+    obtained_state_space = main.get_state_space(N=N, k=k)
+    np.testing.assert_allclose(
+        sorted(expected_state_space), sorted(obtained_state_space)
     )
 
 
@@ -773,3 +773,230 @@ def test_get_absorption_probabilities_for_trivial_transition_matrix_and_standard
 
     for key in expected:
         np.testing.assert_allclose(expected[key], actual[key])
+
+
+def test_extract_Q_for_numeric_transition_matrix():
+    """
+    Tests the extract_Q function for a transition matrix with numeric values
+
+    and no symbolic values. We take N=2 and K=2"""
+
+    transition_matrix = np.array(
+        [
+            [1, 0, 0, 0],
+            [0, 0.25, 0.3, 0.45],
+            [0, 0, 1, 0],
+            [0.25, 0.25, 0.25, 0.25],
+        ]
+    )
+
+    expected_Q = np.array(
+        [
+            [0.25, 0.45],
+            [0.25, 0.25],
+        ]
+    )
+
+    np.testing.assert_array_equal(
+        expected_Q, main.extract_Q(transition_matrix=transition_matrix)
+    )
+
+
+def test_extract_Q_for_symbolic_transition_matrix():
+    """
+    Tests the extract_Q function for a transition matrix with just symbolic values. We take N=2 and K=2
+    """
+
+    A = sym.Symbol("A")
+    B = sym.Symbol("B")
+    C = sym.Symbol("C")
+
+    transition_matrix = np.array(
+        [
+            [1, 0, 0, 0],
+            [0, A, B, B],
+            [0, 0, 1, 0],
+            [C + A, C, B, C + A],
+        ]
+    )
+
+    expected_Q = np.array(
+        [
+            [A, B],
+            [C, C + A],
+        ]
+    )
+
+    np.testing.assert_array_equal(
+        expected_Q, main.extract_Q(transition_matrix=transition_matrix)
+    )
+
+
+def test_extract_Q_for_mixed_transition_matrix():
+    """
+    Tests the extract_Q function for a transition matrix with symbolic values
+
+    and numeric values. We take N=2 and K=2"""
+
+    A = sym.Symbol("A")
+    B = sym.Symbol("B")
+    C = sym.Symbol("C")
+
+    transition_matrix = np.array(
+        [
+            [1, 0, 0, 0],
+            [0, A, B, B / 3],
+            [0, 0, 1, 0],
+            [C + A, 0.5, B, C + 0.2],
+        ]
+    )
+
+    expected_Q = np.array(
+        [
+            [A, B / 3],
+            [0.5, C + 0.2],
+        ]
+    )
+
+    np.testing.assert_array_equal(
+        expected_Q, main.extract_Q(transition_matrix=transition_matrix)
+    )
+
+
+def test_extract_R_numerical_for_numeric_transition_matrix():
+    """
+    Tests the extract_R_numerical function for a transition matrix with numeric
+
+    values and no symbolic values. We take N=2 and K=2"""
+
+    transition_matrix = np.array(
+        [
+            [1, 0, 0, 0],
+            [0, 0.25, 0.3, 0.45],
+            [0, 0, 1, 0],
+            [0.25, 0.25, 0.25, 0.25],
+        ]
+    )
+
+    expected_R = np.array(
+        [
+            [0, 0.3],
+            [0.25, 0.25],
+        ]
+    )
+
+    np.testing.assert_array_equal(
+        expected_R, main.extract_R_numerical(transition_matrix=transition_matrix)
+    )
+
+
+def test_extract_R_symbolic_for_mixed_transition_matrix():
+    """
+    Tests the extract_R_symbolic function for a transition matrix with symbolic values
+
+    and numeric values. We take N=2 and K=2"""
+
+    A = sym.Symbol("A")
+    B = sym.Symbol("B")
+    C = sym.Symbol("C")
+
+    transition_matrix = np.array(
+        [
+            [1, 0, 0, 0],
+            [0.5, A, B, B / 3],
+            [0, 0, 1, 0],
+            [C + A, 0.2, 0.3, C],
+        ]
+    )
+
+    expected_R = np.array(
+        [
+            [0.5, B],
+            [C + A, 0.3],
+        ]
+    )
+
+    np.testing.assert_array_equal(
+        expected_R, main.extract_R_symbolic(transition_matrix=transition_matrix)
+    )
+
+
+def test_extract_R_symbolic_for_purely_symbolic_transition_matrix():
+    """
+    Tests the extract_Q function for a transition matrix with symbolic values
+
+    and no numeric values. We take N=2 and K=2"""
+
+    A = sym.Symbol("A")
+    B = sym.Symbol("B")
+    C = sym.Symbol("C")
+
+    transition_matrix = np.array(
+        [
+            [1, 0, 0, 0],
+            [0, A, B, B],
+            [0, 0, 1, 0],
+            [C + A, C, B, C + A],
+        ]
+    )
+
+    expected_R = np.array(
+        [
+            [0, B],
+            [C + A, B],
+        ]
+    )
+
+    np.testing.assert_array_equal(
+        expected_R, main.extract_R_symbolic(transition_matrix=transition_matrix)
+    )
+
+
+def test_generate_absorption_matrix_for_numeric_transition_matrix():
+    """
+    Tests the generate_absorption_matrix function for an entirely numeric
+
+    transition matrix"""
+
+    transition_matrix = np.array(
+        [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0.25, 0.75, 0],
+            [0.3, 0, 0, 0.7],
+        ]
+    )
+
+    expected_absorption_matrix = np.array([[0, 1], [1, 0]])
+
+    np.testing.assert_array_almost_equal(
+        expected_absorption_matrix,
+        main.generate_absorption_matrix_numerical(transition_matrix=transition_matrix),
+    )
+
+
+def test_generate_absorption_matrix_symbolic_for_symbolic_transition_matrix():
+    """
+    Tests the generate_absorption_matrix function for an entirely numeric
+
+    transition matrix"""
+
+    A = sym.Symbol("A")
+    B = sym.Symbol("B")
+    C = sym.Symbol("C")
+
+    transition_matrix = np.array(
+        [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, A, B, 0],
+            [C, C, 0, 0],
+        ]
+    )
+
+    expected_absorption_matrix = np.array([[0, A / (1 - B)], [C, C]])
+
+    np.testing.assert_array_almost_equal(
+        expected_absorption_matrix,
+        main.generate_absorption_matrix_symbolic(transition_matrix=transition_matrix),
+    )

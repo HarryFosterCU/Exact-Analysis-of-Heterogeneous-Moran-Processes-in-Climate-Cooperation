@@ -954,7 +954,7 @@ def test_extract_R_symbolic_for_purely_symbolic_transition_matrix():
 
 def test_generate_absorption_matrix_numerical_for_numeric_transition_matrix():
     """
-    Tests the generate_absorption_matrix_numerical function for an entirely 
+    Tests the generate_absorption_matrix_numerical function for an entirely
 
     numeric transition matrix"""
 
@@ -1004,7 +1004,7 @@ def test_generate_absorption_matrix_symbolic_for_symbolic_transition_matrix():
 
 def test_generate_absorption_matrix_for_numeric_transition_matrix():
     """
-    Tests the generate_absorption_matrix function for an entirely 
+    Tests the generate_absorption_matrix function for an entirely
 
     numeric transition matrix"""
 
@@ -1023,6 +1023,7 @@ def test_generate_absorption_matrix_for_numeric_transition_matrix():
         expected_absorption_matrix,
         main.generate_absorption_matrix(transition_matrix=transition_matrix),
     )
+
 
 def test_generate_absorption_matrix_for_symbolic_transition_matrix():
     """
@@ -1047,5 +1048,7 @@ def test_generate_absorption_matrix_for_symbolic_transition_matrix():
 
     np.testing.assert_array_almost_equal(
         expected_absorption_matrix,
-        main.generate_absorption_matrix(transition_matrix=transition_matrix, symbolic=True),
+        main.generate_absorption_matrix(
+            transition_matrix=transition_matrix, symbolic=True
+        ),
     )

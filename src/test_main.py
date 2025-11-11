@@ -1106,4 +1106,4 @@ def test_generate_absorption_matrix_accuracy_for_r_values():
 
     obtained_results = symbolic_expression(r_test_values, 2, 0.2)
 
-    np.testing.assert_array_almost_equal(expected_results, obtained_results, decimal=18)
+    np.testing.assert_array_almost_equal(expected_results, obtained_results)

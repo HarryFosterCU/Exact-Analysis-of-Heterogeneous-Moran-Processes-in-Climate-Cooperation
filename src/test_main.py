@@ -3,72 +3,6 @@ import numpy as np
 import sympy as sym
 
 
-def test_generate_state_space_for_N_eq_3_and_k_eq_2():
-    """
-    Given a value of $N$: the number of individuals and a value of $k$: the
-    number of types generate $S = [1, ..., k] ^ N$.
-
-    This tests this for N = 3, k = 2.
-    """
-    k = 2
-    N = 3
-    expected_state_space = np.array(
-        [
-            (0, 0, 1),
-            (0, 1, 0),
-            (1, 0, 0),
-            (0, 1, 1),
-            (1, 0, 1),
-            (1, 1, 0),
-            (0, 0, 0),
-            (1, 1, 1),
-        ]
-    )
-    obtained_state_space = main.get_state_space(N=N, k=k)
-    np.testing.assert_array_equal(
-        sorted(tuple(x) for x in obtained_state_space),
-        sorted(tuple(x) for x in expected_state_space),
-    )
-
-
-def test_generate_state_space_for_N_eq_3_and_k_eq_1():
-    """
-    Given a value of $N$: the number of individuals and a value of $k$: the
-    number of types generate $S = [1, ..., k] ^ N$.
-
-    This tests this for N = 3, k = 1.
-    """
-    k = 1
-    N = 3
-    expected_state_space = [
-        (0, 0, 0),
-    ]
-    obtained_state_space = main.get_state_space(N=N, k=k)
-    np.testing.assert_allclose(
-        sorted(expected_state_space), sorted(obtained_state_space)
-    )
-
-
-def test_generate_state_space_for_N_eq_1_and_k_eq_3():
-    """
-    Given a value of $N$: the number of individuals and a value of $k$: the
-    number of types generate $S = [1, ..., k] ^ N$.
-
-    This tests this for N = 1, k = 3.
-    """
-    k = 3
-    N = 1
-    expected_state_space = [
-        (0,),
-        (1,),
-        (2,),
-    ]
-    obtained_state_space = main.get_state_space(N=N, k=k)
-    np.testing.assert_allclose(
-        sorted(expected_state_space), sorted(obtained_state_space)
-    )
-
-
 def test_compute_transition_probability_for_trivial_fitness_function():
     """
     Tests whether the compute_transition_probability
@@ -336,6 +270,72 @@ def test_compute_transition_probability_for_kwargs_fitness_function():
     )
 
 
+def test_generate_state_space_for_N_eq_3_and_k_eq_2():
+    """
+    Given a value of $N$: the number of individuals and a value of $k$: the
+    number of types generate $S = [1, ..., k] ^ N$.
+
+    This tests this for N = 3, k = 2.
+    """
+    k = 2
+    N = 3
+    expected_state_space = np.array(
+        [
+            (0, 0, 1),
+            (0, 1, 0),
+            (1, 0, 0),
+            (0, 1, 1),
+            (1, 0, 1),
+            (1, 1, 0),
+            (0, 0, 0),
+            (1, 1, 1),
+        ]
+    )
+    obtained_state_space = main.get_state_space(N=N, k=k)
+    np.testing.assert_array_equal(
+        sorted(tuple(x) for x in obtained_state_space),
+        sorted(tuple(x) for x in expected_state_space),
+    )
+
+
+def test_generate_state_space_for_N_eq_3_and_k_eq_1():
+    """
+    Given a value of $N$: the number of individuals and a value of $k$: the
+    number of types generate $S = [1, ..., k] ^ N$.
+
+    This tests this for N = 3, k = 1.
+    """
+    k = 1
+    N = 3
+    expected_state_space = [
+        (0, 0, 0),
+    ]
+    obtained_state_space = main.get_state_space(N=N, k=k)
+    np.testing.assert_allclose(
+        sorted(expected_state_space), sorted(obtained_state_space)
+    )
+
+
+def test_generate_state_space_for_N_eq_1_and_k_eq_3():
+    """
+    Given a value of $N$: the number of individuals and a value of $k$: the
+    number of types generate $S = [1, ..., k] ^ N$.
+
+    This tests this for N = 1, k = 3.
+    """
+    k = 3
+    N = 1
+    expected_state_space = [
+        (0,),
+        (1,),
+        (2,),
+    ]
+    obtained_state_space = main.get_state_space(N=N, k=k)
+    np.testing.assert_allclose(
+        sorted(expected_state_space), sorted(obtained_state_space)
+    )
+
+
 def test_generate_transition_matrix_for_trivial_fitness_function():
     """
     Tests whether generate_transition_matrix returns the correct matrix
@@ -508,7 +508,9 @@ def test_generate_transition_matrix_for_symbolic_fitness_function():
     )
     np.testing.assert_array_equal(
         main.generate_transition_matrix(
-            state_space=state_space, fitness_function=symbolic_fitness_function
+            state_space=state_space,
+            fitness_function=symbolic_fitness_function,
+            symbolic=True,
         ),
         expected_transition_matrix,
     )
@@ -548,3 +550,560 @@ def test_generate_transition_matrix_for_kwargs_fitness_function():
             state_space=state_space, fitness_function=kwargs_fitness_function, c=c, r=r
         ),
     )
+
+
+def test_get_absorbing_state_index_for_N_eq_2_k_eq_4():
+    """
+    Tests that get_absorbing_state_index correctly identifies
+
+    the absorbing states in a standard state space"""
+
+    state_space = np.array(
+        [
+            [0, 0],
+            [0, 1],
+            [0, 2],
+            [0, 3],
+            [1, 0],
+            [1, 1],
+            [1, 2],
+            [1, 3],
+            [2, 0],
+            [2, 1],
+            [2, 2],
+            [2, 3],
+            [3, 0],
+            [3, 1],
+            [3, 2],
+            [3, 3],
+        ]
+    )
+
+    expected_absorbing_states = np.array([0, 5, 10, 15])
+
+    np.testing.assert_array_equal(
+        expected_absorbing_states,
+        main.get_absorbing_state_index(state_space=state_space),
+    )
+
+
+def test_get_absorbing_state_index_for_no_absorbing_states():
+    """
+    Tests that get_absorbing_state_index correctly identifies
+
+    that there are no absorbing states in a given state
+
+    space"""
+
+    non_absorbing_state_space = np.array(
+        [
+            [0, 1],
+            [0, 2],
+            [0, 3],
+            [1, 0],
+            [1, 2],
+            [1, 3],
+            [2, 0],
+            [2, 1],
+            [2, 3],
+            [3, 0],
+            [3, 1],
+            [3, 2],
+        ]
+    )
+
+    expected_absorbing_states = None
+
+    assert expected_absorbing_states == main.get_absorbing_state_index(
+        state_space=non_absorbing_state_space
+    )
+
+
+def test_get_absorbing_state_index_for_symbolic_state_space():
+    """Tests the get_absorbing_state_index function for
+    a symbolic state space."""
+
+    A = sym.Symbol("A")
+    B = sym.Symbol("B")
+
+    symbolic_state_space = np.array(
+        [
+            [A, B],
+            [A, A],
+            [B, B],
+            [B, A],
+        ]
+    )
+
+    expected_absorbing_states = np.array([1, 2])
+    np.testing.assert_array_equal(
+        expected_absorbing_states,
+        main.get_absorbing_state_index(state_space=symbolic_state_space),
+    )
+
+
+def test_get_absorbing_states_for_standard_state_space():
+    """Tests the get_absorbing_states function
+
+    for a standard state space"""
+
+    state_space = np.array(
+        [
+            [0, 0],
+            [0, 1],
+            [0, 2],
+            [0, 3],
+            [1, 0],
+            [1, 1],
+            [1, 2],
+            [1, 3],
+            [2, 0],
+            [2, 1],
+            [2, 2],
+            [2, 3],
+            [3, 0],
+            [3, 1],
+            [3, 2],
+            [3, 3],
+        ]
+    )
+
+    expected_absorbing_states = np.array(
+        [
+            [0, 0],
+            [1, 1],
+            [2, 2],
+            [3, 3],
+        ]
+    )
+
+    np.testing.assert_array_equal(
+        expected_absorbing_states,
+        main.get_absorbing_states(state_space=state_space),
+    )
+
+
+def test_get_absorbing_states_for_no_absorbing_states():
+    """
+    Tests that get_absorbing_states correctly identifies
+
+    that there are no absorbing states in a given state
+
+    space"""
+
+    non_absorbing_state_space = np.array(
+        [
+            [0, 1],
+            [0, 2],
+            [0, 3],
+            [1, 0],
+            [1, 2],
+            [1, 3],
+            [2, 0],
+            [2, 1],
+            [2, 3],
+            [3, 0],
+            [3, 1],
+            [3, 2],
+        ]
+    )
+
+    assert main.get_absorbing_states(state_space=non_absorbing_state_space) is None
+
+
+def test_get_absorbing_states_for_symbolic_state_space():
+    """Tests the get_absorbing_states function for
+    a symbolic state space."""
+
+    A = sym.Symbol("A")
+    B = sym.Symbol("B")
+
+    symbolic_state_space = np.array(
+        [
+            [A, B],
+            [A, A],
+            [B, B],
+            [B, A],
+        ]
+    )
+    expected_absorbing_states = np.array(
+        [
+            [A, A],
+            [B, B],
+        ]
+    )
+
+    np.testing.assert_array_equal(
+        expected_absorbing_states,
+        main.get_absorbing_states(state_space=symbolic_state_space),
+    )
+
+
+def test_get_absorption_probabilities_for_trivial_transition_matrix_and_standard_state_space():
+    """Tests the get_absorption_probabilities function for a transition matrix that guarentees absorption into a certain absorbing state."""
+
+    state_space = np.array(
+        [
+            [0, 0],
+            [1, 0],
+            [1, 1],
+            [1, 0],
+        ]
+    )
+
+    transition_matrix = np.array(
+        [
+            [1, 0, 0, 0],
+            [1 / 2, 1 / 2, 0, 0],
+            [0, 0, 1, 0],
+            [0, 0, 1 / 2, 1 / 2],
+        ]
+    )
+
+    expected = {
+        0: np.array([0, 1, 2, 0], dtype=float),
+        1: np.array([0, 1, 2, 0], dtype=float),
+        2: np.array([0, 0, 2, 1], dtype=float),
+        3: np.array([0, 0, 2, 1], dtype=float),
+    }
+
+    actual = main.get_absorption_probabilities(
+        transition_matrix=transition_matrix,
+        state_space=state_space,
+        exponent_coefficient=50,
+    )
+
+    for key in expected:
+        np.testing.assert_allclose(expected[key], actual[key])
+
+
+def test_extract_Q_for_numeric_transition_matrix():
+    """
+    Tests the extract_Q function for a transition matrix with numeric values
+
+    and no symbolic values. We take N=2 and K=2"""
+
+    transition_matrix = np.array(
+        [
+            [1, 0, 0, 0],
+            [0, 0.25, 0.3, 0.45],
+            [0, 0, 1, 0],
+            [0.25, 0.25, 0.25, 0.25],
+        ]
+    )
+
+    expected_Q = np.array(
+        [
+            [0.25, 0.45],
+            [0.25, 0.25],
+        ]
+    )
+
+    np.testing.assert_array_equal(
+        expected_Q, main.extract_Q(transition_matrix=transition_matrix)
+    )
+
+
+def test_extract_Q_for_symbolic_transition_matrix():
+    """
+    Tests the extract_Q function for a transition matrix with just symbolic values. We take N=2 and K=2
+    """
+
+    A = sym.Symbol("A")
+    B = sym.Symbol("B")
+    C = sym.Symbol("C")
+
+    transition_matrix = np.array(
+        [
+            [1, 0, 0, 0],
+            [0, A, B, B],
+            [0, 0, 1, 0],
+            [C + A, C, B, C + A],
+        ]
+    )
+
+    expected_Q = np.array(
+        [
+            [A, B],
+            [C, C + A],
+        ]
+    )
+
+    np.testing.assert_array_equal(
+        expected_Q, main.extract_Q(transition_matrix=transition_matrix)
+    )
+
+
+def test_extract_Q_for_mixed_transition_matrix():
+    """
+    Tests the extract_Q function for a transition matrix with symbolic values
+
+    and numeric values. We take N=2 and K=2"""
+
+    A = sym.Symbol("A")
+    B = sym.Symbol("B")
+    C = sym.Symbol("C")
+
+    transition_matrix = np.array(
+        [
+            [1, 0, 0, 0],
+            [0, A, B, B / 3],
+            [0, 0, 1, 0],
+            [C + A, 0.5, B, C + 0.2],
+        ]
+    )
+
+    expected_Q = np.array(
+        [
+            [A, B / 3],
+            [0.5, C + 0.2],
+        ]
+    )
+
+    np.testing.assert_array_equal(
+        expected_Q, main.extract_Q(transition_matrix=transition_matrix)
+    )
+
+
+def test_extract_R_numerical_for_numeric_transition_matrix():
+    """
+    Tests the extract_R_numerical function for a transition matrix with numeric
+
+    values and no symbolic values. We take N=2 and K=2"""
+
+    transition_matrix = np.array(
+        [
+            [1, 0, 0, 0],
+            [0, 0.25, 0.3, 0.45],
+            [0, 0, 1, 0],
+            [0.25, 0.25, 0.25, 0.25],
+        ]
+    )
+
+    expected_R = np.array(
+        [
+            [0, 0.3],
+            [0.25, 0.25],
+        ]
+    )
+
+    np.testing.assert_array_equal(
+        expected_R, main.extract_R_numerical(transition_matrix=transition_matrix)
+    )
+
+
+def test_extract_R_symbolic_for_mixed_transition_matrix():
+    """
+    Tests the extract_R_symbolic function for a transition matrix with symbolic values
+
+    and numeric values. We take N=2 and K=2"""
+
+    A = sym.Symbol("A")
+    B = sym.Symbol("B")
+    C = sym.Symbol("C")
+
+    transition_matrix = np.array(
+        [
+            [1, 0, 0, 0],
+            [0.5, A, B, B / 3],
+            [0, 0, 1, 0],
+            [C + A, 0.2, 0.3, C],
+        ]
+    )
+
+    expected_R = np.array(
+        [
+            [0.5, B],
+            [C + A, 0.3],
+        ]
+    )
+
+    np.testing.assert_array_equal(
+        expected_R, main.extract_R_symbolic(transition_matrix=transition_matrix)
+    )
+
+
+def test_extract_R_symbolic_for_purely_symbolic_transition_matrix():
+    """
+    Tests the extract_Q function for a transition matrix with symbolic values
+
+    and no numeric values. We take N=2 and K=2"""
+
+    A = sym.Symbol("A")
+    B = sym.Symbol("B")
+    C = sym.Symbol("C")
+
+    transition_matrix = np.array(
+        [
+            [1, 0, 0, 0],
+            [0, A, B, B],
+            [0, 0, 1, 0],
+            [C + A, C, B, C + A],
+        ]
+    )
+
+    expected_R = np.array(
+        [
+            [0, B],
+            [C + A, B],
+        ]
+    )
+
+    np.testing.assert_array_equal(
+        expected_R, main.extract_R_symbolic(transition_matrix=transition_matrix)
+    )
+
+
+def test_generate_absorption_matrix_numerical_for_numeric_transition_matrix():
+    """
+    Tests the generate_absorption_matrix_numerical function for an entirely
+
+    numeric transition matrix"""
+
+    transition_matrix = np.array(
+        [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0.25, 0.75, 0],
+            [0.3, 0, 0, 0.7],
+        ]
+    )
+
+    expected_absorption_matrix = np.array([[0, 1], [1, 0]])
+
+    np.testing.assert_array_almost_equal(
+        expected_absorption_matrix,
+        main.generate_absorption_matrix_numerical(transition_matrix=transition_matrix),
+    )
+
+
+def test_generate_absorption_matrix_symbolic_for_symbolic_transition_matrix():
+    """
+    Tests the generate_absorption_matrix_symbolic function for an symbolic
+
+    transition matrix"""
+
+    A = sym.Symbol("A")
+    B = sym.Symbol("B")
+    C = sym.Symbol("C")
+
+    transition_matrix = np.array(
+        [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, A, B, 0],
+            [C, C, 0, 0],
+        ]
+    )
+
+    expected_absorption_matrix = np.array([[0, A / (1 - B)], [C, C]])
+
+    np.testing.assert_array_almost_equal(
+        expected_absorption_matrix,
+        main.generate_absorption_matrix_symbolic(transition_matrix=transition_matrix),
+    )
+
+
+def test_generate_absorption_matrix_for_numeric_transition_matrix():
+    """
+    Tests the generate_absorption_matrix function for an entirely
+
+    numeric transition matrix"""
+
+    transition_matrix = np.array(
+        [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, 0.25, 0.75, 0],
+            [0.3, 0, 0, 0.7],
+        ]
+    )
+
+    expected_absorption_matrix = np.array([[0, 1], [1, 0]])
+
+    np.testing.assert_array_almost_equal(
+        expected_absorption_matrix,
+        main.generate_absorption_matrix(transition_matrix=transition_matrix),
+    )
+
+
+def test_generate_absorption_matrix_for_symbolic_transition_matrix():
+    """
+    Tests the generate_absorption_matrix function for a symbolic
+
+    transition matrix"""
+
+    A = sym.Symbol("A")
+    B = sym.Symbol("B")
+    C = sym.Symbol("C")
+
+    transition_matrix = np.array(
+        [
+            [1, 0, 0, 0],
+            [0, 1, 0, 0],
+            [0, A, B, 0],
+            [C, C, 0, 0],
+        ]
+    )
+
+    expected_absorption_matrix = np.array([[0, A / (1 - B)], [C, C]])
+
+    np.testing.assert_array_almost_equal(
+        expected_absorption_matrix,
+        main.generate_absorption_matrix(
+            transition_matrix=transition_matrix, symbolic=True
+        ),
+    )
+
+
+def test_generate_absorption_matrix_accuracy_for_r_values():
+    """Tests that the equations generated by the symbolic
+
+    generate_absorption_matrix function will give the correct value for various
+
+    r values"""
+
+    def public_goods_fitness_function(state, alpha, r, omega):
+        number_of_contributors = state.sum()
+        big_bit = r * alpha * (number_of_contributors) / (len(state))
+        payoff = np.array([big_bit - alpha * x for x in state])
+        return (1) + (omega * payoff)
+
+    r = sym.Symbol("r")
+    alpha = sym.Symbol("a")
+    omega = sym.Symbol("w")
+
+    r_test_values = np.array([0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4])
+
+    expected_results = [
+        0.1971326164874552,
+        0.20815138282387194,
+        0.21739130434782605,
+        0.22528032619775737,
+        0.23211169284467714,
+        0.2380952380952381,
+        0.24338624338624337,
+        0.24810274372445998,
+    ]
+
+    state_space = main.get_state_space(N=3, k=2)
+
+    transition_matrix = main.generate_transition_matrix(
+        state_space=state_space,
+        fitness_function=public_goods_fitness_function,
+        r=r,
+        alpha=alpha,
+        omega=omega,
+    )
+
+    absorption_matrix = main.generate_absorption_matrix(
+        transition_matrix, symbolic=True
+    )
+
+    symbolic_expression = sym.lambdify(
+        (r, alpha, omega), sym.Matrix(absorption_matrix)[0, 1], "numpy"
+    )
+
+    obtained_results = symbolic_expression(r_test_values, 2, 0.2)
+
+    np.testing.assert_array_almost_equal(expected_results, obtained_results)

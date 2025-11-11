@@ -29,7 +29,6 @@ def get_state_space(N, k):
     Returns:
     --------
     Array of possible states within the system, sorted based on the
-
     total values of the rows, in order to ensure a consistent result
     """
     state_space = np.array(list(itertools.product(range(k), repeat=N)))
@@ -78,7 +77,7 @@ def compute_transition_probability(source, target, fitness_function, **kwargs):
     return numerator / denominator
 
 
-def generate_transition_matrix(state_space, fitness_function, **kwargs):
+def generate_transition_matrix(state_space, fitness_function, symbolic=False, **kwargs):
     """
     Given a state space and a fitness function, returns the transition matrix
 
@@ -176,7 +175,7 @@ def get_absorption_probabilities(
 
     Returns
     -------------
-    dictionary of values: tuple([starting state]): [[absorbing state 1, absorption probability 1], [absorbing state 2, absorption probability 2]]
+    Dictionary of values: tuple([starting state]): [[absorbing state 1, absorption probability 1], [absorbing state 2, absorption probability 2]]
     """
 
     absorption_index = get_absorbing_state_index(state_space=state_space)
@@ -248,7 +247,8 @@ def extract_R_symbolic(transition_matrix):
     n = transition_matrix.shape[0]
 
     absorbing_states = np.array(
-        [sym.simplify(transition_matrix[i, i] - 1) == 0 for i in range(n)], dtype=bool
+        [sym.simplify(transition_matrix[i, i] - 1) in (0, float(0)) for i in range(n)],
+        dtype=bool,
     )
 
     non_absorbing_states = ~absorbing_states
@@ -308,7 +308,7 @@ def generate_absorption_matrix_symbolic(transition_matrix):
     Returns:
     -----------
 
-    numpy.array: the probability of transitioning from
+    sympy.Matrix: the probability of transitioning from
 
     each transitive state (row) to each absorbing state(column).
     """
@@ -321,9 +321,9 @@ def generate_absorption_matrix_symbolic(transition_matrix):
     R_symbolic = sym.Matrix(R)
 
     I = sym.eye(Q_symbolic.shape[0])
-    B = (I - Q_symbolic).inv() * R_symbolic
+    B = (I - Q_symbolic) ** -1 * R_symbolic
 
-    return np.array(B)
+    return sym.Matrix(B)
 
 
 def generate_absorption_matrix(transition_matrix, symbolic=False):
@@ -344,7 +344,9 @@ def generate_absorption_matrix(transition_matrix, symbolic=False):
     Returns:
     ------------
 
-    numpy.array, the absorption probabilities in the form:
+    numpy.array if symbolic == False, else sym.Matri., the absorption
+
+    probabilities in the form:
 
     entry i,j = probability of transitive state i being absorbed into
 

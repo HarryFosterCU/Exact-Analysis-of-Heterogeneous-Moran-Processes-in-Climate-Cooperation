@@ -15,6 +15,7 @@
 \section{Introduction}
 
 \section{Literature Review}
+
 Evolutionary game theory has long been at the forefront of the study of
 emergent cooperation, showing how a strategy that is seemingly unfavourable for
 the individual, but beneficial to the collective, can become dominant in
@@ -58,13 +59,52 @@ attributes based on inherent properties of the individuals, such as in
 \cite{Lei} where the players participate in different amounts of games, and
 contribute different amounts based on this factor.\\
 
-In both of the above cases, it is shown that an increased scrutiny of heterogeneous attributes in a spatial public goods game is beneficial to the emergence of cooperation, though for different reasons. In \cite{Maa}, we see that increasing such scrutiny obviously harms defectors, as they receive reduced payoffs based on their low reputation due to being unable to coerce high contributions from other players. \cite{Lei}, however, finds that if we encourage players to cooperate with those in a similar number of games to them, the high-degree defector nodes are unable to gather a large payoff, and so will be unable to spread their defection to their neighbours. If you encourage players to interact with those with different degrees, however, then middle-degree defectors will make heavy losses and be unable to survive.\\
+In both of the above cases, it is shown that an increased scrutiny of
+heterogeneous attributes in a spatial public goods game is beneficial to the
+emergence of cooperation, though for different reasons. In \cite{Maa}, we see
+that increasing such scrutiny obviously harms defectors, as they receive
+reduced payoffs based on their low reputation due to being unable to coerce
+high contributions from other players. \cite{Lei}, however, finds that if we
+encourage players to cooperate with those in a similar number of games to them,
+here done by tuning the \(\beta\) parameter, the high-degree defector nodes are
+unable to gather a large payoff, and so will be unable to spread their
+defection to their neighbours. If you encourage players to interact with those
+with different degrees, however, then middle-degree defectors will make heavy losses and be unable to survive.\\
 
-\cite{Flores} shows how the benefits of this heterogeneity are not always as pronounced as it may seem. When the contribution is not calculated by some attribute, but rather is an attribute in and of itself (essentially becoming a new strategy) then even in systems where contribution dominates, we will see low-value contributions act as a sort of defection against the most globally beneficial strategies. Therefore, we can see that the emergence of cooperation is not the end of the story in some cases, and we must look at what sort of cooperation it is that we have fostered the emergence of.\\
+\cite{Flores} shows how the benefits of this heterogeneity are not always as
+pronounced as it may seem. When the contribution is not calculated by some
+attribute, but rather is an attribute in and of itself (essentially becoming a
+new strategy) then even in systems where contribution dominates, we will see
+low-value contributions act as a sort of defection against the most globally
+beneficial strategies. Therefore, we can see that the emergence of cooperation
+is not the end of the story in some cases, and we must look at what sort of
+cooperation it is that we have fostered the emergence of.\\
 
-One common theme in the spatial public goods game is the manner in which cooperation spreads. An initial ``invasion" of defectors leads to cooperation mainly existing within small clusters. These clusters, however, are much more profitable than their defecting neighbours. Therefore, the cooperating clusters will influence the nearby defectors to join in, which eventually spreads throughout the system. This relies on the ability of the clusters to resist the initial invasion of defectors - an occurrence which relies on a high enough \(r\) value (the positive multiplier of the contribution to the public good).\\
+One common theme in the spatial public goods game is the manner in which
+cooperation spreads. An initial ``invasion" of defectors leads to cooperation
+mainly existing within small clusters. These clusters, however, are much more
+profitable than their defecting neighbours. Therefore, the cooperating clusters
+will influence the nearby defectors to join in, which eventually spreads
+throughout the system. This relies on the ability of the clusters to resist the
+initial invasion of defectors - an occurrence which relies on a high enough
+\(r\) value (the positive multiplier of the contribution to the public good).\\
 
-We also see that a potential climate club may soon be forming within the European Union. While it functions slightly differently to the classic example in \cite{Climate Clubs}, it follows the same principles of encouraging countries to join the group by punishing those outside of the club, in order to attempt to reduce overall carbon emissions. This is the ``Carbon Border Adjustment Mechanism" \cite{CBAM}. Currently, all goods within the EU require taxation based on their carbon footprint, however imported goods from outside cannot be subject to such taxes. CBAM aims to prevent foreign goods from gaining benefits due to environmentally harmful practices by enforcing that EU companies report the carbon content of imported goods, and purchase certificates to cover the environmental cost of said goods. However, if a country already levies a tax on their own goods (similar to the EU's carbon tax), then this cost will be taken into consideration, and fewer certificates must be purchased. This discourages the importation of goods from countries which do not levy a similar tax on their own items, forming a structure which behaves very similarly to the ``climate clubs" in \cite{Climate Clubs}.
+We also see that a potential climate club may soon be forming within the
+European Union. While it functions slightly differently to the classic example
+in \cite{Climate Clubs}, it follows the same principles of encouraging
+countries to join the group by punishing those outside of the club, in order to
+attempt to reduce overall carbon emissions. This is the ``Carbon Border
+Adjustment Mechanism" \cite{CBAM}. Currently, all goods within the EU require
+taxation based on their carbon footprint, however imported goods from outside
+cannot be subject to such taxes. CBAM aims to prevent foreign goods from
+gaining benefits due to environmentally harmful practices by enforcing that EU
+companies report the carbon content of imported goods, and purchase
+certificates to cover the environmental cost of said goods. However, if a
+country already levies a tax on their own goods (similar to the EU's carbon
+tax), then this cost will be taken into consideration, and fewer certificates
+must be purchased. This discourages the importation of goods from countries
+which do not levy a similar tax on their own items, forming a structure which
+behaves very similarly to the ``climate clubs" in \cite{Climate Clubs}.
 
 
 
@@ -122,6 +162,7 @@ Given a transition matrix \(T\), we can calculate the state distribution after \
 Thus, our absorption probabilities starting at are given by the non-zero entries in the matrix \(\lim_{k \to \infty} T^k\)
 
 \section{The General Heterogenous Public Goods Game}
+
 \subsection{The Standard Model and Transformations}
 
 In this section, we shall see how this model can be applied to the classical public goods game. In this game, individuals choose whether or not to contribute to a public resource pool. In the end, the total resource is multiplied by some factor \(r > 1\) and distributed equally between each player. This model often encourages a behaviour known as ``free-riding" \cite{Climate Clubs}, where players refuse to contribute to the pool and simply take the benefit provided by other individuals' contribution. The classic problem of a public goods game is to provide an environment where such free-riding is not a profitable strategy - or rather, is less profitable than contributing to the public good.\\
@@ -215,9 +256,27 @@ We will begin by looking at the state space with \(N=4\) and see how cooperation
 
 \begin{figure}[!h]
     \centering
-\includegraphics[width=1\linewidth]{./Figures/Homogeneous_Fixation_Probabilities/Main.png}
+\includegraphics[width=1\linewidth]{./Figures/Homogeneous_Fixation_Probabilities_r_alpha/Main.png}
     \caption{Fixation probabilities in the homogeneous case. Here we take }
-    \label{fig:Homogeneous_Fixation_Probability_Examples}
+    \label{fig:Homogeneous_Fixation_Probability_r_alpha}
+\end{figure}
+
+Here we can see how the various parameters can be tuned to affect our fixation
+probabilities. As r increases, we see an increase in cooperation as individuals
+benefit more from their own contributions. However, as \(\alpha\) increases,
+individuals must pay more to contribute to the public good, which also benefits
+defectors who receive higher payoffs without risking their own contribution -
+leading to a wider gap between the payoffs of cooperators and defectors in the
+game.\\
+
+We can also look at how different population sizes affect the overall
+probability of cooperation.
+
+\begin{figure}[!h]
+    \centering
+\includegraphics[width=1\linewidth]{./Figures/Homogeneous_Fixation_Probabilities_N/Main.png}
+    \caption{Fixation probabilities in the homogeneous case. Here we take }
+    \label{fig:Homogeneous_Fixation_Probability_N}
 \end{figure}
 
 \newpage

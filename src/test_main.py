@@ -1107,3 +1107,82 @@ def test_generate_absorption_matrix_accuracy_for_r_values():
     obtained_results = symbolic_expression(r_test_values, 2, 0.2)
 
     np.testing.assert_array_almost_equal(expected_results, obtained_results)
+
+
+
+def test_symbolic_matrix_is_all_symbolic():
+    """Tests whether all entries in the transition matrix (with a symbolic
+
+    fitness function) are of a symbolic type"""
+
+    r = sym.Symbol("r")
+    alpha = sym.Symbol("α")
+    omega = sym.Symbol("ω")
+
+    def public_goods_fitness_function(state, alpha, r, omega):
+        number_of_contributors = state.sum()
+        big_bit = r * alpha * (number_of_contributors) / (len(state))
+        payoff = np.array([big_bit - alpha * x for x in state])
+        return (1) + (omega * payoff)
+    
+    state_space = main.get_state_space(N=3,k=2)
+
+    transition_matrix = main.generate_transition_matrix(state_space = state_space, fitness_function=public_goods_fitness_function, r=r, alpha=alpha, omega=omega)
+
+    rows,cols = transition_matrix.shape
+    for i in range(rows):
+        for j in range(cols):
+            assert isinstance(transition_matrix[i,j], sym.Basic)
+
+
+
+def test_generate_absorption_matrix_for_5_by_5_symbolic_transition_matrix():
+    """
+    Tests the generate_absorption_matrix function for a 5x5 symbolic
+
+    transition matrix"""
+
+    A = sym.Symbol("A")
+    B = sym.Symbol("B")
+    C = sym.Symbol("C")
+    D = sym.Symbol("D")
+
+    transition_matrix = np.array(
+        [
+            [1, 0, 0, 0, 0],
+            [A, 1/3, B, 0, 0],
+            [0, A, 0, C, 0],
+            [0, 0, C, D, 1/3],
+            [0, 0, 0, 0, 1]
+        ]
+    )
+
+    Q = sym.Matrix(np.array([
+        [1/3, B, 0],
+        [A,0,C],
+        [0,C,D]
+    ]))
+
+    I = sym.Matrix(np.array([
+        [1,0,0],
+        [0,1,0],
+        [0,0,1]
+    ]))
+
+    R = sym.Matrix(np.array([
+        [A,0],
+        [0,0],
+        [0,1/3]
+    ]))
+
+    expected_absorption_matrix = ((I - Q) ** -1) * R
+    
+    obtained_absorption_matrix = (main.generate_absorption_matrix(
+            transition_matrix=transition_matrix, symbolic=True
+        ))
+    
+    zero_matrix = sym.Matrix(np.zeros((3, 2)))
+
+    np.testing.assert_array_almost_equal(
+        expected_absorption_matrix - obtained_absorption_matrix, zero_matrix
+    )

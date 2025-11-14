@@ -235,7 +235,7 @@ def extract_R_numerical(transition_matrix):
     np.array, the matrix R
     """
 
-    #TODO merge with symbolic version and Q as function: obtain canonical form
+    # TODO merge with symbolic version and Q as function: obtain canonical form
 
     absorbing_states = np.isclose(np.diag(transition_matrix), 1.0)
     non_absorbing_states = ~absorbing_states

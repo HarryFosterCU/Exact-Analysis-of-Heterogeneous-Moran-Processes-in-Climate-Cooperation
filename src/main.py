@@ -360,3 +360,30 @@ def generate_absorption_matrix(transition_matrix, symbolic=False):
         return generate_absorption_matrix_numerical(transition_matrix=transition_matrix)
 
     return generate_absorption_matrix_symbolic(transition_matrix=transition_matrix)
+
+
+def get_contribution_vector(contribution_rule, state, **kwargs):
+    """
+    Given a state and a function defining the contribution
+
+    given by each player, generates the contribution vector
+
+    for the state.
+
+    Parameters
+    ------------
+
+    contribution_rule: a function that takes an index and an action type
+
+    (index, action), and returns the contribution of that player.
+
+    state: numpy.array, a state
+
+    Returns
+    ---------
+
+    numpy.array: a vector of contributions by player"""
+
+    return np.array(
+        [contribution_rule(index=x, action=y, **kwargs) for x, y in enumerate(state)]
+    )

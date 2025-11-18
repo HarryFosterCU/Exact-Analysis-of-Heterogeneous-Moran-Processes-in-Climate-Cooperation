@@ -1178,3 +1178,69 @@ def test_generate_absorption_matrix_for_5_by_5_symbolic_transition_matrix():
     np.testing.assert_array_almost_equal(
         expected_absorption_matrix - obtained_absorption_matrix, zero_matrix
     )
+
+
+def test_get_contribution_vector_for_homogeneous_case():
+    """Tests the get_contribution_vector function for a homogeneous
+    case"""
+
+    def homogeneous_contribution_rule(index, action):
+        """The player at (index) performing (action) contributes this
+        amount."""
+
+        return 2 * action
+
+    state = np.array([0, 1, 1])
+
+    expected_contribution_vector = np.array([0, 2, 2])
+
+    np.testing.assert_array_equal(
+        main.get_contribution_vector(
+            contribution_rule=homogeneous_contribution_rule, state=state
+        ),
+        expected_contribution_vector,
+    )
+
+
+def test_get_contribution_vector_for_heterogeneous_case():
+    """Tests the get_contribution_vector function for a homogeneous
+    case"""
+
+    def heterogeneous_contribution_rule(index, action):
+        """The player at (index) performing (action) contributes this
+        amount."""
+
+        return 2 * (index + 1) * action
+
+    state = np.array([0, 1, 1])
+
+    expected_contribution_vector = np.array([0, 4, 6])
+
+    np.testing.assert_array_equal(
+        main.get_contribution_vector(
+            contribution_rule=heterogeneous_contribution_rule, state=state
+        ),
+        expected_contribution_vector,
+    )
+
+
+def test_get_contribution_vector_for_kwargs_case():
+    """Tests the get_contribution_vector function for a homogeneous
+    case"""
+
+    def homogeneous_contribution_rule(index, action, discount):
+        """The player at (index) performing (action) contributes this
+        amount, depending on (discount)."""
+
+        return (2 - discount) * action * (index + 1)
+
+    state = np.array([0, 1, 1])
+
+    expected_contribution_vector = np.array([0, 2, 3])
+
+    np.testing.assert_array_equal(
+        main.get_contribution_vector(
+            contribution_rule=homogeneous_contribution_rule, state=state, discount=1
+        ),
+        expected_contribution_vector,
+    )

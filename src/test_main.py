@@ -1154,8 +1154,15 @@ def test_get_contribution_vector_for_homogeneous_case():
     case"""
 
     def homogeneous_contribution_rule(index, action):
-        """The player at (index) performing (action) contributes this
-        amount."""
+        """The contribution of player i (indexed from 1) performing action k
+        (indexed from 0, as to allow for zero contribution) is given by:
+
+        2  * action.
+
+        For example, ALL players performing action 1 would contribute 2
+
+        This is a test that shows the ability of get_contribution_vector to
+        handle standard contribution rules, not relying on both action and index."""
 
         return 2 * action
 
@@ -1176,8 +1183,16 @@ def test_get_contribution_vector_for_heterogeneous_case():
     case"""
 
     def heterogeneous_contribution_rule(index, action):
-        """The player at (index) performing (action) contributes this
-        amount."""
+        """The contribution of player i (indexed from 1) performing action k
+        (indexed from 0, as to allow for zero contribution) is given by:
+
+        2 * i * action.
+
+        For example, player 2 performing action 3 would contribute 12
+
+        This is a test that shows the use of both the (index) and (action)
+        parameters for the required contribution_rule function in get_contribution_vector
+        """
 
         return 2 * (index + 1) * action
 
@@ -1198,8 +1213,17 @@ def test_get_contribution_vector_for_kwargs_case():
     case"""
 
     def homogeneous_contribution_rule(index, action, discount):
-        """The player at (index) performing (action) contributes this
-        amount, depending on (discount)."""
+        """The contribution of player i (indexed from 1) performing action k
+        (indexed from 0, as to allow for zero contribution), with a discount
+        value <2, is given by:
+
+        (2-discount) * i * action.
+
+        For example, player 2 performing action 2 with 0.5 discount would
+        contribute 6
+
+        This is a test that shows the use of **kwargs arguments in a
+        contribution rule passde to get_contribution_vector"""
 
         return (2 - discount) * action * (index + 1)
 

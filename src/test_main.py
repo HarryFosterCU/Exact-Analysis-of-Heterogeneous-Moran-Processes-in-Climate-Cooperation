@@ -1107,3 +1107,133 @@ def test_generate_absorption_matrix_accuracy_for_r_values():
     obtained_results = symbolic_expression(r_test_values, 2, 0.2)
 
     np.testing.assert_array_almost_equal(expected_results, obtained_results)
+
+
+def test_generate_absorption_matrix_for_5_by_5_symbolic_transition_matrix():
+    """
+    Tests the generate_absorption_matrix function for a 5x5 symbolic
+
+    transition matrix"""
+
+    A = sym.Symbol("A")
+    B = sym.Symbol("B")
+    C = sym.Symbol("C")
+    D = sym.Symbol("D")
+
+    transition_matrix = np.array(
+        [
+            [1, 0, 0, 0, 0],
+            [A, 1 / 3, B, 0, 0],
+            [0, A, 0, C, 0],
+            [0, 0, C, D, 1 / 3],
+            [0, 0, 0, 0, 1],
+        ]
+    )
+
+    Q = sym.Matrix(np.array([[1 / 3, B, 0], [A, 0, C], [0, C, D]]))
+
+    I = sym.Matrix(np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]]))
+
+    R = sym.Matrix(np.array([[A, 0], [0, 0], [0, 1 / 3]]))
+
+    expected_absorption_matrix = ((I - Q) ** -1) * R
+
+    obtained_absorption_matrix = main.generate_absorption_matrix(
+        transition_matrix=transition_matrix, symbolic=True
+    )
+
+    zero_matrix = sym.Matrix(np.zeros((3, 2)))
+
+    np.testing.assert_array_almost_equal(
+        expected_absorption_matrix - obtained_absorption_matrix, zero_matrix
+    )
+
+
+def test_get_contribution_vector_for_homogeneous_case():
+    """Tests the get_contribution_vector function for a homogeneous
+    case"""
+
+    def homogeneous_contribution_rule(index, action):
+        """The contribution of player i (indexed from 1) performing action k
+        (indexed from 0, as to allow for zero contribution) is given by:
+
+        2  * action.
+
+        For example, ALL players performing action 1 would contribute 2
+
+        This is a test that shows the ability of get_contribution_vector to
+        handle standard contribution rules, not relying on both action and index."""
+
+        return 2 * action
+
+    state = np.array([0, 1, 1])
+
+    expected_contribution_vector = np.array([0, 2, 2])
+
+    np.testing.assert_array_equal(
+        main.get_contribution_vector(
+            contribution_rule=homogeneous_contribution_rule, state=state
+        ),
+        expected_contribution_vector,
+    )
+
+
+def test_get_contribution_vector_for_heterogeneous_case():
+    """Tests the get_contribution_vector function for a homogeneous
+    case"""
+
+    def heterogeneous_contribution_rule(index, action):
+        """The contribution of player i (indexed from 1) performing action k
+        (indexed from 0, as to allow for zero contribution) is given by:
+
+        2 * i * action.
+
+        For example, player 2 performing action 3 would contribute 12
+
+        This is a test that shows the use of both the (index) and (action)
+        parameters for the required contribution_rule function in get_contribution_vector
+        """
+
+        return 2 * (index + 1) * action
+
+    state = np.array([0, 1, 1])
+
+    expected_contribution_vector = np.array([0, 4, 6])
+
+    np.testing.assert_array_equal(
+        main.get_contribution_vector(
+            contribution_rule=heterogeneous_contribution_rule, state=state
+        ),
+        expected_contribution_vector,
+    )
+
+
+def test_get_contribution_vector_for_kwargs_case():
+    """Tests the get_contribution_vector function for a homogeneous
+    case"""
+
+    def homogeneous_contribution_rule(index, action, discount):
+        """The contribution of player i (indexed from 1) performing action k
+        (indexed from 0, as to allow for zero contribution), with a discount
+        value <2, is given by:
+
+        (2-discount) * i * action.
+
+        For example, player 2 performing action 2 with 0.5 discount would
+        contribute 6
+
+        This is a test that shows the use of **kwargs arguments in a
+        contribution rule passde to get_contribution_vector"""
+
+        return (2 - discount) * action * (index + 1)
+
+    state = np.array([0, 1, 1])
+
+    expected_contribution_vector = np.array([0, 2, 3])
+
+    np.testing.assert_array_equal(
+        main.get_contribution_vector(
+            contribution_rule=homogeneous_contribution_rule, state=state, discount=1
+        ),
+        expected_contribution_vector,
+    )

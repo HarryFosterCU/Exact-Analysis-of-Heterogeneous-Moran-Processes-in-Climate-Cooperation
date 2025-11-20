@@ -362,13 +362,17 @@ def generate_absorption_matrix(transition_matrix, symbolic=False):
     return generate_absorption_matrix_symbolic(transition_matrix=transition_matrix)
 
 
-def get_contribution_vector(contribution_rule, state, **kwargs):
+def get_linear_contribution_vector(contribution_rule, state, **kwargs):
     """
     Given a state and a function defining the contribution
 
     given by each player, generates the contribution vector
 
-    for the state.
+    for the state. The contribution vector may be stochastic, however in such
+    
+    case this function cannot guarentee the sum of entries within the
+
+    contribution vector.
 
     Parameters
     ------------
@@ -387,3 +391,51 @@ def get_contribution_vector(contribution_rule, state, **kwargs):
     return np.array(
         [contribution_rule(index=x, action=y, **kwargs) for x, y in enumerate(state)]
     )
+
+
+def get_dirichlet_contribution_vector(state, alpha_rule, M, **kwargs):
+    """
+    Given a state and a function to generate a set of alpha
+    values, returns the contribution vector for a population according to a
+    dirichlet distribution. Creates a set of realisations from the dirichlet
+    distribution, then applies the transformation:
+
+    realisation * M * state
+
+    in order to guarentee that players contribute according to their action,
+    and that the population maximum contribution is M
+
+    The dirichlet distribution's components all sum to 1, and therefore we can
+    see that multiplying this realisation by M component-wise, we will have
+    that each vector sums to M - thus we make our maximum population
+    contribution equal to M. Taking the mean across these 100 realisations, we
+    therefore obtain a vector who's sum is also M (proof in main.tex).
+
+    Parameters
+    ------------
+
+    state: numpy.array, a state for the Public Goods Game. Contains value 0 for
+    defection (not contribution) and 1 for cooperation (contributing). May
+    theoretically contaiin higher values if players are to be able to
+    contribute multiple times.
+
+    alpha_rule: function, takes **kwargs and returns an array of alpha values
+    for the dirichlet distribution's parameters. Must return alphas with length
+
+    M: the population maximum contribution - the contribution when all players
+    give to the public good.
+    
+
+    Returns
+    ---------
+
+    numpy.array: a vector of contributions by player"""
+
+    alphas = alpha_rule(N = len(state), **kwargs)
+
+    if len(alphas) != len(state):
+            raise ValueError("Expected alphas of length", len(state), "but received ", len(alphas))
+    else:
+        realisation = np.random.dirichlet(alpha=alphas, size=100).mean(axis=0)
+
+    return realisation * M * state

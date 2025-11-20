@@ -1149,8 +1149,8 @@ def test_generate_absorption_matrix_for_5_by_5_symbolic_transition_matrix():
     )
 
 
-def test_get_linear_contribution_vector_for_homogeneous_case():
-    """Tests the get_linear_contribution_vector function for a homogeneous
+def test_get_deterministic_contribution_vector_for_homogeneous_case():
+    """Tests the get_deterministic_contribution_vector function for a homogeneous
     case"""
 
     def homogeneous_contribution_rule(index, action):
@@ -1161,7 +1161,7 @@ def test_get_linear_contribution_vector_for_homogeneous_case():
 
         For example, ALL players performing action 1 would contribute 2
 
-        This is a test that shows the ability of get_linear_contribution_vector to
+        This is a test that shows the ability of get_deterministic_contribution_vector to
         handle standard contribution rules, not relying on both action and index."""
 
         return 2 * action
@@ -1171,15 +1171,15 @@ def test_get_linear_contribution_vector_for_homogeneous_case():
     expected_contribution_vector = np.array([0, 2, 2])
 
     np.testing.assert_array_equal(
-        main.get_linear_contribution_vector(
+        main.get_deterministic_contribution_vector(
             contribution_rule=homogeneous_contribution_rule, state=state
         ),
         expected_contribution_vector,
     )
 
 
-def test_get_linear_contribution_vector_for_heterogeneous_case():
-    """Tests the get_linear_contribution_vector function for a homogeneous
+def test_get_deterministic_contribution_vector_for_heterogeneous_case():
+    """Tests the get_deterministic_contribution_vector function for a homogeneous
     case"""
 
     def heterogeneous_contribution_rule(index, action):
@@ -1191,7 +1191,7 @@ def test_get_linear_contribution_vector_for_heterogeneous_case():
         For example, player 2 performing action 3 would contribute 12
 
         This is a test that shows the use of both the (index) and (action)
-        parameters for the required contribution_rule function in get_linear_contribution_vector
+        parameters for the required contribution_rule function in get_deterministic_contribution_vector
         """
 
         return 2 * (index + 1) * action
@@ -1201,15 +1201,15 @@ def test_get_linear_contribution_vector_for_heterogeneous_case():
     expected_contribution_vector = np.array([0, 4, 6])
 
     np.testing.assert_array_equal(
-        main.get_linear_contribution_vector(
+        main.get_deterministic_contribution_vector(
             contribution_rule=heterogeneous_contribution_rule, state=state
         ),
         expected_contribution_vector,
     )
 
 
-def test_get_linear_contribution_vector_for_kwargs_case():
-    """Tests the get_linear_contribution_vector function for a homogeneous
+def test_get_deterministic_contribution_vector_for_kwargs_case():
+    """Tests the get_deterministic_contribution_vector function for a homogeneous
     case"""
 
     def homogeneous_contribution_rule(index, action, discount):
@@ -1223,7 +1223,7 @@ def test_get_linear_contribution_vector_for_kwargs_case():
         contribute 6
 
         This is a test that shows the use of **kwargs arguments in a
-        contribution rule passde to get_linear_contribution_vector"""
+        contribution rule passde to get_deterministic_contribution_vector"""
 
         return (2 - discount) * action * (index + 1)
 
@@ -1232,7 +1232,7 @@ def test_get_linear_contribution_vector_for_kwargs_case():
     expected_contribution_vector = np.array([0, 2, 3])
 
     np.testing.assert_array_equal(
-        main.get_linear_contribution_vector(
+        main.get_deterministic_contribution_vector(
             contribution_rule=homogeneous_contribution_rule, state=state, discount=1
         ),
         expected_contribution_vector,

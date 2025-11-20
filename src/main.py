@@ -362,7 +362,7 @@ def generate_absorption_matrix(transition_matrix, symbolic=False):
     return generate_absorption_matrix_symbolic(transition_matrix=transition_matrix)
 
 
-def get_linear_contribution_vector(contribution_rule, state, **kwargs):
+def get_deterministic_contribution_vector(contribution_rule, state, **kwargs):
     """
     Given a state and a function defining the contribution
 
@@ -372,7 +372,9 @@ def get_linear_contribution_vector(contribution_rule, state, **kwargs):
     
     case this function cannot guarentee the sum of entries within the
 
-    contribution vector.
+    contribution vector, and get_dirichlet_contribution_vector is better 
+
+    placed to run.
 
     Parameters
     ------------

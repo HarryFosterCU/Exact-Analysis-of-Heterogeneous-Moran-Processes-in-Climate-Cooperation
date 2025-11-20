@@ -3,6 +3,7 @@ import numpy as np
 import sympy as sym
 import pytest
 
+
 def test_compute_transition_probability_for_trivial_fitness_function():
     """
     Tests whether the compute_transition_probability
@@ -1244,31 +1245,39 @@ def test_get_dirichlet_contribution_vector_for_trivial_alpha_rule_and_large_repi
     Tests the get_dirichlet_contribution_vector function for a trivial alpha
     rule in which all alphas are equal to 2. In this case, all the means should
     be equal (with a margin of error due to the stochastic nature of the
-    function). 
-    
+    function).
+
     This test is performed by taking the mean across 100 calls to the
     get_diriclet_contribution_vector function"""
 
     def trivial_alpha_rule(N):
-        
+
         return np.array([2 for _ in range(N)])
-    
+
     M = 12
     N = 3
-    state = np.array([0,1,1])
-    
-    expected_return = np.array([0,4,4])
+    state = np.array([0, 1, 1])
 
-    actual_return = np.array([main.get_dirichlet_contribution_vector(state = state, alpha_rule=trivial_alpha_rule, M=M) for _ in range(100)]).mean(axis=0)
+    expected_return = np.array([0, 4, 4])
+
+    actual_return = np.array(
+        [
+            main.get_dirichlet_contribution_vector(
+                state=state, alpha_rule=trivial_alpha_rule, M=M
+            )
+            for _ in range(100)
+        ]
+    ).mean(axis=0)
 
     np.testing.assert_allclose(actual_return, expected_return, rtol=0.1)
+
 
 def test_get_dirichlet_contribution_vector_for_linear_alpha_rule_and_large_repitions():
     """
     Tests the get_dirichlet_contribution_vector function for a linear alpha
     rule. In this case, all the means should be equal (with a margin of error
-    due to the stochastic nature of the function). 
-    
+    due to the stochastic nature of the function).
+
     This test is performed by taking the mean across 100 calls to the
     get_diriclet_contribution_vector function"""
 
@@ -1276,23 +1285,31 @@ def test_get_dirichlet_contribution_vector_for_linear_alpha_rule_and_large_repit
         """Returns a numpy.array 1, 2, ..., N. This test allows us to see that
         alphas are not all treated as the same, but without adding the extra
         complications of long computations."""
-        return np.array([_ for _ in range(1, N+1)])
-    
-    M = 12
-    state = np.array([0,1,1])
-    
-    expected_return = np.array([0,4,6])
+        return np.array([_ for _ in range(1, N + 1)])
 
-    actual_return = np.array([main.get_dirichlet_contribution_vector(state = state, alpha_rule=linear_alpha_rule, M=12) for _ in range(100)]).mean(axis=0)
+    M = 12
+    state = np.array([0, 1, 1])
+
+    expected_return = np.array([0, 4, 6])
+
+    actual_return = np.array(
+        [
+            main.get_dirichlet_contribution_vector(
+                state=state, alpha_rule=linear_alpha_rule, M=12
+            )
+            for _ in range(100)
+        ]
+    ).mean(axis=0)
 
     np.testing.assert_allclose(actual_return, expected_return, rtol=0.1)
+
 
 def test_get_dirichlet_contribution_vector_for_kwargs_alpha_rule_and_large_repitions():
     """
     Tests the get_dirichlet_contribution_vector function for an alpha
     rule in which all alphas are equal to index + bonus, in order to check that
     kwargs are properly passed to the alpha_rule function
-    
+
     This test is performed by taking the mean across 100 calls to the
     get_diriclet_contribution_vector function"""
 
@@ -1300,15 +1317,22 @@ def test_get_dirichlet_contribution_vector_for_kwargs_alpha_rule_and_large_repit
         """Returns a numpy.array 1, 2, ..., N. This test allows us to see that
         alphas are not all treated as the same, but without adding the extra
         complications of long computations."""
-        return np.array([_ * bonus for _ in range(1, N+1)])
-    
+        return np.array([_ * bonus for _ in range(1, N + 1)])
+
     M = 36
     bonus = 3
-    state = np.array([1,0,1])
-    
-    expected_return = np.array([6,0,18])
+    state = np.array([1, 0, 1])
 
-    actual_return = np.array([main.get_dirichlet_contribution_vector(state = state, alpha_rule=kwargs_alpha_rule, M=M, bonus = 2) for _ in range(100)]).mean(axis=0)
+    expected_return = np.array([6, 0, 18])
+
+    actual_return = np.array(
+        [
+            main.get_dirichlet_contribution_vector(
+                state=state, alpha_rule=kwargs_alpha_rule, M=M, bonus=2
+            )
+            for _ in range(100)
+        ]
+    ).mean(axis=0)
 
     np.testing.assert_allclose(actual_return, expected_return, rtol=0.1)
 
@@ -1316,16 +1340,20 @@ def test_get_dirichlet_contribution_vector_for_kwargs_alpha_rule_and_large_repit
 def test_get_dirichlet_contribution_vector_raises_type_error_for_few_alphas():
     """
     Tests whether the get_dirichlet_contribution_vector function correctly
-    raises a type error in the case that the number of alphas returned by the alpha_rule function is less than the length of the state."""
+    raises a type error in the case that the number of alphas returned by the alpha_rule function is less than the length of the state.
+    """
 
     def small_alpha_rule(N):
-        
-        return( np.array([2 for _ in range(N-1)]) )
-    
-    state = np.array([1,1,0])
-    
+
+        return np.array([2 for _ in range(N - 1)])
+
+    state = np.array([1, 1, 0])
+
     with pytest.raises(ValueError):
-        main.get_dirichlet_contribution_vector(state = state, alpha_rule=small_alpha_rule, M=15) 
+        main.get_dirichlet_contribution_vector(
+            state=state, alpha_rule=small_alpha_rule, M=15
+        )
+
 
 def test_get_dirichlet_contribution_vector_raises_type_error_for_many_alphas():
     """
@@ -1334,10 +1362,12 @@ def test_get_dirichlet_contribution_vector_raises_type_error_for_many_alphas():
     alpha_rule function is more than the length of the state."""
 
     def small_alpha_rule(N):
-        
-        return( np.array([2 for _ in range(N+1)]) )
-    
-    state = np.array([1,1,0])
-    
+
+        return np.array([2 for _ in range(N + 1)])
+
+    state = np.array([1, 1, 0])
+
     with pytest.raises(ValueError):
-        main.get_dirichlet_contribution_vector(state = state, alpha_rule=small_alpha_rule, M=15) 
+        main.get_dirichlet_contribution_vector(
+            state=state, alpha_rule=small_alpha_rule, M=15
+        )

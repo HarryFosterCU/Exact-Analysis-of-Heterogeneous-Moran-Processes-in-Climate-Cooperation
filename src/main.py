@@ -369,10 +369,10 @@ def get_deterministic_contribution_vector(contribution_rule, state, **kwargs):
     given by each player, generates the contribution vector
 
     for the state. The contribution vector may be stochastic, however in such
-    
+
     case this function cannot guarentee the sum of entries within the
 
-    contribution vector, and get_dirichlet_contribution_vector is better 
+    contribution vector, and get_dirichlet_contribution_vector is better
 
     placed to run.
 
@@ -426,17 +426,19 @@ def get_dirichlet_contribution_vector(state, alpha_rule, M, **kwargs):
 
     M: the population maximum contribution - the contribution when all players
     give to the public good.
-    
+
 
     Returns
     ---------
 
     numpy.array: a vector of contributions by player"""
 
-    alphas = alpha_rule(N = len(state), **kwargs)
+    alphas = alpha_rule(N=len(state), **kwargs)
 
     if len(alphas) != len(state):
-            raise ValueError("Expected alphas of length", len(state), "but received ", len(alphas))
+        raise ValueError(
+            "Expected alphas of length", len(state), "but received ", len(alphas)
+        )
     else:
         realisation = np.random.dirichlet(alpha=alphas, size=100).mean(axis=0)
 

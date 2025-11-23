@@ -284,17 +284,59 @@ We begin by defining a maximum value \(M\), which is the total contribution to
 the public good in the case that all players contribute. The responsibility for
 the contribution of such \(M\) is then split between all players according to
 some rule. This rule will take the form of some \(\lambda\), such that
-\(\sum_{j=1}^{N} j\lambda = M\).\\
- We look at 6 such rules for sharing the contribution between all players.
+\(\sum_{j=1}^{N} j\lambda = M\).
 
-\subsection{The Linear Case}
+\subsection{The Linear and Log-Linear Cases}
 
 In this case, players simply contribute an amount equal to their position
 within the state. For example, a state (1,1,0,1) for \(M=10\) will
 contribute (1, 2, 0, 4) respectively. For a given \(N, M\), we have that here,
-\(\lambda = \frac{2M}{N(N+1_)}\)
+\(\lambda = \frac{2M}{N(N+1_)}\).\\
 
+Now importantly, this case has that each player \(j\) contributes some
+\(C_{j-1} + \frac{2M}{N(N+1_)}\), and so the increase in contribution as you
+move from one player to the next is constant. We also introduce a case where
+this increase is logarithmic, namely so that \(\sum_{j=1}^{N} \ln(j\lambda) =
+M\). In this case we define \(\lambda = (\frac{e^M}{N!})^{1/N}\). This case
+keeps the difference between contributions from becoming extremely large if we
+increase \(M\) while keeping \(N\) constant.
 
+\subsection{The Binomial Case}
+
+In this case, we split the population into two subgroups. These groups are
+called "poor" and "wealthy", and their contributions are defined as \(C_{low}\)
+and \(C_{high}\) respectively. In this case, we can define a system by the
+following parameters:
+
+\begin{itemize}
+    \item N - the number of players
+    \item M - the maximum population contribution
+    \item \(C_{high}\) - the contribution of the wealthy players
+    \item n - the number of poor players
+\end{itemize}
+
+In this case we have that the following holds:
+
+\begin{equation} \label{eqn:binomial}
+n C_{low} + (N-n)C_{high} = NC_{high} - nd = M, \text{where d is the
+    difference between low and high contributions.}
+\end{equation}
+
+We can therefore, for a given \(M, N, and n\), acquire the bound:
+
+\begin{equation}
+    \frac{M}{N} < C_{high} < \frac{M}{N-n}
+\end{equation}
+
+As \(C_{high}\) must be greater than \(C_{low}\), and we have \(N-n\) players
+contributing \(C_{high}\), so it must be bounded from above.
+
+We also trivially obtain \(C_{low} = \frac{M - (N-n)C_{high}}{n}\), completing
+our system. We do not need to define a \(\lambda\) in this system, as we have
+\ref{eqn:binomial} that aptly provides us with a system of contributions.\\
+
+Now, as the following cases are defined according to a random distribution, let
+us take a detour and look into the distribution that we shall use.
 
 
 \section{The Dirichlet Distribution}

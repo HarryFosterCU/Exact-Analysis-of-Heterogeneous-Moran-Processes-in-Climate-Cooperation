@@ -5,6 +5,8 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{positioning,calc}
 
 \title{A Heterogeneous Moran Process for the Analysis of Public Goods Games}
 \author{Harry Foster, Vince Knight, Sebastian Krapohl}
@@ -254,12 +256,12 @@ Therefore, we take the affine-linear mapping shown in \ref{eqn:Affine-linear} in
 
 We will begin by looking at the state space with \(N=4\) and see how cooperation emerges based on different values of \(r \text{ and } \alpha\).
 
-\begin{figure}[!h]
-    \centering
-\includegraphics[width=1\linewidth]{./Figures/Homogeneous_Fixation_Probabilities_r_alpha/Main.png}
-    \caption{Fixation probabilities in the homogeneous case. Here we take }
-    \label{fig:Homogeneous_Fixation_Probability_r_alpha}
-\end{figure}
+%\begin{figure}[!h]
+    %\centering
+%\includegraphics[width=1\linewidth]{./Figures/%Homogeneous_Fixation_Probabilities_r_alpha/Main.png}
+ %   \caption{Fixation probabilities in the homogeneous case. Here we take }
+  %  \label{fig:Homogeneous_Fixation_Probability_r_alpha}
+%\end{figure}
 
 Here we can see how the various parameters can be tuned to affect our fixation
 probabilities. As r increases, we see an increase in cooperation as individuals
@@ -268,21 +270,289 @@ individuals must pay more to contribute to the public good, which also benefits
 defectors who receive higher payoffs without risking their own contribution -
 leading to a wider gap between the payoffs of cooperators and defectors in the
 game.\\
-
-We can also look at how different population sizes affect the overall
-probability of cooperation.
-
-\begin{figure}[!h]
-    \centering
-\includegraphics[width=1\linewidth]{./Figures/Homogeneous_Fixation_Probabilities_N/Main.png}
-    \caption{Fixation probabilities in the homogeneous case. Here we take }
-    \label{fig:Homogeneous_Fixation_Probability_N}
-\end{figure}
-
 \newpage
 \section{Public Goods Games with Heterogeneous Returns}
 
-When we look at a public goods game, we often generalise the players to all receive the same return. However, in the real world this is often not the case. 
+When we look at a public goods game, we often generalise the players to all
+contribute the same amount. However, in the real world this is often not the
+case, as different individuals may have different attributes which affect their
+ability to contribute as much as others. In this section, we look at how a
+heterogeneous population with respect to contribution can affect the fixation
+probability.\\
+
+We begin by defining a maximum value \(M\), which is the total contribution to
+the public good in the case that all players contribute. The responsibility for
+the contribution of such \(M\) is then split between all players according to
+some rule. This rule will take the form of some \(\lambda\), such that
+\(\sum_{j=1}^{N} j\lambda = M\).\\
+ We look at 6 such rules for sharing the contribution between all players.
+
+\subsection{The Linear Case}
+
+In this case, players simply contribute an amount equal to their position
+within the state. For example, a state (1,1,0,1) for \(M=10\) will
+contribute (1, 2, 0, 4) respectively. For a given \(N, M\), we have that here,
+\(\lambda = \frac{2M}{N(N+1_)}\)
+
+
+
+
+\section{The Dirichlet Distribution}
+
+\subsection{The Basics}
+
+We begin with a beta distribution. Imagine you have tossed a coin \(N\)
+times, observing \(H\) heads and \(T\) tails. Our beta distribution takes
+two parameters: \(\alpha\) and \(\beta\) with values \(H+1\) and \(T+1\)
+respectively. The "peak" (mode) of the beta distribution occurs at
+\(\frac{H}{H+T}\).\\
+
+Now the Dirichlet distribution extends this problem into \(K\) components.
+Imagine you have a bag containing different coloured balls - red, blue, and
+green. After a certain number of samples, you observe \(R\), \(B\), and \(G\)
+balls of each colour respectively. Then, similarly to our beta distribution,
+our dirichlet distribution takes the values \(\alpha_1 = R+1, \alpha_2 = B+1,
+\alpha_3 = G+1\).\\
+Now, unlike the beta distribution, the Dirichlet distribution
+returns a vector of probabilities \(X = (x_1, x_2,...,x_K)\) such that
+\(\sum_{i=1}^K x_i = 1\), rather than a single probability. While theoretically
+the beta distribution can be used to return a probability vector which sums to
+1 by taking the compliment of it's value for a given parameter (in our above
+example, it could return [\(\frac{H}{H+T}, \frac{T}{H+T}\)]), the distribution
+is not often used this way. For the Dirichlet distribution, we always obtain
+such a vector. The PDF is therefore defined by this vector as follows:
+\begin{large}
+    \begin{equation}
+        f(x_1, ..., x_k, \alpha_1, ..., \alpha_k) = \frac{1}{B(\alpha_1, \alpha_2, ...)}\Pi_{i=1}^K x_i ^ {\alpha_i}
+    \end{equation}
+\end{large}
+where \(B(\alpha_1, \alpha_2,...)\) is the normalisation function
+\begin{equation}
+    \frac{\Pi_{i=1}^K \Gamma(\alpha_i)}{\Gamma(\sum_{i=1}^K \alpha_i)}
+\end{equation}
+and \(\Gamma\) is the Gamma distribution. This exists to ensure that
+\(\int_{-\infty}^{\infty} f(x_1, ..., x_k, \alpha_1, ..., \alpha_k) = 1\)\\
+
+Now let us look at the expected value of the Dirichlet distribution. We have the following:\\
+\begin{large}
+\begin{equation}
+    E(X_i) = \frac{\alpha_i}{\sum_j \alpha_j}
+\end{equation}
+\end{large}
+So as \(\sum_{j=1}^{K}\alpha_j = n\), we have that if we take a Dirichlet
+distribution \(D_1\) with parameters \( (\alpha_1, \alpha_2, ...)\) and another
+\(D_2\) with parameters \( (z\alpha_1, z\alpha_2, ...)\) for a constant \(z\),
+they will retain the same mean for each component due to the following:
+\begin{large}
+\begin{equation}
+    E(D_{2,i}) =
+\frac{n_i}{n} = \frac{z\alpha_i}{\sum_{j=1}^{K}z\alpha_j} = \frac{\alpha_i}{\sum_{j=1}^{K}\alpha_j} = E(D_{1,i})
+\end{equation}
+\end{large} 
+
+Now, as our number of observations \(n\) increases, we get that our expected
+value converges to \(\frac{n_i}{n}\), where \(X_i\) is observed \(n_i\) times.
+The variance of the data also behaves in a similar way. The explicit formula is
+given by:
+
+\begin{large}
+\begin{equation}
+    Var(X_i) = \frac{\frac{\alpha_i}{\sum_{j=1}^K \alpha_j}(1-\frac{\alpha_i}{\sum_{j=1}^K \alpha_j})}{\sum_{j=1}^K \alpha_j + 1}
+\end{equation}
+\end{large}
+
+which tends to \(\frac{x_i(1-x_1)}{n}\) as \(n \to \infty\). We see that this
+is the result that we would intuitively expect by normal statistical methods.
+We also notice that as this is strictly decreasing as \(n \to \infty\), and so
+we would acquire the result that \(Var(D_{2_i}) < Var(D_{1,i})\). This fits
+with our intuition once again, as if we obtain more data for each case in the
+same ratio (so for example, having data (2 red, 3 blue, 1 green) and then
+obtaining the additional data (4 red, 6 blue, 2 green)), we will retain the
+same mean value in our posterior distribution, however our variance will be reeduced.
+
+\subsection{A Visual Example of Sampling from the Dirichlet Distribution}
+
+Now for a deeper look into sampling from the Dirichlet distribution. Consider
+each case as a vertex on the probability simplex as follows (we take K=3 as an
+example, however we would consider a K-sided simplex for a Dirichlet
+distribution with K components):
+
+\begin{tikzpicture}
+
+  \coordinate (A) at (0,0);
+  \coordinate (B) at (3,0);
+  \coordinate (C) at (1.5,2.598076211353316);
+
+
+  \shade[shading=radial,
+         inner color=red!80,
+         outer color=blue!50]
+         (A) -- (B) -- (C) -- cycle;
+
+
+
+  \draw[thick] (A) -- (B) -- (C) -- cycle;
+
+  \fill (0, 0) circle (2pt);
+  \fill (3, 0) circle (2pt);
+  \fill (1.5,2.598076211353316) circle (2pt);
+
+  \node[below left]  at (A) {All Green};
+  \node[below right] at (B) {All Blue};
+  \node[above]       at (C) {All Red};
+
+\end{tikzpicture}
+
+The points on this simplex correspond to different probability vectors, with
+the vertices representing the extreme cases in which our vectors are simply 1
+for some entry, and 0 elsewhere. The distribution gives us which regions of the
+simplex have a higher probability of being the true values (for example, 5 red,
+4 blue, 4 green being in the bag). This is a visual description of the PDF of
+the K-dimensional Dirichlet distribution.\\
+
+Now how do the \(\alpha\) parameters control the spread of probabity across the
+simplex? Well, as proven in the last section, we know that the ratio between
+the \(\alpha s\) determines the expected value of the distribution, and the
+total of the \(\alpha s\) determines the variance of the distribution. Thus, we
+can picture the effects of the \(\alpha\) parameters visually as follows:
+
+\begin{tikzpicture}[scale=1]
+
+
+\def\shiftone{0}
+\def\shifttwo{4.2}
+\def\shiftthree{8.4}
+
+
+
+\coordinate (A) at (0,0);
+\coordinate (B) at (3,0);
+\coordinate (C) at (1.5,2.598);
+\begin{scope}
+  \fill[red!90!blue!40] (A) -- (B) -- (C) -- cycle; 
+  \draw[thick] (A) -- (B) -- (C) -- cycle;
+  \node[below] at ($(A)!0.5!(B)$) {$\alpha = (1,1,1)$};
+\end{scope}
+
+
+\coordinate (A1) at (4,0);
+\coordinate (B1) at (7,0);
+\coordinate (C1) at (5.5,2.598);
+\begin{scope}[shift={(\shifttwo,0)}]
+  \path[shade, shading=axis,
+        top color=red!80,
+        bottom color=blue!40,
+        middle color=red!50,
+        shading angle=90]
+        (A1) -- (B1) -- (C1) -- cycle;
+  \draw[thick] (A1) -- (B1) -- (C1) -- cycle;
+  \node[below] at ($(A1)!0.5!(B1)$) {$\alpha = (1,1,3)$};
+\end{scope}
+
+
+\coordinate (A2) at (8,0);
+\coordinate (B2) at (11,0);
+\coordinate (C2) at (9.5,2.598);
+\begin{scope}[shift={(\shiftthree,0)}]
+  \path[shade, shading=axis,
+        top color=red!95,
+        middle color=blue!60,
+        bottom color=blue!90,
+        shading angle=90]
+        (A2) -- (B2) -- (C2) -- cycle;
+  \draw[thick] (A2) -- (B2) -- (C2) -- cycle;
+  \node[below] at ($(A2)!0.5!(B2)$) {$\alpha = (100,100,300)$};
+\end{scope}
+
+\end{tikzpicture}
+
+Where the red regions represent areas of high probability, and blue regions are
+those of low probability. We see that each \(\alpha\) corresponds to a
+different vertex on the probability simplex, with the distribution being
+concentrated towards a vertex depending on it's corresponding \(\alpha\) value.
+To illustrate the reason behind this, consider a set of \(\alpha\)s where
+\(\alpha_i = 0 \forall i \neq 1, \alpha_1 = 1\). In this case, our probability
+would be entirely concentrated on the vertex corresponding to \(\alpha_1\),
+with no variance. This is obvious from the expected value formula above. In a
+similar case of \(\alpha_i = 1 \forall i \neq 1, \alpha_1 = 100\), we would see
+a very heavy concentration of probability towards the vertex corresponding to
+\(\alpha_1\), however we would not see it entirely concentrated into one point
+as before, instead there would be some variance, who's source is the other
+non-zero \(\alpha\) values, that causes the probability to become more
+distributed across the simplex.\\
+
+This illustration shows how the \(\alpha\)s affect the probability distribution
+in practice, and serves as a visual demonstration of how the formulas in the
+previous section behave. Now, we shall move on to look at how the Dirichlet
+distribution applies in practice to our public goods game.
+
+\subsection{The Dirichlet distribution and a Markov Process}
+
+Consider now a Markov process. For a transition matrix \(T\), \(T_{A,B} =
+p_{A,B}\), the probability of transitioning from state \(A\) to state \(B\) (in
+this example, we have ordered the states in our state space, and \(A,B\) are
+integers). When we look at the the steady state of a given transition
+matrix, we are left with the vector \(\textbf{\(\mu\)} = (\mu_1, \mu_2, ...)\), where once
+the steady state is reached, \(\mu_i\) gives the proportion of time steps that,
+on average, will be spent in state \(i\). This is an eigenvector for \(T\).
+This is because for any state distribution vector \(\tilde\mu\), we have that
+\(\tilde\mu T\) gives us the probability of being in each state at the next
+timestep. For the vector \textbf{\(\mu\)}, we get
+\(\textbf{\(\mu\)}T=\textbf{\(\mu\)}\).\\
+
+Now, upon obtaining this vector for a given Markov chain, we can see the
+folllowing properties:
+
+\begin{itemize}
+    \item The entries of \textbf{\(\mu\)} are positive
+    \item The sum of the \(\mu_i\)s is equal to 1
+\end{itemize}
+
+Now, these probabilities can be meaningfully interpreted as the realisations of
+components of a Dirichlet distribution. Therefore, we can say that
+\(\textbf{\(\mu\)} \sim Dirichlet(\alpha_1, \alpha_2, ..., \alpha_{k^N})\). Now, if
+we have fixed probabilities for the entries of a given transition matrix \(T\),
+then the \textbf{\(\mu\)} that we obtain is the average proportion of time
+steps spent in each state. Thus, we can say that the obtained vector
+\(\textbf{\(\mu\)} = E(X) = (E(X_1), E(X_2), ...)\), where \(X\) is a random
+variable with a Dirichlet distribution. We can therefore fit a Dirichlet
+distribution according to this.\\
+
+In the case of a heterogeneous moran process, our steady state is trivial - we
+always remain in one of the absorbing states \(v \in S^{\Gamma}\). Therefore,
+for any given starting state, we have that our \textbf{\(\mu\)} only has
+non-zero entries for \(\mu_i\)s corresponding to absorbing states. This means
+that we would model this Dirichlet distribution with many \(\alpha_i = 0\)
+(specifically all but \(k\) entries of \textbf{\(\mu\)} are equal to 0).
+However, as the Dirichlet distribution is parameterised by strictly positive
+\(\alpha\) values, we omit these and simply write \textbf{\(\mu\)} with only
+the entries according to their absorbing states. In this case, our
+\textbf{\(\mu\)} corresponds with the probability of entering each absorbing
+state in a given markov process.\\
+
+For the case of introspection dynamics, we have a more standard interpretation
+of \textbf{\(\mu\)} as described before, where \textbf{\(\mu\)} corresponds to
+the average number of timesteps spent in each state once we have reached the
+steady state of the process. Now, given this case, let us look further into how
+this works with regards to a certain type of heterogeneity - that being where
+the attributes of each player are assigned according to a random variable
+\(H\). In this case, the transition probabilities \(T_{A,B}\) are some function
+\(t(H)\). Then, we must look at \textbf{\(\mu\)} in this context as a
+random vector.\\
+
+%TODO - look deeper into eigenvectors of random matrices. I think we may end up
+%being able to say that as we simulate more and more, then \textbf{\(\mu\)} will
+%tend to the expected value of the distribution where each player has the
+%expected value of each attribute. This is homogeneous if everyone is using the
+%same distribution, and not homogeneous if not.\\
+
+%Also find citations for the Dirichlet distribution work and random markov
+%chains.
+%https://mast.queensu.ca/~communications/Papers/msc-jiayu-lin.pdf?utm_source=chatgpt.com
+%looks good for Dirichlet distributions.
+
+
+
 
 
 \newpage

@@ -1239,8 +1239,10 @@ def test_get_dirichlet_contribution_vector_for_trivial_alpha_rule_and_large_repi
     be equal (with a margin of error due to the stochastic nature of the
     function).
 
-    This test is performed by taking the mean across 100 calls to the
-    get_diriclet_contribution_vector function"""
+    With np.random.seed(1), we expect to obtain
+    [4.14781218, 4.12911919, 3.72306863]
+
+    The empirical mean would be [4,4,4]"""
 
     def trivial_alpha_rule(N):
 
@@ -1251,17 +1253,13 @@ def test_get_dirichlet_contribution_vector_for_trivial_alpha_rule_and_large_repi
     N = 3
     state = np.array([0, 1, 1])
 
-    expected_return = np.array([0, 4, 4])
+    expected_return = np.array([4.14781218, 4.12911919, 3.72306863])
 
-    actual_return = np.array(
-        [
-            main.get_dirichlet_contribution_vector(
-                state=state, alpha_rule=trivial_alpha_rule, M=M
-            )
-        ]
-    ).mean(axis=0)
+    actual_return = main.get_dirichlet_contribution_vector(
+        N=N, alpha_rule=trivial_alpha_rule, M=M
+    )
 
-    np.testing.assert_allclose(actual_return, expected_return, rtol=0.1)
+    np.testing.assert_allclose(actual_return, expected_return)
 
 
 def test_get_dirichlet_contribution_vector_for_linear_alpha_rule_and_large_repitions():
@@ -1270,8 +1268,10 @@ def test_get_dirichlet_contribution_vector_for_linear_alpha_rule_and_large_repit
     rule. In this case, all the means should be equal (with a margin of error
     due to the stochastic nature of the function).
 
-    This test is performed by taking the mean across 100 calls to the
-    get_diriclet_contribution_vector function"""
+    With np.random.seed(1), we expect to obtain
+    [1.9269376 , 3.90995069, 6.16311171]
+
+    The empirical mean would be [2,4,6]"""
 
     def linear_alpha_rule(N):
         """Returns a numpy.array 1, 2, ..., N. This test allows us to see that
@@ -1280,20 +1280,16 @@ def test_get_dirichlet_contribution_vector_for_linear_alpha_rule_and_large_repit
         return np.array([_ for _ in range(1, N + 1)])
 
     M = 12
-    state = np.array([0, 1, 1])
+    N = 3
+    np.random.seed(1)
 
-    expected_return = np.array([0, 4, 6])
+    expected_return = np.array([1.9269376, 3.90995069, 6.16311171])
 
-    actual_return = np.array(
-        [
-            main.get_dirichlet_contribution_vector(
-                state=state, alpha_rule=linear_alpha_rule, M=12
-            )
-            for _ in range(100)
-        ]
-    ).mean(axis=0)
+    actual_return = main.get_dirichlet_contribution_vector(
+        N=N, alpha_rule=linear_alpha_rule, M=M
+    )
 
-    np.testing.assert_allclose(actual_return, expected_return, rtol=0.1)
+    np.testing.assert_allclose(actual_return, expected_return)
 
 
 def test_get_dirichlet_contribution_vector_for_kwargs_alpha_rule_and_large_repitions():
@@ -1302,8 +1298,11 @@ def test_get_dirichlet_contribution_vector_for_kwargs_alpha_rule_and_large_repit
     rule in which all alphas are equal to index + bonus, in order to check that
     kwargs are properly passed to the alpha_rule function
 
-    This test is performed by taking the mean across 100 calls to the
-    get_diriclet_contribution_vector function"""
+    With np.random.seed(1), we expect to obtain
+    [6.59821129, 11.40493245, 17.99685625]
+
+    The empirical mean would be [6,12,18]
+    """
 
     def kwargs_alpha_rule(N, bonus):
         """Returns a numpy.array 1, 2, ..., N. This test allows us to see that
@@ -1313,20 +1312,15 @@ def test_get_dirichlet_contribution_vector_for_kwargs_alpha_rule_and_large_repit
 
     M = 36
     bonus = 3
-    state = np.array([1, 0, 1])
+    N = 3
+    np.random.seed(1)
 
-    expected_return = np.array([6, 0, 18])
+    expected_return = np.array([6.59821129, 11.40493245, 17.99685625])
+    actual_return = main.get_dirichlet_contribution_vector(
+        N=N, alpha_rule=kwargs_alpha_rule, M=M, bonus=bonus
+    )
 
-    actual_return = np.array(
-        [
-            main.get_dirichlet_contribution_vector(
-                state=state, alpha_rule=kwargs_alpha_rule, M=M, bonus=2
-            )
-            for _ in range(100)
-        ]
-    ).mean(axis=0)
-
-    np.testing.assert_allclose(actual_return, expected_return, rtol=0.1)
+    np.testing.assert_allclose(actual_return, expected_return)
 
 
 def test_get_dirichlet_contribution_vector_raises_type_error_for_few_alphas():
@@ -1339,12 +1333,10 @@ def test_get_dirichlet_contribution_vector_raises_type_error_for_few_alphas():
 
         return np.array([2 for _ in range(N - 1)])
 
-    state = np.array([1, 1, 0])
+    N = 3
 
     with pytest.raises(ValueError):
-        main.get_dirichlet_contribution_vector(
-            state=state, alpha_rule=small_alpha_rule, M=15
-        )
+        main.get_dirichlet_contribution_vector(N=N, alpha_rule=small_alpha_rule, M=15)
 
 
 def test_get_dirichlet_contribution_vector_raises_type_error_for_many_alphas():
@@ -1357,9 +1349,7 @@ def test_get_dirichlet_contribution_vector_raises_type_error_for_many_alphas():
 
         return np.array([2 for _ in range(N + 1)])
 
-    state = np.array([1, 1, 0])
+    N = 5
 
     with pytest.raises(ValueError):
-        main.get_dirichlet_contribution_vector(
-            state=state, alpha_rule=small_alpha_rule, M=15
-        )
+        main.get_dirichlet_contribution_vector(N=N, alpha_rule=small_alpha_rule, M=15)

@@ -393,14 +393,14 @@ def get_deterministic_contribution_vector(contribution_rule, N, **kwargs):
     return np.array([contribution_rule(index=x, **kwargs) for x in range(N)])
 
 
-def get_dirichlet_contribution_vector(state, alpha_rule, M, **kwargs):
+def get_dirichlet_contribution_vector(N, alpha_rule, M, **kwargs):
     """
-    Given a state and a function to generate a set of alpha
+    Given the number of players and a function to generate a set of alpha
     values, returns the contribution vector for a population according to a
     dirichlet distribution. Creates a set of realisations from the dirichlet
     distribution, then applies the transformation:
 
-    realisation * M * state
+    realisation * M
 
     in order to guarentee that players contribute according to their action,
     and that the population maximum contribution is M
@@ -414,10 +414,7 @@ def get_dirichlet_contribution_vector(state, alpha_rule, M, **kwargs):
     Parameters
     ------------
 
-    state: numpy.array, a state for the Public Goods Game. Contains value 0 for
-    defection (not contribution) and 1 for cooperation (contributing). May
-    theoretically contaiin higher values if players are to be able to
-    contribute multiple times.
+    N: int, the number of players
 
     alpha_rule: function, takes **kwargs and returns an array of alpha values
     for the dirichlet distribution's parameters. Must return alphas with length
@@ -431,13 +428,11 @@ def get_dirichlet_contribution_vector(state, alpha_rule, M, **kwargs):
 
     numpy.array: a vector of contributions by player"""
 
-    alphas = alpha_rule(N=len(state), **kwargs)
+    alphas = alpha_rule(N=N, **kwargs)
 
-    if len(alphas) != len(state):
-        raise ValueError(
-            "Expected alphas of length", len(state), "but received ", len(alphas)
-        )
+    if len(alphas) != N:
+        raise ValueError("Expected alphas of length", N, "but received ", len(alphas))
     else:
         realisation = np.random.dirichlet(alpha=alphas, size=100).mean(axis=0)
 
-    return realisation * M * state
+    return realisation * M

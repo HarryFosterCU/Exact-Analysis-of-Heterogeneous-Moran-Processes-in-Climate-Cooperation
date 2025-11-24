@@ -362,9 +362,9 @@ def generate_absorption_matrix(transition_matrix, symbolic=False):
     return generate_absorption_matrix_symbolic(transition_matrix=transition_matrix)
 
 
-def get_deterministic_contribution_vector(contribution_rule, state, **kwargs):
+def get_deterministic_contribution_vector(contribution_rule, N, **kwargs):
     """
-    Given a state and a function defining the contribution
+    Given the number of players and a function defining the contribution
 
     given by each player, generates the contribution vector
 
@@ -379,20 +379,18 @@ def get_deterministic_contribution_vector(contribution_rule, state, **kwargs):
     Parameters
     ------------
 
-    contribution_rule: a function that takes an index and an action type
+    contribution_rule: a function that takes an index, and returns the
 
-    (index, action), and returns the contribution of that player.
+    contribution of that player.
 
-    state: numpy.array, a state
+    N: int, the number of players
 
     Returns
     ---------
 
     numpy.array: a vector of contributions by player"""
 
-    return np.array(
-        [contribution_rule(index=x, action=y, **kwargs) for x, y in enumerate(state)]
-    )
+    return np.array([contribution_rule(index=x, **kwargs) for x in range(N)])
 
 
 def get_dirichlet_contribution_vector(state, alpha_rule, M, **kwargs):

@@ -71,7 +71,7 @@ def dirichlet_log_alpha_rule(N):
     return np.array([np.log(i) + 1 for i in range(1, N + 1)])
 
 
-def log_contribution_rule(index, action, M, N):
+def log_contribution_rule(index, M, N):
     """
     Players contribute according to a logarithmic scale of a linear
     contribution rule. As stated in main.tex, this corresponds to the equation
@@ -82,7 +82,6 @@ def log_contribution_rule(index, action, M, N):
     ------------
     index: integer, the position of the player within the ordered population
 
-    action: 0 or 1, 1 if the player contributes, 0 if the player does not
 
     M: float, the population maximum contribution
 
@@ -91,17 +90,14 @@ def log_contribution_rule(index, action, M, N):
     returns:
     ---------
     float, the contribution of the player at (index) according to a logarithmic
-    contribution rule when playing (action)"""
+    contribution rule"""
 
     import scipy.special
 
-    return (
-        sym.log((index + 1) * ((sym.exp(M) / scipy.special.factorial(N)) ** (1 / N)))
-        * action
-    )
+    return sym.log((index + 1) * ((sym.exp(M) / scipy.special.factorial(N)) ** (1 / N)))
 
 
-def linear_contribution_rule(index, action, N, M):
+def linear_contribution_rule(index, N, M):
     """
     Players contribute according to a linear contribution rule. As stated in main.tex, this corresponds to the equation
     $\sum_{i=1}^{N} \lambda i = M$. Here, we calculate a lambda value
@@ -111,8 +107,6 @@ def linear_contribution_rule(index, action, N, M):
     ------------
     index: integer, the position of the player within the ordered population
 
-    action: 0 or 1, 1 if the player contributes, 0 if the player does not
-
     M: float, the population maximum contribution
 
     N: integer, the size of the population
@@ -120,14 +114,14 @@ def linear_contribution_rule(index, action, N, M):
     returns:
     ---------
     float, the contribution of the player at (index) according to a linear
-    contribution rule when playing (action)"""
+    contribution rule when playing"""
 
     K = (2 * M) / (N * (N + 1))
 
-    return (index + 1) * K * action
+    return (index + 1) * K
 
 
-def binomial_contribution_rule(index, action, N, n, M, alpha_h):
+def binomial_contribution_rule(index, N, n, M, alpha_h):
     """
     Players contribute according to a binomial contribution rule, where n
     players contribute a low amount, and N-n contribute a high amount. As stated in main.tex, this corresponds to the equation
@@ -137,8 +131,6 @@ def binomial_contribution_rule(index, action, N, n, M, alpha_h):
     Parameters:
     ------------
     index: integer, the position of the player within the ordered population
-
-    action: 0 or 1, 1 if the player contributes, 0 if the player does not
 
     M: float, the population maximum contribution
 
@@ -150,9 +142,9 @@ def binomial_contribution_rule(index, action, N, n, M, alpha_h):
     returns:
     ---------
     float, the contribution of the player at (index) according to a binomial
-    contribution rule for a given alpha_h when playing (action)"""
+    contribution rule for a given alpha_h when playing"""
 
     d = (N * alpha_h - M) / (n)
     alpha_l = alpha_h - d
 
-    return alpha_l * action if index < n else alpha_h * action
+    return alpha_l if index < n else alpha_h

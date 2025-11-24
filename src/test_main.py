@@ -1154,26 +1154,21 @@ def test_get_deterministic_contribution_vector_for_homogeneous_case():
     """Tests the get_deterministic_contribution_vector function for a homogeneous
     case"""
 
-    def homogeneous_contribution_rule(index, action):
-        """The contribution of player i (indexed from 1) performing action k
-        (indexed from 0, as to allow for zero contribution) is given by:
-
-        2  * action.
-
-        For example, ALL players performing action 1 would contribute 2
+    def homogeneous_contribution_rule(index):
+        """The contribution of player i (indexed from 1) is always equal to 2
 
         This is a test that shows the ability of get_deterministic_contribution_vector to
         handle standard contribution rules, not relying on both action and index."""
 
-        return 2 * action
+        return 2
 
-    state = np.array([0, 1, 1])
+    N = 3
 
-    expected_contribution_vector = np.array([0, 2, 2])
+    expected_contribution_vector = np.array([2, 2, 2])
 
     np.testing.assert_array_equal(
         main.get_deterministic_contribution_vector(
-            contribution_rule=homogeneous_contribution_rule, state=state
+            contribution_rule=homogeneous_contribution_rule, N=N
         ),
         expected_contribution_vector,
     )
@@ -1183,27 +1178,26 @@ def test_get_deterministic_contribution_vector_for_heterogeneous_case():
     """Tests the get_deterministic_contribution_vector function for a homogeneous
     case"""
 
-    def heterogeneous_contribution_rule(index, action):
-        """The contribution of player i (indexed from 1) performing action k
-        (indexed from 0, as to allow for zero contribution) is given by:
+    def heterogeneous_contribution_rule(index):
+        """The contribution of player i (indexed from 1) is given by:
 
-        2 * i * action.
+        2 * i.
 
         For example, player 2 performing action 3 would contribute 12
 
-        This is a test that shows the use of both the (index) and (action)
-        parameters for the required contribution_rule function in get_deterministic_contribution_vector
+        This is a test that shows the use of the (index)
+        parameter for the required contribution_rule function in get_deterministic_contribution_vector
         """
 
-        return 2 * (index + 1) * action
+        return 2 * (index + 1)
 
-    state = np.array([0, 1, 1])
+    N = 3
 
-    expected_contribution_vector = np.array([0, 4, 6])
+    expected_contribution_vector = np.array([2, 4, 6])
 
     np.testing.assert_array_equal(
         main.get_deterministic_contribution_vector(
-            contribution_rule=heterogeneous_contribution_rule, state=state
+            contribution_rule=heterogeneous_contribution_rule, N=N
         ),
         expected_contribution_vector,
     )
@@ -1213,28 +1207,26 @@ def test_get_deterministic_contribution_vector_for_kwargs_case():
     """Tests the get_deterministic_contribution_vector function for a homogeneous
     case"""
 
-    def homogeneous_contribution_rule(index, action, discount):
-        """The contribution of player i (indexed from 1) performing action k
-        (indexed from 0, as to allow for zero contribution), with a discount
+    def homogeneous_contribution_rule(index, discount):
+        """The contribution of player i (indexed from 1), with a discount
         value <2, is given by:
 
-        (2-discount) * i * action.
+        (2-discount) * i.
 
-        For example, player 2 performing action 2 with 0.5 discount would
-        contribute 6
+        For example, player 2 with 0.5 discount would contribute 3
 
         This is a test that shows the use of **kwargs arguments in a
         contribution rule passde to get_deterministic_contribution_vector"""
 
-        return (2 - discount) * action * (index + 1)
+        return (2 - discount) * (index + 1)
 
-    state = np.array([0, 1, 1])
+    N = 3
 
-    expected_contribution_vector = np.array([0, 2, 3])
+    expected_contribution_vector = np.array([1, 2, 3])
 
     np.testing.assert_array_equal(
         main.get_deterministic_contribution_vector(
-            contribution_rule=homogeneous_contribution_rule, state=state, discount=1
+            contribution_rule=homogeneous_contribution_rule, N=N, discount=1
         ),
         expected_contribution_vector,
     )
@@ -1254,6 +1246,7 @@ def test_get_dirichlet_contribution_vector_for_trivial_alpha_rule_and_large_repi
 
         return np.array([2 for _ in range(N)])
 
+    np.random.seed(1)
     M = 12
     N = 3
     state = np.array([0, 1, 1])
@@ -1265,7 +1258,6 @@ def test_get_dirichlet_contribution_vector_for_trivial_alpha_rule_and_large_repi
             main.get_dirichlet_contribution_vector(
                 state=state, alpha_rule=trivial_alpha_rule, M=M
             )
-            for _ in range(100)
         ]
     ).mean(axis=0)
 

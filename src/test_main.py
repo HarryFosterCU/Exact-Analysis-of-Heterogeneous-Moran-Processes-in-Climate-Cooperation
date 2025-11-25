@@ -1237,10 +1237,14 @@ def test_get_dirichlet_contribution_vector_for_trivial_alpha_rule_and_large_repi
     Tests the get_dirichlet_contribution_vector function for a trivial alpha
     rule in which all alphas are equal to 2. In this case, all the means should
     be equal (with a margin of error due to the stochastic nature of the
-    function).
+    function). We also test the stochasticity of the function by testing across
+    100 iterations with a different seed.
 
     With np.random.seed(1), we expect to obtain
     [4.14781218, 4.12911919, 3.72306863]
+
+    With np.random.seed(5), we expect to obtain a mean over 100 iterations of
+    [3.98697183, 3.99898138, 4.01404679]
 
     The empirical mean would be [4,4,4]"""
 
@@ -1251,13 +1255,29 @@ def test_get_dirichlet_contribution_vector_for_trivial_alpha_rule_and_large_repi
     np.random.seed(1)
     M = 12
     N = 3
-    state = np.array([0, 1, 1])
 
     expected_return = np.array([4.14781218, 4.12911919, 3.72306863])
 
     actual_return = main.get_dirichlet_contribution_vector(
         N=N, alpha_rule=trivial_alpha_rule, M=M
     )
+
+    np.random.seed(5)
+
+    expected_return_iteration = np.array([3.98697183, 3.99898138, 4.01404679])
+
+    actual_return_iteration = np.array(
+        [
+            main.get_dirichlet_contribution_vector(
+                N=N,
+                alpha_rule=trivial_alpha_rule,
+                M=M,
+            )
+            for _ in range(100)
+        ]
+    ).mean(axis=0)
+
+    np.testing.assert_allclose(actual_return_iteration, expected_return_iteration)
 
     np.testing.assert_allclose(actual_return, expected_return)
 
@@ -1266,10 +1286,15 @@ def test_get_dirichlet_contribution_vector_for_linear_alpha_rule_and_large_repit
     """
     Tests the get_dirichlet_contribution_vector function for a linear alpha
     rule. In this case, all the means should be equal (with a margin of error
-    due to the stochastic nature of the function).
+    due to the stochastic nature of the function). We also test the
+    stochasticity of the function by testing across 100 iterations with a
+    different seed.
 
     With np.random.seed(1), we expect to obtain
     [1.9269376 , 3.90995069, 6.16311171]
+
+    With np.random.seed(4), we expect to obtain a mean over 100 iterations of
+    [1.96018551, 4.0127389 , 6.02707559]
 
     The empirical mean would be [2,4,6]"""
 
@@ -1291,17 +1316,40 @@ def test_get_dirichlet_contribution_vector_for_linear_alpha_rule_and_large_repit
 
     np.testing.assert_allclose(actual_return, expected_return)
 
+    np.random.seed(4)
+
+    expected_return_iteration = np.array([1.96018551, 4.0127389, 6.02707559])
+
+    actual_return_iteration = np.array(
+        [
+            main.get_dirichlet_contribution_vector(
+                N=N,
+                alpha_rule=linear_alpha_rule,
+                M=M,
+            )
+            for _ in range(100)
+        ]
+    ).mean(axis=0)
+
+    np.testing.assert_allclose(actual_return_iteration, expected_return_iteration)
+
 
 def test_get_dirichlet_contribution_vector_for_kwargs_alpha_rule_and_large_repitions():
     """
     Tests the get_dirichlet_contribution_vector function for an alpha
     rule in which all alphas are equal to index + bonus, in order to check that
-    kwargs are properly passed to the alpha_rule function
+    kwargs are properly passed to the alpha_rule function. We also test the
+    stochasticity of the function by testing across 100 iterations with a
+    different seed.
 
     With np.random.seed(1), we expect to obtain
     [6.59821129, 11.40493245, 17.99685625]
 
+    With np.random.seed(3), we expect to obtain a mean over 100 iterations of
+    [5.99449831, 11.97708597, 18.02841572]
+
     The empirical mean would be [6,12,18]
+
     """
 
     def kwargs_alpha_rule(N, bonus):
@@ -1321,6 +1369,21 @@ def test_get_dirichlet_contribution_vector_for_kwargs_alpha_rule_and_large_repit
     )
 
     np.testing.assert_allclose(actual_return, expected_return)
+
+    np.random.seed(3)
+
+    expected_return_iteration = np.array([5.99449831, 11.97708597, 18.02841572])
+
+    actual_return_iteration = np.array(
+        [
+            main.get_dirichlet_contribution_vector(
+                N=N, alpha_rule=kwargs_alpha_rule, M=M, bonus=bonus
+            )
+            for _ in range(100)
+        ]
+    ).mean(axis=0)
+
+    np.testing.assert_allclose(actual_return_iteration, expected_return_iteration)
 
 
 def test_get_dirichlet_contribution_vector_raises_type_error_for_few_alphas():

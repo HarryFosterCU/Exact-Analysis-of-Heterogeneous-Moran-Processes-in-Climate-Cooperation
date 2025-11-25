@@ -1,6 +1,7 @@
 import scipy
 import sympy as sym
 import numpy as np
+import scipy.special
 
 
 def dirichlet_linear_alpha_rule(N):
@@ -22,7 +23,7 @@ def dirichlet_linear_alpha_rule(N):
     return np.array([i + 1 for i in range(N)])
 
 
-def dirichlet_bonmial_alpha_rule(N, n, low_alpha, high_alpha):
+def dirichlet_binomial_alpha_rule(N, n, low_alpha, high_alpha):
     """
     Generates the alphas for a population contributing according to a binomial
     rule in the dirichlet distribution. We have a low alpha and a high alpha. n
@@ -74,7 +75,7 @@ def dirichlet_log_alpha_rule(N):
 def log_contribution_rule(index, M, N):
     """
     Players contribute according to a logarithmic scale of a linear
-    contribution rule. As stated in main.tex, this corresponds to the equation
+    contribution rule. This corresponds to the equation
     $\sum_{i=1}^{N} log(\lambda i) = M$. Here, we calculate a lambda value
     $(\frac{e^M}{N!})^{1/N}$ (proof in main.tex)
 
@@ -91,8 +92,6 @@ def log_contribution_rule(index, M, N):
     ---------
     float, the contribution of the player at (index) according to a logarithmic
     contribution rule"""
-
-    import scipy.special
 
     return sym.log((index + 1) * ((sym.exp(M) / scipy.special.factorial(N)) ** (1 / N)))
 

@@ -1,4 +1,4 @@
-import contribution_rules as cr
+import contribution_rules
 import numpy as np
 import sympy as sym
 
@@ -11,7 +11,7 @@ def test_dirichlet_linear_alpha_rule_for_N_eq_3():
 
     expected_alphas = np.array([1, 2, 3])
 
-    obtained_alphas = cr.dirichlet_linear_alpha_rule(N)
+    obtained_alphas = contribution_rules.dirichlet_linear_alpha_rule(N)
 
     np.testing.assert_array_equal(expected_alphas, obtained_alphas)
 
@@ -28,7 +28,7 @@ def test_dirichlet_binomial_alpha_rule_for_N_eq_5_n_eq_3():
 
     expected_alphas = np.array([1, 1, 1, 3, 3])
 
-    obtained_alphas = cr.dirichlet_bonmial_alpha_rule(
+    obtained_alphas = contribution_rules.dirichlet_binomial_alpha_rule(
         N=N, n=n, low_alpha=low_alpha, high_alpha=high_alpha
     )
 
@@ -44,7 +44,7 @@ def test_dirichlet_log_alpha_rule_for_N_eq_3():
 
     expected_alphas = np.array([1, 1.693147, 2.098612])
 
-    obtained_alphas = cr.dirichlet_log_alpha_rule(N=N)
+    obtained_alphas = contribution_rules.dirichlet_log_alpha_rule(N=N)
 
     np.testing.assert_array_almost_equal(expected_alphas, obtained_alphas)
 
@@ -60,7 +60,9 @@ def test_log_contribution_rule_for_player_2_N_eq_3_M_eq_12_contributing():
 
     expected_contribution = 4.095894024
 
-    obtained_contribution = cr.log_contribution_rule(index=index, M=M, N=N)
+    obtained_contribution = contribution_rules.log_contribution_rule(
+        index=index, M=M, N=N
+    )
 
     np.testing.assert_almost_equal(expected_contribution, obtained_contribution)
 
@@ -76,7 +78,9 @@ def test_linear_contribution_rule_for_N_eq_3_M_eq_12_contributing():
 
     expected_contribution = 4
 
-    obtained_contribution = cr.linear_contribution_rule(index=index, M=M, N=N)
+    obtained_contribution = contribution_rules.linear_contribution_rule(
+        index=index, M=M, N=N
+    )
 
     assert expected_contribution == obtained_contribution
 
@@ -97,11 +101,11 @@ def test_binomial_contribution_rule_for_N_eq_5_n_eq_3():
     expected_contribution_1 = 1
     expected_contribution_2 = 3
 
-    obtained_contribution_1 = cr.binomial_contribution_rule(
+    obtained_contribution_1 = contribution_rules.binomial_contribution_rule(
         index=index_1, M=M, N=N, alpha_h=alpha_h, n=3
     )
 
-    obtained_contribution_2 = cr.binomial_contribution_rule(
+    obtained_contribution_2 = contribution_rules.binomial_contribution_rule(
         index=index_2, M=M, N=N, alpha_h=alpha_h, n=3
     )
 

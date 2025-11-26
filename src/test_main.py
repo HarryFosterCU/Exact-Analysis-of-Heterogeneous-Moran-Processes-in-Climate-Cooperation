@@ -1154,7 +1154,7 @@ def test_get_deterministic_contribution_vector_for_homogeneous_case():
     """Tests the get_deterministic_contribution_vector function for a homogeneous
     case"""
 
-    def homogeneous_contribution_rule(index):
+    def homogeneous_contribution_rule(index, N):
         """The contribution of player i (indexed from 1) is always equal to 2
 
         This is a test that shows the ability of get_deterministic_contribution_vector to
@@ -1178,7 +1178,7 @@ def test_get_deterministic_contribution_vector_for_heterogeneous_case():
     """Tests the get_deterministic_contribution_vector function for a homogeneous
     case"""
 
-    def heterogeneous_contribution_rule(index):
+    def heterogeneous_contribution_rule(index, N):
         """The contribution of player i (indexed from 1) is given by:
 
         2 * i.
@@ -1207,7 +1207,7 @@ def test_get_deterministic_contribution_vector_for_kwargs_case():
     """Tests the get_deterministic_contribution_vector function for a homogeneous
     case"""
 
-    def homogeneous_contribution_rule(index, discount):
+    def homogeneous_contribution_rule(index, N, discount):
         """The contribution of player i (indexed from 1), with a discount
         value <2, is given by:
 

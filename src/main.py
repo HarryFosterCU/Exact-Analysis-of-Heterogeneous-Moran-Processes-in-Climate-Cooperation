@@ -379,9 +379,7 @@ def get_deterministic_contribution_vector(contribution_rule, N, **kwargs):
     Parameters
     ------------
 
-    contribution_rule: a function that takes an index, and returns the
-
-    contribution of that player.
+    contribution_rule: a function that takes a player's index and Ns, and returns the contribution of that player.
 
     N: int, the number of players
 
@@ -390,7 +388,7 @@ def get_deterministic_contribution_vector(contribution_rule, N, **kwargs):
 
     numpy.array: a vector of contributions by player"""
 
-    return np.array([contribution_rule(index=x, **kwargs) for x in range(N)])
+    return np.array([contribution_rule(index=x, N=N, **kwargs) for x in range(N)])
 
 
 def get_dirichlet_contribution_vector(N, alpha_rule, M, **kwargs):

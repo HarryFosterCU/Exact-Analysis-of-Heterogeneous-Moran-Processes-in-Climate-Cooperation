@@ -39,7 +39,7 @@ array([
 ])
 ```
 
-This state space will define the size of our transition matrix. We must then
+We must then
 define the strictly positive fitness function which we will use
 to calculate our transition probabilities. The general fitness function for a
 heterogeneous public goods game is:
@@ -64,10 +64,9 @@ def heterogeneous_contribution_fitness_function(
     return 1 + (omega * payoff_vector)
 ```
 
-Now contribution_vector is a parameter of this fitness function. As the
-public goods game is a key focus of this library, there is functionality
-to calculate contributions according to certain rules. There are two ways to
-do this. If our contribution vector is to be a deterministic value we use:
+As the public goods game is a key focus of this library, there is functionality
+to calculate a contribution_vector for this function. We will calculate a
+linear contribution vector:
 
 ```python
 M = 12
@@ -78,9 +77,10 @@ contribution_vector = main.get_deterministic_contribution_vector(
     M=M)
 ```
 
-Note that all included contribution rules require us to pass M.
-Now we can pass this, along with the other \*\*kwarg parameters needed for our
-fitness function, into our generate_transition_matrix function.
+Note that all supported contribution rules take the parameter M, which is the
+sum of all contributions. Now we can pass this, along with the other \*\*kwargs
+parameters needed for our fitness function, into our generate_transition_matrix
+function.
 
 ```python
 r=2
@@ -153,7 +153,6 @@ Now we want to run the generate_absorption_matrix function. This will return
 the absorption matrix for this Moran process.
 
 ```python
-
 main.generate_absorption_matrix(transition_matrix=transition_matrix)
 ```
 
@@ -167,43 +166,6 @@ array([[0.80145592, 0.19854408],
        [0.44455339, 0.55544661],
        [0.42534939, 0.57465061]])
 ```
-
-Now how do we interpret this absorption matrix? We must consider the state
-space:
-
-```
-array([
-    [0,0,0],
-    [0,0,1],
-    [0,1,0],
-    [0,1,1],
-    [1,0,0],
-    [1,0,1],
-    [1,1,0],
-    [1,1,1]
-])
-```
-
-We can split this into two arrays: one for the absorbing states, and one for
-the transitive states:
-
-```
-array([
-    [0,0,1],
-    [0,1,0],
-    [0,1,1],
-    [1,0,0],
-    [1,0,1],
-    [1,1,0],
-])
-
-array([[0,0,0], [1,1,1]])
-```
-
-Now, the entry $i,j$ in the absorption matrix is the probability of ending up
-in absorbing state $j$ after beginning in transitive state $i$. So entry (1,1)
-is the probability of ending up in state [1,1,1] after beginning in [0,0,1].
-For this explanation, we index these arrays from 1.
 
 ### How to compute symbolic transition and absorption matrices
 
@@ -446,6 +408,44 @@ Now we calculate our _absorption matrix_ $B$ by the formula $B = FR$.
 $B$ will be an $(N-k)$ x $k$ matrix,
 as we have exactly $k$ absorbing states; those where each individual is of the
 same type.
+
+### How to interpret an absorption matrix
+
+Consider a state space
+
+```
+array([
+    [0,0,0],
+    [0,0,1],
+    [0,1,0],
+    [0,1,1],
+    [1,0,0],
+    [1,0,1],
+    [1,1,0],
+    [1,1,1]
+])
+```
+
+We can split this into two arrays: one for the transitive states, and one for
+the absorbing states:
+
+```
+array([
+    [0,0,1],
+    [0,1,0],
+    [0,1,1],
+    [1,0,0],
+    [1,0,1],
+    [1,1,0],
+])
+
+array([[0,0,0], [1,1,1]])
+```
+
+Now, the entry $i,j$ in the absorption matrix is the probability of ending up
+in absorbing state $j$ after beginning in transitive state $i$. So entry (1,1)
+is the probability of ending up in state [1,1,1] after beginning in [0,0,1].
+For this explanation, we index these arrays from 1.
 
 ## References
 

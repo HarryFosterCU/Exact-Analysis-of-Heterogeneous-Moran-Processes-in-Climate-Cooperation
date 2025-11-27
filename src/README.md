@@ -337,8 +337,9 @@ according to the alpha at index i.
 A Moran process is a type of Markov process often used in evolutionary game
 theory. We define a set of $N$ players, each playing one of $k$ actions, $A_1,
 A_2, ..., A_k$. We denote the set of all possible actions as $\textbf{K}$.
-We then obtain a state space $S = ${$\textbf{v} | v_i \in \textbf{K}^N,
-|\textbf{v}| = N$}. These states represent all possible permutations of each
+We then define a state space,
+$S$, which is an ordered set of ordered N-tuples with entries in $\textbf{K}$.
+These states represent all possible permutations of each
 player performing each action.
 
 For example, the state space for $N=3$ and $k=2$ is:
@@ -355,9 +356,9 @@ For example, the state space for $N=3$ and $k=2$ is:
 ```
 
 Now we define a fitness function which assigns a non-zero value to each
-player in a given state. A higher fitness represents a player who is performing
-"better" in a given state. An example of this would be the function we use for
-the homogeneous public goods game with contribution $\alpha$ and selection
+player in a given state $\textbf{v}$. A higher fitness represents a player who is
+performing "better" in a state. An example of this would be the function we use
+for the homogeneous public goods game with contribution $\alpha$ and selection
 intensity $\omega$ (in order to ensure positivity).
 
 $$
@@ -378,7 +379,7 @@ $$
         \end{cases}
 $$
 
-We calculate these probabilities to form our transition matrix $T$. In an
+These probabilities form the entries of our transition matrix $T$. In an
 ordered state space, the entry $T_{i,j}$ represents the probability of
 transitioning from the state at index $i$ to the state at index $j$.
 
@@ -414,7 +415,6 @@ same type.
 Consider a state space
 
 ```
-array([
     [0,0,0],
     [0,0,1],
     [0,1,0],
@@ -423,29 +423,28 @@ array([
     [1,0,1],
     [1,1,0],
     [1,1,1]
-])
 ```
 
 We can split this into two arrays: one for the transitive states, and one for
 the absorbing states:
 
 ```
-array([
+Transitive states:
     [0,0,1],
     [0,1,0],
     [0,1,1],
     [1,0,0],
     [1,0,1],
     [1,1,0],
-])
 
-array([[0,0,0], [1,1,1]])
+Absorbing states:
+    [0,0,0],
+    [1,1,1]
 ```
 
 Now, the entry $i,j$ in the absorption matrix is the probability of ending up
-in absorbing state $j$ after beginning in transitive state $i$. So entry (1,1)
+in absorbing state $j$ after beginning in transitive state $i$. So entry (1,2)
 is the probability of ending up in state [1,1,1] after beginning in [0,0,1].
-For this explanation, we index these arrays from 1.
 
 ## References
 

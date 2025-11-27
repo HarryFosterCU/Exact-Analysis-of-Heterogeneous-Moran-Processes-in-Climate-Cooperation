@@ -10,7 +10,7 @@ transition matrix defining a heterogeneous public goods game. For background
 information on Markov processes in general we recommend:
 <Probability, Markov Chains, Queues, and Simulation by
 William J Stewart>, and for information about the Moran process:
-<https://en.wikipedia.org/wiki/Moran_process>.
+<Martin A. Nowak. Evolutionary Dynamics: Exploring the Equations of Life>.
 
 We begin by defining a state space. This is the set of possible populations for
 a N players with k actions, and can be obtained by the following code. In this

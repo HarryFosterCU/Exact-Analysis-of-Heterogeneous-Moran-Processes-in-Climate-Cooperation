@@ -8,8 +8,8 @@ results for the heterogeneous moran process.
 In this tutorial we will see how to use `maynard` in order to generate the
 transition matrix defining a heterogeneous public goods game. For background
 information on Markov processes in general we recommend:
-<Probability, Markov Chains, Queues, and Simulation by
-William J Stewart>
+Probability, Markov Chains, Queues, and Simulation by
+William J Stewart
 
 We begin by defining a state space. This is the set of possible populations for
 a N players with k actions, and can be obtained by the following code. In this

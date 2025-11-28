@@ -6,14 +6,15 @@ results for the heterogeneous moran process.
 ## Tutorial
 
 In this tutorial we will see how to use `maynard` in order to generate the
-transition matrix defining a heterogeneous public goods game. For background
-information on Markov processes in general we recommend:
-Probability, Markov Chains, Queues, and Simulation by
-William J Stewart
+transition matrix defining the Moran process on a heterogeneous public goods
+game. For background
+information on Markov processes in general we recommend [1], and for
+information on the Moran process and further reading into evolutionary game
+theory we recommend [2].
 
 We begin by defining a state space. This is the set of possible populations for
-a N players with k actions, and can be obtained by the following code. In this
-example, we shall use N=3 and k=2
+a $N$ players with $k$ actions, and can be obtained by the following code. In this
+example, we shall use $N=3$ and $k=2$
 
 ```python
 import main
@@ -69,12 +70,7 @@ to calculate a contribution_vector for this function. We will calculate a
 linear contribution vector:
 
 ```python
-M = 12
-
-contribution_vector = main.get_deterministic_contribution_vector(
-    contribution_rule=linear_contribution_rule,
-    N=N,
-    M=M)
+contribution_vector = np.array([2,4,6])
 ```
 
 Note that all supported contribution rules take the parameter M, which is the
@@ -169,7 +165,7 @@ array([[0.80145592, 0.19854408],
 
 ### How to compute symbolic transition and absorption matrices
 
-Maynard supports sympy values in it's functionaility. Begin by defining a state
+`Maynard` supports sympy.Symbol values. Begin by defining a state
 space as before, but now consider a fitness function that gives symbolic
 values.
 
@@ -268,8 +264,10 @@ generate_absorption_matrix(symbolic_transition_matrix, symbolic=True)
 
 which generates a sympy.Matrix:
 
-$\displaystyle \left[\begin{matrix}\frac{4 y \left(3 x^{3} y + 9 x^{2} y^{2} + 6 x y^{3}\right)}{\left(3 x + 6 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} + \frac{2 y \left(12 x^{4} + 51 x^{3} y + 81 x^{2} y^{2} + 66 x y^{3} + 24 y^{4}\right)}{\left(3 x + 6 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} & \frac{2 x \left(6 x^{3} y + 3 x^{2} y^{2}\right)}{\left(6 x + 3 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} + \frac{4 x \left(12 x^{4} + 24 x^{3} y + 21 x^{2} y^{2} + 6 x y^{3}\right)}{\left(6 x + 3 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)}\\\frac{4 y \left(3 x^{3} y + 9 x^{2} y^{2} + 6 x y^{3}\right)}{\left(3 x + 6 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} + \frac{2 y \left(12 x^{4} + 51 x^{3} y + 81 x^{2} y^{2} + 66 x y^{3} + 24 y^{4}\right)}{\left(3 x + 6 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} & \frac{2 x \left(6 x^{3} y + 3 x^{2} y^{2}\right)}{\left(6 x + 3 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} + \frac{4 x \left(12 x^{4} + 24 x^{3} y + 21 x^{2} y^{2} + 6 x y^{3}\right)}{\left(6 x + 3 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)}\\\frac{2 y \left(3 x^{2} y^{2} + 6 x y^{3}\right)}{\left(3 x + 6 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} + \frac{4 y \left(6 x^{3} y + 21 x^{2} y^{2} + 24 x y^{3} + 12 y^{4}\right)}{\left(3 x + 6 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} & \frac{4 x \left(6 x^{3} y + 9 x^{2} y^{2} + 3 x y^{3}\right)}{\left(6 x + 3 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} + \frac{2 x \left(24 x^{4} + 66 x^{3} y + 81 x^{2} y^{2} + 51 x y^{3} + 12 y^{4}\right)}{\left(6 x + 3 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)}\\\frac{4 y \left(3 x^{3} y + 9 x^{2} y^{2} + 6 x y^{3}\right)}{\left(3 x + 6 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} + \frac{2 y \left(12 x^{4} + 51 x^{3} y + 81 x^{2} y^{2} + 66 x y^{3} + 24 y^{4}\right)}{\left(3 x + 6 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} & \frac{2 x \left(6 x^{3} y + 3 x^{2} y^{2}\right)}{\left(6 x + 3 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} + \frac{4 x \left(12 x^{4} + 24 x^{3} y + 21 x^{2} y^{2} + 6 x y^{3}\right)}{\left(6 x + 3 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)}\\\frac{2 y \left(3 x^{2} y^{2} + 6 x y^{3}\right)}{\left(3 x + 6 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} + \frac{4 y \left(6 x^{3} y + 21 x^{2} y^{2} + 24 x y^{3} + 12 y^{4}\right)}{\left(3 x + 6 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} & \frac{4 x \left(6 x^{3} y + 9 x^{2} y^{2} + 3 x y^{3}\right)}{\left(6 x + 3 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} + \frac{2 x \left(24 x^{4} + 66 x^{3} y + 81 x^{2} y^{2} + 51 x y^{3} + 12 y^{4}\right)}{\left(6 x + 3 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)}\\\frac{2 y \left(3 x^{2} y^{2} + 6 x y^{3}\right)}{\left(3 x + 6 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} + \frac{4 y \left(6 x^{3} y + 21 x^{2} y^{2} + 24 x y^{3} + 12 y^{4}\right)}{\left(3 x + 6 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} & \frac{4 x \left(6 x^{3} y + 9 x^{2} y^{2} + 3 x y^{3}\right)}{\left(6 x + 3 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} + \frac{2 x \left(24 x^{4} + 66 x^{3} y + 81 x^{2} y^{2} + 51 x y^{3} + 12 y^{4}\right)}{\left(6 x + 3 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)}
-\end{matrix}\right]$
+$$
+\left[\begin{matrix}\frac{4 y \left(3 x^{3} y + 9 x^{2} y^{2} + 6 x y^{3}\right)}{\left(3 x + 6 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} + \frac{2 y \left(12 x^{4} + 51 x^{3} y + 81 x^{2} y^{2} + 66 x y^{3} + 24 y^{4}\right)}{\left(3 x + 6 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} & \frac{2 x \left(6 x^{3} y + 3 x^{2} y^{2}\right)}{\left(6 x + 3 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} + \frac{4 x \left(12 x^{4} + 24 x^{3} y + 21 x^{2} y^{2} + 6 x y^{3}\right)}{\left(6 x + 3 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)}\\\frac{4 y \left(3 x^{3} y + 9 x^{2} y^{2} + 6 x y^{3}\right)}{\left(3 x + 6 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} + \frac{2 y \left(12 x^{4} + 51 x^{3} y + 81 x^{2} y^{2} + 66 x y^{3} + 24 y^{4}\right)}{\left(3 x + 6 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} & \frac{2 x \left(6 x^{3} y + 3 x^{2} y^{2}\right)}{\left(6 x + 3 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} + \frac{4 x \left(12 x^{4} + 24 x^{3} y + 21 x^{2} y^{2} + 6 x y^{3}\right)}{\left(6 x + 3 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)}\\\frac{2 y \left(3 x^{2} y^{2} + 6 x y^{3}\right)}{\left(3 x + 6 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} + \frac{4 y \left(6 x^{3} y + 21 x^{2} y^{2} + 24 x y^{3} + 12 y^{4}\right)}{\left(3 x + 6 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} & \frac{4 x \left(6 x^{3} y + 9 x^{2} y^{2} + 3 x y^{3}\right)}{\left(6 x + 3 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} + \frac{2 x \left(24 x^{4} + 66 x^{3} y + 81 x^{2} y^{2} + 51 x y^{3} + 12 y^{4}\right)}{\left(6 x + 3 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)}\\\frac{4 y \left(3 x^{3} y + 9 x^{2} y^{2} + 6 x y^{3}\right)}{\left(3 x + 6 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} + \frac{2 y \left(12 x^{4} + 51 x^{3} y + 81 x^{2} y^{2} + 66 x y^{3} + 24 y^{4}\right)}{\left(3 x + 6 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} & \frac{2 x \left(6 x^{3} y + 3 x^{2} y^{2}\right)}{\left(6 x + 3 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} + \frac{4 x \left(12 x^{4} + 24 x^{3} y + 21 x^{2} y^{2} + 6 x y^{3}\right)}{\left(6 x + 3 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)}\\\frac{2 y \left(3 x^{2} y^{2} + 6 x y^{3}\right)}{\left(3 x + 6 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} + \frac{4 y \left(6 x^{3} y + 21 x^{2} y^{2} + 24 x y^{3} + 12 y^{4}\right)}{\left(3 x + 6 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} & \frac{4 x \left(6 x^{3} y + 9 x^{2} y^{2} + 3 x y^{3}\right)}{\left(6 x + 3 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} + \frac{2 x \left(24 x^{4} + 66 x^{3} y + 81 x^{2} y^{2} + 51 x y^{3} + 12 y^{4}\right)}{\left(6 x + 3 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)}\\\frac{2 y \left(3 x^{2} y^{2} + 6 x y^{3}\right)}{\left(3 x + 6 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} + \frac{4 y \left(6 x^{3} y + 21 x^{2} y^{2} + 24 x y^{3} + 12 y^{4}\right)}{\left(3 x + 6 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} & \frac{4 x \left(6 x^{3} y + 9 x^{2} y^{2} + 3 x y^{3}\right)}{\left(6 x + 3 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)} + \frac{2 x \left(24 x^{4} + 66 x^{3} y + 81 x^{2} y^{2} + 51 x y^{3} + 12 y^{4}\right)}{\left(6 x + 3 y\right) \left(8 x^{4} + 22 x^{3} y + 30 x^{2} y^{2} + 22 x y^{3} + 8 y^{4}\right)}
+\end{matrix}\right]
+$$
 
 ### How to write a fitness function
 
@@ -280,6 +278,17 @@ floats. The general form of a fitness function would be as follows:
 - Take state and any \*\*kwargs
 - Calculate the fitness of each individual
 - Return an ordered array of fitness values for each player
+
+An example for the two-thirds game [5] would be as follows:
+
+```python
+def example_fitness_function(state, **kwargs):
+
+    avg = sum(state) / len(state)
+    target = (2/3) * avg
+
+    return np.array([abs(state[i] - target) for i in state])
+```
 
 ### How to write a contribution rule
 
@@ -297,10 +306,20 @@ Contribution rules generally take a number of \*\*kwargs in order to perform
 their calculations, however index and N are the only required parameters for
 such a function.
 
+An example to return a contribution equal to your index multiplied by the
+number of players would be:
+
+```python
+def example_contribution_rule(index, N, **kwargs):
+
+    return index * N
+```
+
 ### How to generate a contribution vector based on a distribution
 
 There is functionality to generate contribution vectors based on a Dirichlet
-distribution. For this, we use the following function:
+distribution (for further reading, see [6]).
+For this, we use the following function:
 
 ```python
 import main
@@ -324,11 +343,16 @@ The returned array will always sum to M.
 
 ### How to write an alpha rule
 
-Alpha rules are functions which generate the alpha values in the dirichlet
-distribution. An alpha rule will take a value N and return a numpy.array of N
-strictly positive floats. These values will be used to create realisations of
-the Dirichlet distributions. The player at index i in the state will contribute
-according to the alpha at index i.
+An alpha rule will take a value N and return a numpy.array of N
+strictly positive floats.
+
+An example returning a sequence of increasing alpha parameters would be:
+
+```python
+def example_alpha_rule(N, **kwargs):
+
+    return np.array([i for i in range(N)])
+```
 
 ## Explanation
 
@@ -446,6 +470,40 @@ Now, the entry $i,j$ in the absorption matrix is the probability of ending up
 in absorbing state $j$ after beginning in transitive state $i$. So entry (1,2)
 is the probability of ending up in state [1,1,1] after beginning in [0,0,1].
 
+### The affect of $\alpha$ parameters on the Dirichlet distribution
+
+There are three key factors which affect the
+realisation based on the $\alpha$ parameters.
+
+- The number of $\alpha$ parameters determines the number of entries in the realisation
+  vector
+
+- The ratio between the $\alpha$ parameters will be reflected in the realisation. For
+  example, if we have $\alpha_1 = 1, \alpha_2 = 2, \alpha_3 = 3$ then the
+  expected value of our realisation will be
+  $(\frac{1}{6}, \frac{2}{6}, \frac{3}{6})$. This is because the expected value
+  of entry $i$ in our realisation is $\tilde{\alpha}_i =
+  \frac{\alpha_i}{\sum_{j=1}^{N}\alpha_j}$
+
+- $\alpha_0 = \sum_{i=1}^{N} \alpha_i$ determines the standard deviation of
+  each entry in
+  the realisation. This is because the variance of each component is given by
+  $\frac{\tilde{\alpha}_i (1 - \tilde{\alpha}_i)}{\alpha_0 + 1}$
+
+For further reading on the derivation of these results, see [6]
+
+### Transforming a realisation of the Dirichlet distribution into a contribution vector
+
+Once we obtain a realisation of the Dirichlet distribution, we use it to
+produce a contribution vector. This is done by multiplying the realisation by
+some parameter $M$, defining the total contribution of all individuals. This is
+the only necessary step as for any realisation of the Dirichlet distribution
+$X = (X_1, X_2, ...)$, we have $\sum_{i=1}^{N} X_i = 1$. This is because a
+Dirichlet random vector is constructed by sampling independent Gamma
+distributions $Y_i \sim \operatorname{Gamma}(\alpha_i, 1)$ and normalising to
+$X_i = \frac{Y_i}{\sum_{j=1}^{K} Y_j}$, which then sums to 1 across the $X_is$.
+[6]
+
 ## References
 
 ### List of functionality
@@ -483,17 +541,26 @@ are available:
 The wikipedia pages on absorbing Markov chains and Moran processes give good
 overviews of the topics:
 
-<https://en.wikipedia.org/wiki/Absorbing_Markov_chain>,
+[1] <https://en.wikipedia.org/wiki/Absorbing_Markov_chain>,
 
-<https://en.wikipedia.org/wiki/Moran_process>
+[2] <https://en.wikipedia.org/wiki/Moran_process>
 
 The following textbook is also a very good resource and reference on Markov
 chains
 
-> Stewart, William J. Probability, Markov chains, queues, and simulation: the
+> [3] Stewart, William J. Probability, Markov chains, queues, and simulation: the
 > mathematical basis of performance modelling. Princeton university press, 2009.
 
 To read more about evolutionary game theory, the following textbook is well
 regarded
 
-> Martin A. Nowak. Evolutionary Dynamics: Exploring the Equations of Life
+> [4] Martin A. Nowak. Evolutionary Dynamics: Exploring the Equations of Life
+
+For information on the $\frac{2}{3}$ game:
+
+[5] https://en.wikipedia.org/wiki/Guess_2/3_of_the_average
+
+For further reading into the Dirichlet Distribution, see
+
+> [6] Jiayu Lin. On the Dirichlet Distribution. Queen’s University
+> Kingston, Ontario, Canada September 2016

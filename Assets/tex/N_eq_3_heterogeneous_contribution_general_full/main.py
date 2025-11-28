@@ -1,5 +1,7 @@
 import sympy as sym
-import main
+import sys
+sys.path.append('../../../src/')
+import src.main
 import numpy as np
 
 def heterogeneous_contribution_fitness_function(
@@ -29,10 +31,10 @@ omega = sym.Symbol('w')
 N = 3
 M = sym.Symbol('alpha_1') + sym.Symbol('alpha_2') + sym.Symbol('alpha_3')
 general_alphas_N_eq_3 = [sym.Symbol('alpha_1'), sym.Symbol('alpha_2'), sym.Symbol('alpha_3')]
-state_space = main.get_state_space(N=N, k=2)
+state_space = src.main.get_state_space(N=N, k=2)
 
 
-general_heterogeneous_contribution_transition_matrix = main.generate_transition_matrix(
+general_heterogeneous_contribution_transition_matrix = src.main.generate_transition_matrix(
     state_space=state_space,
     fitness_function=heterogeneous_contribution_fitness_function,
     r=r,
@@ -41,7 +43,7 @@ general_heterogeneous_contribution_transition_matrix = main.generate_transition_
     contribution_vector=general_alphas_N_eq_3,
 )
 
-general_heterogeneous_absorption_matrix = main.generate_absorption_matrix(general_heterogeneous_contribution_transition_matrix, symbolic=True)
+general_heterogeneous_absorption_matrix = src.main.generate_absorption_matrix(general_heterogeneous_contribution_transition_matrix, symbolic=True)
 
 with open("main.tex", "w") as f:
     f.write(sym.latex(sym.Matrix(general_heterogeneous_absorption_matrix)))

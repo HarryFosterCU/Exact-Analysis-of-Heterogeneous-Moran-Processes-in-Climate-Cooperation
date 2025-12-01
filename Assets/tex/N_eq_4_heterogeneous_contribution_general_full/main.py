@@ -40,7 +40,7 @@ def heterogeneous_contribution_fitness_function(
 r = sym.Symbol("r")
 omega = sym.Symbol("w")
 N = 4
-alphas = [sym.Symbol(f"alpha_{i}") _ for i in range(1, N + 1)]
+alphas = [sym.Symbol(f"alpha_{i}") for i in range(1, N + 1)]
 M = sum(alphas)
 state_space = src.main.get_state_space(N=N, k=2)
 

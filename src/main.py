@@ -90,7 +90,7 @@ def fermi_imitation_function(delta, selection_intensity=0.5):
 
     Xiaojian Maa, Ji Quana, Xianjia Wang (2021): Effect of reputation-based
     heterogeneous investment on cooperation in spatial public goods games
-    
+
 
     Parameters
     -----------
@@ -151,7 +151,9 @@ def compute_fermi_transition_probability(source, target, fitness_function, **kwa
     fitness = fitness_function(source, **kwargs)
 
     changes = [
-        fermi_imitation_function(delta = fitness[different_indices] - fitness[i], **kwargs)
+        fermi_imitation_function(
+            delta=fitness[different_indices] - fitness[i], **kwargs
+        )
         for i in np.where(source == target[different_indices])
     ]
 

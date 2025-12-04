@@ -373,7 +373,9 @@ def test_generate_transition_matrix_for_trivial_fitness_function():
     )
     assert np.array_equal(
         main.generate_transition_matrix(
-            state_space=state_space, fitness_function=trivial_fitness_function, compute_transition_probability=main.compute_moran_transition_probability
+            state_space=state_space,
+            fitness_function=trivial_fitness_function,
+            compute_transition_probability=main.compute_moran_transition_probability,
         ),
         expected_transition_matrix,
     )
@@ -427,7 +429,9 @@ def test_generate_transition_matrix_for_ordered_fitness_function():
     )
     np.testing.assert_allclose(
         main.generate_transition_matrix(
-            state_space=state_space, fitness_function=ordered_fitness_function, compute_transition_probability=main.compute_moran_transition_probability
+            state_space=state_space,
+            fitness_function=ordered_fitness_function,
+            compute_transition_probability=main.compute_moran_transition_probability,
         ),
         expected_transition_matrix,
     )
@@ -461,7 +465,9 @@ def test_generate_transition_matrix_for_different_state_space():
     )
     np.testing.assert_allclose(
         main.generate_transition_matrix(
-            state_space=state_space, fitness_function=trivial_fitness_function, compute_transition_probability=main.compute_moran_transition_probability
+            state_space=state_space,
+            fitness_function=trivial_fitness_function,
+            compute_transition_probability=main.compute_moran_transition_probability,
         ),
         expected_transition_matrix,
     )
@@ -511,7 +517,7 @@ def test_generate_transition_matrix_for_symbolic_fitness_function():
         main.generate_transition_matrix(
             state_space=state_space,
             fitness_function=symbolic_fitness_function,
-            compute_transition_probability=main.compute_moran_transition_probability
+            compute_transition_probability=main.compute_moran_transition_probability,
         ),
         expected_transition_matrix,
     )
@@ -548,7 +554,11 @@ def test_generate_transition_matrix_for_kwargs_fitness_function():
     np.testing.assert_array_almost_equal(
         expected_transition_matrix,
         main.generate_transition_matrix(
-            state_space=state_space, fitness_function=kwargs_fitness_function, compute_transition_probability=main.compute_moran_transition_probability, c=c, r=r
+            state_space=state_space,
+            fitness_function=kwargs_fitness_function,
+            compute_transition_probability=main.compute_moran_transition_probability,
+            c=c,
+            r=r,
         ),
     )
 
@@ -1429,7 +1439,9 @@ def test_fermi_imitation_function_for_numeric_value():
 
     expected_fermi_value = 0.00247262315663477
 
-    actual_fermi_value = main.fermi_imitation_function(delta=delta, selection_intensity=selection_intensity)
+    actual_fermi_value = main.fermi_imitation_function(
+        delta=delta, selection_intensity=selection_intensity
+    )
 
     np.testing.assert_almost_equal(expected_fermi_value, actual_fermi_value)
 
@@ -1439,12 +1451,14 @@ def test_fermi_imitation_function_for_symbolic_value():
     Tests whether the fermi_imitation_function returns the desired expression
     for symbolic values of delta and selection_intensity"""
 
-    delta = sym.Symbol('Delta')
-    selection_intensity = sym.Symbol('beta')
+    delta = sym.Symbol("Delta")
+    selection_intensity = sym.Symbol("beta")
 
-    expected_fermi_value = 1 / (1 + sym.E ** (delta/selection_intensity))
+    expected_fermi_value = 1 / (1 + sym.E ** (delta / selection_intensity))
 
-    actual_fermi_value = main.fermi_imitation_function(delta=delta, selection_intensity=selection_intensity)
+    actual_fermi_value = main.fermi_imitation_function(
+        delta=delta, selection_intensity=selection_intensity
+    )
 
     assert expected_fermi_value == actual_fermi_value
 
@@ -1456,15 +1470,18 @@ def test_compute_fermi_transition_probability_for_trivial_fitness_function():
 
     def trivial_fitness_function(state):
         return np.array([1 for _ in state])
-    
-    source = np.array([0,1])
-    target = np.array([1,1])
-    
-    actual_probability = main.compute_fermi_transition_probability(source=source, target=target, fitness_function=trivial_fitness_function)
+
+    source = np.array([0, 1])
+    target = np.array([1, 1])
+
+    actual_probability = main.compute_fermi_transition_probability(
+        source=source, target=target, fitness_function=trivial_fitness_function
+    )
 
     expected_probability = 0.25
 
     assert expected_probability == actual_probability
+
 
 def test_compute_fermi_transition_probability_for_symbolic_fitness_function():
     """
@@ -1472,20 +1489,28 @@ def test_compute_fermi_transition_probability_for_symbolic_fitness_function():
     correct expression for a symbolic fitness function"""
 
     def symbolic_fitness_function(state, **kwargs):
-        return np.array([sym.Symbol('x') if i == 0 else sym.Symbol('y') for i in state])
-    
-    source = np.array([0,1,1])
-    target = np.array([1,1,1])
-    beta = sym.Symbol('beta')
+        return np.array([sym.Symbol("x") if i == 0 else sym.Symbol("y") for i in state])
 
-    actual_probability = main.compute_fermi_transition_probability(source=source, target=target, fitness_function=symbolic_fitness_function, selection_intensity=beta)
-    
-    x = sym.Symbol('x')
-    y = sym.Symbol('y')
+    source = np.array([0, 1, 1])
+    target = np.array([1, 1, 1])
+    beta = sym.Symbol("beta")
 
-    expected_probability = (1 / 6) * (1 / (1 + sym.E ** (((x - y) / beta))) + 1 / (1 + sym.E ** (((x - y) / beta))))
+    actual_probability = main.compute_fermi_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=symbolic_fitness_function,
+        selection_intensity=beta,
+    )
+
+    x = sym.Symbol("x")
+    y = sym.Symbol("y")
+
+    expected_probability = (1 / 6) * (
+        1 / (1 + sym.E ** (((x - y) / beta))) + 1 / (1 + sym.E ** (((x - y) / beta)))
+    )
 
     assert actual_probability == expected_probability
+
 
 def test_compute_fermi_transition_probability_for_infeasible_states_and_no_change():
     """
@@ -1494,19 +1519,23 @@ def test_compute_fermi_transition_probability_for_infeasible_states_and_no_chang
 
     def trivial_fitness_function(state):
         return np.array([1 for _ in state])
-    
-    source1 = np.array([0,1])
-    target1 = np.array([1,0])
 
-    actual_probability1 = main.compute_fermi_transition_probability(source=source1, target=target1, fitness_function=trivial_fitness_function)
+    source1 = np.array([0, 1])
+    target1 = np.array([1, 0])
+
+    actual_probability1 = main.compute_fermi_transition_probability(
+        source=source1, target=target1, fitness_function=trivial_fitness_function
+    )
 
     expected_probability1 = 0
 
     assert expected_probability1 == actual_probability1
 
-    source2 = np.array([0,1])
-    target2 = np.array([0,1])
+    source2 = np.array([0, 1])
+    target2 = np.array([0, 1])
 
-    actual_probability2 = main.compute_fermi_transition_probability(source=source2, target=target2, fitness_function=trivial_fitness_function)
+    actual_probability2 = main.compute_fermi_transition_probability(
+        source=source2, target=target2, fitness_function=trivial_fitness_function
+    )
 
     assert actual_probability2 is None

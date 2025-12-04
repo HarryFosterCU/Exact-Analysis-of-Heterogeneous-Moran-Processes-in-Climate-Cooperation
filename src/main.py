@@ -77,36 +77,40 @@ def compute_moran_transition_probability(source, target, fitness_function, **kwa
     return numerator / denominator
 
 
-
-def fermi_imitation_function(fitness_focal, fitness_target, selection_intensity):
+def fermi_imitation_function(delta, selection_intensity=0.5):
     """
-    Given the fitness of the focal individual who changes action type, and the 
-    
-    target individual who is being copied, as well as the selection intensity, 
-    
+    Given the fitness of the focal individual who changes action type, and the
+
+    target individual who is being copied, as well as the selection intensity,
+
     returns $\phi(a_i, a_j) = \frac{1}{1 + \exp({\frac{f(a_{i}) - f(a_{j})
-    }{\beta}})}$ 
+    }{\beta}})}$
+
+    Selection intensity is set to 0.5 by default, as is common according to:
+
+    Xiaojian Maa, Ji Quana, Xianjia Wang (2021): Effect of reputation-based
+    heterogeneous investment on cooperation in spatial public goods games
     
+
     Parameters
     -----------
-    
+
     fitness_focal: float or sym.Symbol, the fitness of the individual who can
     change action type
-    
+
     fitness_target: float or sym.Symbol, the fitness of the individual who may
     have their action type copied
-    
+
     selection_intensity: float or sym.Symbol, a parameter which determines the
     effect the difference in fitness has on the transition probability. As
     selection_intensity goes to infinity, the probability of transitioning goes
     to $\frac{1}{2}$
     """
-    expression = fitness_focal - fitness_target
-    return 1 / (1 + sym.exp**((expression) / selection_intensity))
+
+    return 1 / (1 + sym.E ** ((delta) / selection_intensity))
 
 
-
-def compute_fermi_transition_probability(source, target, fitness_function, **kwargs):  
+def compute_fermi_transition_probability(source, target, fitness_function, **kwargs):
     """
     Given two states and a fitness function, returns the transition probability
 
@@ -120,8 +124,8 @@ def compute_fermi_transition_probability(source, target, fitness_function, **kwa
 
     This is adressed in the get_transition_matrix function.
 
-    $\sum_{a_j=b_{i^*}}^N\frac{1}{N(N-1)}\phi(a_{i^*},a_j)$ 
-    
+    $\sum_{a_j=b_{i^*}}^N\frac{1}{N(N-1)}\phi(a_{i^*},a_j)$
+
     where $\phi(a_i, a_j) = \frac{1}{1 + \exp({\frac{f(a_{i}) - f(a_{j})
     }{\beta}})}$
 
@@ -138,8 +142,7 @@ def compute_fermi_transition_probability(source, target, fitness_function, **kwa
     Returns
     ---------
     Float: the transition pobability from source to target"""
-    
-    
+
     different_indices = np.where(source != target)
     if len(different_indices[0]) > 1:
         return 0
@@ -147,17 +150,18 @@ def compute_fermi_transition_probability(source, target, fitness_function, **kwa
         return None
     fitness = fitness_function(source, **kwargs)
 
-
-    changes = [fermi_imitation_function(fitness[different_indices], fitness[i], **kwargs) for i in np.where(source == target[different_indices])]
-
-
+    changes = [
+        fermi_imitation_function(delta = fitness[different_indices] - fitness[i], **kwargs)
+        for i in np.where(source == target[different_indices])
+    ]
 
     scalar = 1 / (len(source) * (len(source) - 1))
     return (scalar * np.array(changes)).sum()
 
 
-
-def generate_transition_matrix(state_space, fitness_function, compute_transition_probability, **kwargs):
+def generate_transition_matrix(
+    state_space, fitness_function, compute_transition_probability, **kwargs
+):
     """
     Given a state space and a fitness function, returns the transition matrix
 
@@ -169,7 +173,7 @@ def generate_transition_matrix(state_space, fitness_function, compute_transition
 
     fitness_function: function, should return a size N numpy.array when passed
     a state
-    
+
     compute_transition_probability: function, takes a source state, a target
     state, and a fitness function, and returns the probability of transitioning
     from the source state to the target state

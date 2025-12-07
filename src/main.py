@@ -77,7 +77,7 @@ def compute_moran_transition_probability(source, target, fitness_function, **kwa
     return numerator / denominator
 
 
-def fermi_imitation_function(delta, selection_intensity=0.5):
+def fermi_imitation_function(delta, selection_intensity=0.5, **kwargs):
     """
     Given the fitness of the focal individual who changes action type, and the
 

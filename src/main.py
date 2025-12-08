@@ -160,6 +160,7 @@ def compute_fermi_transition_probability(
     if len(different_indices[0]) == 0:
         return None
     fitness = fitness_function(source, **kwargs)
+    
 
     changes = [
         fermi_imitation_function(
@@ -182,7 +183,9 @@ def compute_imitation_introspection_transition_probability(
 
     the transition probability when moving from the source state to the target
 
-    state. Must move between states with a Hamming distance of 1. Returns 0 if
+    state in introspective imitation dynamics. Must move between states with a]
+     
+    Hamming distance of 1. Returns 0 if
 
     Hamming distance > 1.
 
@@ -194,11 +197,7 @@ def compute_imitation_introspection_transition_probability(
 
     The following equation is the subject of this function:
 
-    $\frac{\kappa(b_{I(a,b)})}{N(N-1)}\phi(\Delta(f_{I(\textbf{a,b})})$
-
-    where $\phi(f_i(a) - f(a_j)) = \frac{1}{1 + \exp({\frac{f(a_{i}) - f(a_{j})
-    }{\beta}})}$ and $\delta(f_{I(a,b)})$ is the difference in fitness between
-    the focal player's current strategy and their proposed strategy.
+    
 
     Parameters
     ----------
@@ -224,17 +223,18 @@ def compute_imitation_introspection_transition_probability(
         return 0
     if len(different_indices[0]) == 0:
         return None
-    fitness_before = fitness_function(source, **kwargs)[different_indices][0]
+
+    fitness = fitness_function(source, **kwargs)
+    fitness_before = fitness[different_indices][0]
     fitness_after = fitness_function(target, **kwargs)[different_indices][0]
+    
+    selection_denominator = fitness.sum() * len(source)
+    selection_numerator = fitness[source == target[different_indices]].sum()
+    selection_probability = selection_numerator / selection_denominator
 
     delta = fitness_before - fitness_after
 
-    kappa_a = np.sum(
-        np.array([1 for _ in np.where(source == target[different_indices])[0]])
-    )
-
-    scalar = kappa_a / (len(source) * (len(source) - 1))
-    return scalar * fermi_imitation_function(
+    return selection_probability * fermi_imitation_function(
         delta=delta, selection_intensity=selection_intensity
     )
 

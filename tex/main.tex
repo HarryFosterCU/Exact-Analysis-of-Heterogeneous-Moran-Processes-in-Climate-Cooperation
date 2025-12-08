@@ -216,7 +216,7 @@ Another method by which we can calculate the probability of one player copying t
 Consider a Markov chain where at each time step, one player is chosen with probability \(\frac{1}{N}\) to be the ``focal" player \(a_i\), and they compare their strategy with another player \(a_j\) chosen with probability \(\frac{1}{N-1}\). 
 Then, \(a_i\) copies the strategy of \(a_j\) with a probability according to the Fermi function:
 \begin{equation}
-    \phi(f_{i}(\textbf{a}) - f_{j}(\textbf{a})) = \frac{1}{1 + \exp({\frac{f_{i}(\textbf{a}) - f_{j}(\textbf{a})) }{\beta}})}
+    \phi(f_{i}(\textbf{a}) - f_{j}(\textbf{a})) = \frac{1}{1 + e^{\left({\frac{f_{i}(\textbf{a}) - f_{j}(\textbf{a}) }{\beta}}\right)}}
 \end{equation}
 Where \(\beta\) is the selection intensity of the system. 
 This method has been commonly used in studies of evolutionary games, for example \cite{Maa, Lei, fermi_example}. \\
@@ -255,7 +255,7 @@ Now, let us look once more at our state space \(\textbf{a} = (0,0), \textbf{b} =
 \begin{center}
 \begin{equation}
 \begin{bmatrix}
-1 & 0 & 0 & 0\\\frac{1}{\left(2e^{\frac{- f_{1}{\left(\textbf{b} \right)} + f_{2}{\left(\textbf{b} \right)}}{\beta}} + 1\right)} & 0.5 & 0 & \frac{1}{\left(2e^{\frac{f_{1}{\left(\textbf{b} \right)} - f_{2}{\left(\textbf{b} \right)}}{\beta}} + 1\right)}\\\frac{1}{\left(2e^{\frac{f_{1}{\left(\textbf{c} \right)} - f_{2}{\left(\textbf{c} \right)}}{\beta}} + 1\right)} & 0 & 0.5 & \frac{1}{\left(2e^{\frac{- f_{1}{\left(\textbf{c} \right)} + f_{2}{\left(\textbf{c} \right)}}{\beta}} + 1\right)}\\0 & 0 & 0 & 1
+1 & 0 & 0 & 0\\\frac{1}{2\left(e^{\frac{- f_{1}{\left(\textbf{b} \right)} + f_{2}{\left(\textbf{b} \right)}}{\beta}} + 1\right)} & 0.5 & 0 & \frac{1}{2\left(e^{\frac{f_{1}{\left(\textbf{b} \right)} - f_{2}{\left(\textbf{b} \right)}}{\beta}} + 1\right)}\\\frac{1}{2\left(e^{\frac{f_{1}{\left(\textbf{c} \right)} - f_{2}{\left(\textbf{c} \right)}}{\beta}} + 1\right)} & 0 & 0.5 & \frac{1}{2\left(2e^{\frac{- f_{1}{\left(\textbf{c} \right)} + f_{2}{\left(\textbf{c} \right)}}{\beta}} + 1\right)}\\0 & 0 & 0 & 1
 \end{bmatrix}
 \end{equation}
 \end{center}

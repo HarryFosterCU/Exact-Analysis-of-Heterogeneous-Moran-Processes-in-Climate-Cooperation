@@ -251,11 +251,12 @@ Here we see how the Fermi function can be used to define the transition probabil
 %This is because \(\phi(f_{\text{I(\textbf{a,b})}(a}) - %f_{j}(\textbf{a}))) < 1\) for all \( i,j\in \mathbb{N}\), and clearly \(K-1 \leq N-1\) as \(K < N\). Thus, we have our result that this defines a transition matrix for a Markov chain.
 
 
-Now, let us look once more at our state space \(\textbf{a} = (0,0), \textbf{b} = (0,1), \textbf{c} = (1,0), \textbf{d} = (1,1)\). Using this method, we can define a transition matrix (here, this is simplified for ease of reading):
+Now, let us look once more at our state space \(\textbf{a} = (0,0), \textbf{b} = (0,1), \textbf{c} = (1,0), \textbf{d} = (1,1)\).  
+We can define a transition matrix:
 \begin{center}
 \begin{equation}
 \begin{bmatrix}
-1 & 0 & 0 & 0\\\frac{1}{2\left(e^{\frac{- f_{1}{\left(\textbf{b} \right)} + f_{2}{\left(\textbf{b} \right)}}{\beta}} + 1\right)} & 0.5 & 0 & \frac{1}{2\left(e^{\frac{f_{1}{\left(\textbf{b} \right)} - f_{2}{\left(\textbf{b} \right)}}{\beta}} + 1\right)}\\\frac{1}{2\left(e^{\frac{f_{1}{\left(\textbf{c} \right)} - f_{2}{\left(\textbf{c} \right)}}{\beta}} + 1\right)} & 0 & 0.5 & \frac{1}{2\left(2e^{\frac{- f_{1}{\left(\textbf{c} \right)} + f_{2}{\left(\textbf{c} \right)}}{\beta}} + 1\right)}\\0 & 0 & 0 & 1
+1 & 0 & 0 & 0\\\frac{1}{2}\phi(f_2(\textbf{b}) - f_1(\textbf{b})) & \frac{1}{2} & 0 & \frac{1}{2}\phi(f_1(\textbf{b}) - f_2(\textbf{b}))\\\frac{1}{2}\phi(f_1(\textbf{c}) - f_2(\textbf{c})) & 0 & \frac{1}{2} & \frac{1}{2}\phi(f_2(\textbf{c}) - f_1(\textbf{c}))\\0 & 0 & 0 & 1
 \end{bmatrix}
 \end{equation}
 \end{center}
@@ -266,7 +267,7 @@ and using our previous method, we can acquire our absorption matrix:
 \begin{large}
 \begin{equation}
 \begin{bmatrix}
-\frac{ e^{\frac{f_{1}{\left(\textbf{b} \right)}}{\beta}}}{\left(e^{\frac{f_{1}{\left(\textbf{b} \right)}}{\beta}} + e^{\frac{f_{2}{\left(\textbf{b} \right)}}{\beta}}\right)} & \frac{1}{\left(e^{\frac{f_{1}{\left(\textbf{b} \right)} - f_{2}{\left(\textbf{b} \right)}}{\beta}} + 1\right)}\\\frac{1}{\left(e^{\frac{f_{1}{\left(\textbf{c} \right)} - f_{2}{\left(\textbf{c} \right)}}{\beta}} + 1\right)} & \frac{ e^{\frac{f_{1}{\left(\textbf{c} \right)}}{\beta}}}{\left(e^{\frac{f_{1}{\left(\textbf{c} \right)}}{\beta}} + e^{\frac{f_{2}{\left(\textbf{c} \right)}}{\beta}}\right)}
+\phi(f_2(\textbf{b}) - f_1(\textbf{b})) & \phi(f_1(\textbf{b})-f_2(\textbf{b}))\\\phi(f_1(\textbf{c}) - f_2(\textbf{c})) & \phi(f_2(\textbf{c}) - f_1(\textbf{c}))
 \end{bmatrix}
 \end{equation}
 \end{large}
@@ -334,7 +335,7 @@ We can define a transition matrix \(T\) of an introspective imitation process as
 
 \begin{equation}
 T_{\textbf{a,b}} =  \begin{cases}
-    \frac{1}{N}\sum_{a_{j} = b_{I(\textbf{a}, \textbf{b})}}\frac{f_j(\textbf{a})}{\sum_{k}f_k(\textbf{a})}\phi(\Delta(f_{I(\textbf{a,b})})) & \text{if \textbf{b}}\in \text{Neb(\textbf{a})}\\
+    \frac{1}{N}\frac{\sum_{a_{j} = b_{I(\textbf{a}, \textbf{b})}}f_j(\textbf{a})}{\sum_{k}f_k(\textbf{a})}\phi(\Delta(f_{I(\textbf{a,b})})) & \text{if \textbf{b}}\in \text{Neb(\textbf{a})}\\
     0 & \text{if \textbf{b}}\notin \text{Neb(\textbf{a}) and \textbf{a}} \neq \textbf{b}\\
     1 - \sum_{\textbf{b}\in \text{Neb(\textbf{a})}} p_{a_{I(\textbf{a,b})}\to b_{I(\textbf{a,b})}}(a_{-j}) & \text{if \textbf{a}}=\textbf{b}
 \end{cases}
@@ -345,25 +346,27 @@ This models a behaviour where individuals learn from each other, but do not blin
 Instead, players look to others to see what action they \textit{could} play, but judge based on their own fitness to decide what action they \textit{should} play.\\
 
 Let us now see this model applied to our ongoing example in the state space \(S = \{\textbf{a},\textbf{b},\textbf{c},\textbf{d}\}\).
+Let 
+\(\eta_{i,j}(\textbf{x,y}) =1 +e^{\frac{(f_i(\textbf{x}) - f_j(\textbf{y}))}{\beta}}\) be the denominator of the Fermi function.
 We first see our transition matrix:
 
 \begin{center}
-\begin{small}
-
-\rotatebox{90}{\begin{equation}\begin{bmatrix}
-1 & 0 & 0 & 0\\\frac{f_{1}{\left(b \right)}}{2 \left(f_{1}{\left(b \right)} + f_{2}{\left(b \right)}\right) \left(e^{\frac{- f_{2}{\left(a \right)} + f_{2}{\left(b \right)}}{\beta}} + 1\right)} & 1 - \frac{f_{2}{\left(b \right)}}{\left(2 f_{1}{\left(b \right)} + 2 f_{2}{\left(b \right)}\right) \left(e^{\frac{f_{1}{\left(b \right)} - f_{1}{\left(d \right)}}{\beta}} + 1\right)} - \frac{f_{1}{\left(b \right)}}{\left(1 + e^{- \frac{f_{2}{\left(a \right)} - f_{2}{\left(b \right)}}{\beta}}\right) \left(2 f_{1}{\left(b \right)} + 2 f_{2}{\left(b \right)}\right)} & 0 & \frac{f_{2}{\left(b \right)}}{2 \left(f_{1}{\left(b \right)} + f_{2}{\left(b \right)}\right) \left(e^{\frac{f_{1}{\left(b \right)} - f_{1}{\left(d \right)}}{\beta}} + 1\right)}\\\frac{f_{2}{\left(c \right)}}{2 \left(f_{1}{\left(c \right)} + f_{2}{\left(c \right)}\right) \left(e^{\frac{- f_{1}{\left(a \right)} + f_{1}{\left(c \right)}}{\beta}} + 1\right)} & 0 & 1 - \frac{f_{1}{\left(c \right)}}{\left(2 f_{1}{\left(c \right)} + 2 f_{2}{\left(c \right)}\right) \left(e^{\frac{f_{2}{\left(c \right)} - f_{2}{\left(d \right)}}{\beta}} + 1\right)} - \frac{f_{2}{\left(c \right)}}{\left(1 + e^{- \frac{f_{1}{\left(a \right)} - f_{1}{\left(c \right)}}{\beta}}\right) \left(2 f_{1}{\left(c \right)} + 2 f_{2}{\left(c \right)}\right)} & \frac{f_{1}{\left(c \right)}}{2 \left(f_{1}{\left(c \right)} + f_{2}{\left(c \right)}\right) \left(e^{\frac{f_{2}{\left(c \right)} - f_{2}{\left(d \right)}}{\beta}} + 1\right)}\\0 & 0 & 0 & 1
-\end{bmatrix}\end{equation}}
-
-\end{small}
+\begin{tiny}
+\begin{equation}
+\begin{bmatrix}
+1 & 0 & 0 & 0\\\frac{f_{1}{\left(b \right)}}{2\eta_{2,2}(\textbf{b,a}) \left(f_{1}{\left(b \right)} + f_{2}{\left(b \right)}\right)} & 1 - \frac{f_{2}{\left(b \right)}}{\eta_{1,1}(\textbf{b,d})\left(2 f_{1}{\left(b \right)} + 2 f_{2}{\left(b \right)}\right)} - \frac{f_{1}{\left(b \right)}}{\eta_{2,2}(\textbf{b,a}) \left(2 f_{1}{\left(b \right)} + 2 f_{2}{\left(b \right)}\right)} & 0 & \frac{f_{2}{\left(b \right)}}{2\eta_{1,1}(\textbf{b,d)} \left(f_{1}{\left(b \right)} + f_{2}{\left(b \right)}\right) }\\\frac{f_{2}{\left(c \right)}}{2 \eta_{1,1}(\textbf{c,a})\left(f_{1}{\left(c \right)} + f_{2}{\left(c \right)}\right)} & 0 & 1 - \frac{f_{1}{\left(c \right)}}{\eta_{2,2}(\textbf{c,d})\left(2 f_{1}{\left(c \right)} + 2 f_{2}{\left(c \right)}\right)} - \frac{f_{2}{\left(c \right)}}{\eta_{1,1}(\textbf{c,a}) \left(2 f_{1}{\left(c \right)} + 2 f_{2}{\left(c \right)}\right)} & \frac{f_{1}{\left(c \right)}}{2\eta_{2,2}(\textbf{c,d}) \left(f_{1}{\left(c \right)} + f_{2}{\left(c \right)}\right)}\\0 & 0 & 0 & 1
+\end{bmatrix}
+\end{equation}
+\end{tiny}
 \end{center}
 
-And using the same method as in the other methods of imitation dynamics, we obtain the absorption matrix:
+And, using the same method as in the other methods of imitation dynamics, we obtain the absorption matrix:
 
 \begin{center}
 \begin{large}
 \begin{equation}
 \begin{bmatrix}
-\frac{\left(e^{\frac{f_{1}{\left(b \right)} - f_{1}{\left(d \right)}}{\beta}} + 1\right) f_{1}{\left(b \right)}}{\left(e^{\frac{f_{1}{\left(b \right)} - f_{1}{\left(d \right)}}{\beta}} + 1\right) f_{1}{\left(b \right)} + \left(e^{\frac{- f_{2}{\left(a \right)} + f_{2}{\left(b \right)}}{\beta}} + 1\right) f_{2}{\left(b \right)}} & \frac{\left(e^{\frac{- f_{2}{\left(a \right)} + f_{2}{\left(b \right)}}{\beta}} + 1\right) f_{2}{\left(b \right)}}{\left(e^{\frac{f_{1}{\left(b \right)} - f_{1}{\left(d \right)}}{\beta}} + 1\right) f_{1}{\left(b \right)} + \left(e^{\frac{- f_{2}{\left(a \right)} + f_{2}{\left(b \right)}}{\beta}} + 1\right) f_{2}{\left(b \right)}}\\\frac{\left(e^{\frac{f_{2}{\left(c \right)} - f_{2}{\left(d \right)}}{\beta}} + 1\right) f_{2}{\left(c \right)}}{\left(e^{\frac{- f_{1}{\left(a \right)} + f_{1}{\left(c \right)}}{\beta}} + 1\right) f_{1}{\left(c \right)} + \left(e^{\frac{f_{2}{\left(c \right)} - f_{2}{\left(d \right)}}{\beta}} + 1\right) f_{2}{\left(c \right)}} & \frac{\left(e^{\frac{- f_{1}{\left(a \right)} + f_{1}{\left(c \right)}}{\beta}} + 1\right) f_{1}{\left(c \right)}}{\left(e^{\frac{- f_{1}{\left(a \right)} + f_{1}{\left(c \right)}}{\beta}} + 1\right) f_{1}{\left(c \right)} + \left(e^{\frac{f_{2}{\left(c \right)} - f_{2}{\left(d \right)}}{\beta}} + 1\right) f_{2}{\left(c \right)}}
+\frac{\eta_{1,1}(\textbf{b,d})f_{1}{\left(b \right)}}{\eta_{1,1}(\textbf{b,d}) f_{1}{\left(b \right)} + \eta_{2,2}(\textbf{b,a}) f_{2}{\left(b \right)}} & \frac{\eta_{2,2}(\textbf{b,a}) f_{2}{\left(b \right)}}{\eta_{1,1}(\textbf{b,d}) f_{1}{\left(b \right)} + \eta_{2,2}(\textbf{b,a}) f_{2}{\left(b \right)}}\\\frac{\eta_{2,2}(\textbf{c,d}) f_{2}{\left(c \right)}}{\eta_{1,1}(\textbf{c,a}) f_{1}{\left(c \right)} + \eta_{2,2}(\textbf{c,d}) f_{2}{\left(c \right)}} & \frac{\eta_{1,1}(\textbf{c,a}) f_{1}{\left(c \right)}}{\eta_{1,1}(\textbf{c,a}) f_{1}{\left(c \right)} + \eta_{2,2}(\textbf{c,d}) f_{2}{\left(c \right)}}
 \end{bmatrix}
 \end{equation}
 \end{large}
@@ -389,7 +392,7 @@ Below, we see a diagram showing the classification of the population dynamics sh
 \centering
 \begin{tabular}{|c|c|}
 \hline
-Copy based on target's fitness & Copy based on focal player's fitness\\
+Extrinsic Strategy Analysis & Intrinsic Strategy Analysis\\
 \hline
 % Figure 1
 \begin{tikzpicture}[scale=0.6]
@@ -515,11 +518,11 @@ Copy based on target's fitness & Copy based on focal player's fitness\\
 
 
 
-\node at (2,4.3) {\textbf{Removal}};
-\node at (7,4.3) {\textbf{Duplication}};
-\node at (12,4.3) {\textbf{Transformation}};
+\node at (2,4.5) {\textbf{Selection}};
+\node at (7,4.5) {\textbf{Selection \(\propto f\)}};
+\node at (12,4.5) {\textbf{Update}};
 
-\node at (7, 5.2) {\textbf{Moran Process}};
+\node at (7, 5.5) {\textbf{Moran Process}};
 
 
 
@@ -564,16 +567,23 @@ Copy based on target's fitness & Copy based on focal player's fitness\\
 %================ SECOND BOX ==================
 \draw (5,0) rectangle (9,4);
 % middle comparison: empty triangle < filled triangle
-\begin{scope}[shift={(6,2)}]
+\node[scale=1.5] at (5.5,2) {$f($};
+\node[scale=1.5] at (7.5,2) {$f($};
+\begin{scope}[shift={(6.15,2)}, scale=0.75]
     % --- plain (empty) triangle ---
-    \draw (0,0.5) -- (-0.5,-0.5) -- (0.5,-0.5) -- cycle;
+    \draw (0.15,0.5) -- (-0.35,-0.5) -- (0.65,-0.5) -- cycle;
 
     % --- less-than symbol ---
-    \node at (1,0) {$<$};
+    \node at (1.15,0) {$<$};
 
     % --- filled black triangle ---
-    \fill[black] (2,0.5) -- (1.5,-0.5) -- (2.5,-0.5) -- cycle;
+    \fill[black] (2.75,0.5) -- (2.25,-0.5) -- (3.25,-0.5) -- cycle;
 \end{scope}
+\node[scale=1.5] at (6.75,2) {$)$};
+\node[scale=1.5] at (8.65,2) {$)$};
+
+
+
 
 
 
@@ -621,11 +631,11 @@ Copy based on target's fitness & Copy based on focal player's fitness\\
 \draw[->, thick] (9,2) -- (10,2);  % Arrow from box 2 → box 3
 
 
-\node at (2,4.3) {\textbf{Selection}};
-\node at (7,4.3) {\textbf{Comparison}};
-\node at (12,4.3) {\textbf{Transformation}};
+\node at (2,4.5) {\textbf{Selection}};
+\node at (7,4.5) {\textbf{Comparison}};
+\node at (12,4.5) {\textbf{Update}};
 
-\node at (7, 5.2) {\textbf{Introspection Dynamics}};
+\node at (7, 5.5) {\textbf{Introspection Dynamics}};
 
 
 \draw[dotted, thick] (3,1) circle (0.9cm);
@@ -671,29 +681,35 @@ Copy based on target's fitness & Copy based on focal player's fitness\\
 %================ SECOND BOX ==================
 \draw (5,0) rectangle (9,4);
 % middle comparison: empty triangle < small striped diamond
-\begin{scope}[shift={(6,2)}]
 
+\node[scale=1.5] at (5.5,2) {$f($};
+\node[scale=1.5] at (7.5,2) {$f($};
+\begin{scope}[shift={(6.15,2)}, scale=0.75]
     % --- plain (empty) triangle ---
-    \draw (0,0.5) -- (-0.5,-0.5) -- (0.5,-0.5) -- cycle;
+    \draw (0.15,0.5) -- (-0.35,-0.5) -- (0.65,-0.5) -- cycle;
 
     % --- less-than symbol ---
-    \node at (1,0) {$<$};
+    \node at (1.15,0) {$<$};
 
-    % --- small striped diamond ---
-    \begin{scope}[shift={(2,0)}, scale=0.5] % scale down diamond
-        % outline
+    % outline
+    \begin{scope}[shift={(2.75,0)}, scale=0.55]
         \draw[thick] (0,1) -- (1,0) -- (0,-1) -- (-1,0) -- cycle;
 
         % stripes
-        \begin{scope}
+        
             \clip (0,1) -- (1,0) -- (0,-1) -- (-1,0) -- cycle;
             \foreach \x in {-2,-1.75,...,2} {
                 \draw[black!50] (\x,-2) -- (\x+2,2);
             }
-        \end{scope}
-    \end{scope}
-
 \end{scope}
+\end{scope}
+\node[scale=1.5] at (6.75,2) {$)$};
+\node[scale=1.5] at (8.65,2) {$)$};
+
+
+
+
+
 
 
 
@@ -741,11 +757,11 @@ Copy based on target's fitness & Copy based on focal player's fitness\\
 \draw[->, thick] (9,2) -- (10,2);  % Arrow from box 2 → box 3
 
 
-\node at (2,4.3) {\textbf{Selection}};
-\node at (7,4.3) {\textbf{Comparison}};
-\node at (12,4.3) {\textbf{Transformation}};
+\node at (2,4.5) {\textbf{Selection}};
+\node at (7,4.5) {\textbf{Comparison}};
+\node at (12,4.5) {\textbf{Update}};
 
-\node at (7, 5.2) {\textbf{Fermi Imitation Dynamics}};
+\node at (7, 5.5) {\textbf{Fermi Imitation Dynamics}};
 
 
 \draw[dotted, thick] (3,3) circle (0.8cm);
@@ -753,11 +769,16 @@ Copy based on target's fitness & Copy based on focal player's fitness\\
 \end{tikzpicture}
 &
 % Figure 4
+
+\\
+\hline
+\multicolumn{2}{|c|}{Both Extrinsic and Intrinsic Strategy Analysis}\\
+\hline
+\multicolumn{2}{|c|}{ 
 \begin{tikzpicture}[scale=0.6]
 
 %================ FIRST BOX ==================
 \draw (0,0) rectangle (4,4);
-
 
 \draw (0.5,3.5) rectangle (1.5,2.5);
 
@@ -784,93 +805,116 @@ Copy based on target's fitness & Copy based on focal player's fitness\\
 
 % Triangle (plain)
 \draw (3,1.5) -- (2.5,0.7) -- (3.5,0.7) -- cycle;
-\node (triA) at (3,0.7) {}; % anchor for arrow
 
 
-%================ SECOND BOX ==================
-\draw (5,0) rectangle (9,4);
+%================ 2nd box (SHIFTED RIGHT) ==================
+\draw (6,0) rectangle (10,4);
+\node at (8,4.5) {\textbf{Selection \(\propto f\)}};
 
-\begin{scope}[shift={(6,2)}]
-    % --- plain (empty) triangle ---
-    \draw (0,0.5) -- (-0.5,-0.5) -- (0.5,-0.5) -- cycle;
+\draw (6.5,3.5) rectangle (7.5,2.5);
 
-    % --- less-than symbol ---
-    \node at (1,0) {$<$};
-
-    % --- filled black triangle ---
-    \draw (2,0.5) -- (1.5,-0.5) -- (2.5,-0.5) -- cycle;
-    \begin{scope}
-            \clip (2,0.5) -- (1.5,-0.5) -- (2.5,-0.5) -- cycle;
-            % draw enough stripes from left-bottom to top-right
-            \foreach \x in {-1.5,-1.4,...,2} {
-                \draw (\x,-1) -- (\x+2,1);
-            }
-        \end{scope}
-\end{scope}
-
-
-
-
-
-
-\draw (10,0) rectangle (14,4);
-
-%square
-
-\draw (10.5,3.5) rectangle (11.5,2.5);
-
-% Stripey diamond
 \begin{scope}
-  \clip (12.5,3) -- (13,3.5) -- (13.5,3) -- (13,2.5) -- cycle;
-  \foreach \x in {12.0,12.1,...,14.0} {
+  \clip (8.5,3) -- (9,3.5) -- (9.5,3) -- (9,2.5) -- cycle;
+  \foreach \x in {8.0,8.1,...,10.0} {
     \draw (\x,2.2) -- (\x+1,3.8);
   }
 \end{scope}
-\draw (12.5,3) -- (13,3.5) -- (13.5,3) -- (13,2.5) -- cycle;
+\draw (8.5,3) -- (9,3.5) -- (9.5,3) -- (9,2.5) -- cycle;
 
-% Cross-hatched circle
 \begin{scope}
-  \clip (11,1.5) circle (0.5);
-  \foreach \x in {10.3,10.4,...,11.7} {
+  \clip (7,1.5) circle (0.5);
+  \foreach \x in {6.3,6.4,...,7.7} {
     \draw (\x,1) -- (\x,2);
   }
   \foreach \y in {1,1.1,...,2} {
-    \draw (10.3,\y) -- (11.7,\y);
+    \draw (6.3,\y) -- (7.7,\y);
   }
 \end{scope}
-\draw (11,1.5) circle (0.5);
+\draw (7,1.5) circle (0.5);
 
-% Triangle
+\draw (9,1.5) -- (8.5,0.7) -- (9.5,0.7) -- cycle;
+
+\draw[dotted, thick] (9,3) circle (0.9cm);
+
+
+%================ 3rd box (SHIFTED RIGHT) ==================
+\draw (12,0) rectangle (16,4);
+
+\node[scale=1.5] at (12.55,2) {$f($};
+\node[scale=1.5] at (14.55,2) {$f($};
+\begin{scope}[shift={(13.2,2)}, scale=0.75]
+    % --- plain (empty) triangle ---
+    \draw (0.15,0.5) -- (-0.35,-0.5) -- (0.65,-0.5) -- cycle;
+
+    % --- less-than symbol ---
+    \node at (1.15,0) {$<$};
+
+    % --- stripey black triangle ---
+    \draw (2.75,0.5) -- (2.25,-0.5) -- (3.25,-0.5) -- cycle;
+
+    \clip (2.75,0.5) -- (2.25,-0.5) -- (3.25,-0.5) -- cycle;
+        \foreach \x in {-1.05,-0.95,...,3.25} {
+            \draw (\x,-1) -- (\x+2,1);
+        }
+\end{scope}
+\node[scale=1.5] at (13.7,2) {$)$};
+\node[scale=1.5] at (15.7,2) {$)$};
+
+
+%================ 4th box (SHIFTED RIGHT) ==================
+\draw (18,0) rectangle (22,4);
+
+\draw (18.5,3.5) rectangle (19.5,2.5);
+
 \begin{scope}
-  \clip (13,1.5) -- (12.5,0.7) -- (13.5,0.7) -- cycle;
-  \foreach \x in {11.5,11.6,...,15} {
+  \clip (20.5,3) -- (21,3.5) -- (21.5,3) -- (21,2.5) -- cycle;
+  \foreach \x in {20.0,20.1,...,22.0} {
+    \draw (\x,2.2) -- (\x+1,3.8);
+  }
+\end{scope}
+\draw (20.5,3) -- (21,3.5) -- (21.5,3) -- (21,2.5) -- cycle;
+
+\begin{scope}
+  \clip (19,1.5) circle (0.5);
+  \foreach \x in {18.3,18.4,...,19.7} {
+    \draw (\x,1) -- (\x,2);
+  }
+  \foreach \y in {1,1.1,...,2} {
+    \draw (18.3,\y) -- (19.7,\y);
+  }
+\end{scope}
+\draw (19,1.5) circle (0.5);
+
+\begin{scope}
+  \clip (21,1.5) -- (20.5,0.7) -- (21.5,0.7) -- cycle;
+  \foreach \x in {18.5,18.6,...,22} {
     \draw (\x,0.0) -- (\x+1.2,1.4);
   }
 \end{scope}
-\draw (13,1.5) -- (12.5,0.7) -- (13.5,0.7) -- cycle;
-\node (triC) at (13,0.75) {};
+\draw (21,1.5) -- (20.5,0.7) -- (21.5,0.7) -- cycle;
 
 
-%================ ARROW FROM FIRST → THIRD ==================
-
-\draw[->, thick] (4,2) -- (5,2);   % Arrow from box 1 → box 2
-\draw[->, thick] (9,2) -- (10,2);  % Arrow from box 2 → box 3
-
-
-\node at (2,4.3) {\textbf{Selection}};
-\node at (7,4.3) {\textbf{Comparison}};
-\node at (12,4.3) {\textbf{Transformation}};
-
-\node at (7, 5.2) {\textbf{Introspective Imitation Dynamics}};
+%================ ARROWS (SHIFTED RIGHT) ==================
+\draw[->, thick] (4,2) -- (6,2);    
+\draw[->, thick] (10,2) -- (12,2);   
+\draw[->, thick] (16,2) -- (18,2);   
 
 
-\draw[dotted, thick] (3,3) circle (0.8cm);
+%================ HEADERS ==================
+\node at (2,4.5) {\textbf{Selection}};
+\node at (12,5.5) {\textbf{Introspective Imitation Dynamics}};
+\node at (14,4.5) {\textbf{Comparison}};
+\node at (20,4.5) {\textbf{Update}};
+
 \draw[dotted, thick] (3,1) circle (0.9cm);
-\end{tikzpicture}\\
+
+\end{tikzpicture}
+}\\
 \hline
 \end{tabular}
 \caption{A comparison of different population dynamics. We assume in all cases that the triangle is chosen for replacement with a probability \(\frac{1}{N}\) and the diamond is chosen with a varying probability depending on the process. In the case of Introspection dynamics, we assume that the strategy represented by the shape being filled in is chosen with probability \(\frac{1}{k-1}\)}
 \end{table}
+
 
 
 \section{The Public Goods Game}
@@ -997,7 +1041,31 @@ We can assign the value 0 to non-contribution and 1 contribution in the state sp
 \end{table}
 
 We see that in the homogeneous case of the 2 player public goods game, the absorption probabilities do not depend on which transitive state you begin in.
-This is clear, as the states \(\textbf{b} = (0,1)\) and \(\textbf{c} = (1,0)\) are equivalent due to there being no difference between players 1 and 2.
+This is clear, as the states \(\textbf{b} = (0,1)\) and \(\textbf{c} = (1,0)\)
+are equivalent due to there being no difference between players 1 and 2.
+
+\subsection{Numerical Results}
+
+We can now see how the different population dynamics affect the absorption
+probabilities in the homogeneous public goods game. We first consider the
+effect of r on our population in various \(\alpha\) values:
+
+\begin{figure}[!h]
+\centering
+
+\includegraphics[width=0.45\textwidth]{./src/img/absorption_probabilities_N_eq_2_homogeneous_fermi_r_alpha/main.pdf}
+\hfill
+
+\vspace{1em}
+
+\hfill
+
+
+\caption{Four images in a 2×2 arrangement.}
+\end{figure}
+
+
+
 
 \newpage
 \section{Public Goods Games with Heterogeneous Returns}

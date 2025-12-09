@@ -324,16 +324,17 @@ We define the introspective imitation process as follows:
 
 \begin{enumerate}
     \item A focal player is chosen at random to reconsider their strategy
-    \item Another player \(a_j\) in the population is chosen at random to have their strategy considered
+    \item Another player \(a_j\) in the population is chosen with a probability
+   proportional to their fitness within the population to have their strategy considered
     \item The focal player changes their strategy with probability \(\phi(\Delta(f_{I(\textbf{a,b})})\)
 \end{enumerate}
 
-Let \(\kappa(a_i)\) denote the number of players in \(a_{-i}\) with the same action type as \(a_i\). 
+
 We can define a transition matrix \(T\) of an introspective imitation process as follows:
 
 \begin{equation}
-T_{\textbf{a,b}} = p_{a_{I(\textbf{a,b})}\to b_{I(\textbf{a,b})}}(a_{-j}) = \begin{cases}
-    \frac{\kappa(b_{I(a,b)})}{N(N-1)}\phi(\Delta(f_{I(\textbf{a,b})}) & \text{if \textbf{b}}\in \text{Neb(\textbf{a})}\\
+T_{\textbf{a,b}} =  \begin{cases}
+    \frac{1}{N}\sum_{a_{j} = b_{I(\textbf{a}, \textbf{b})}}\frac{f_j(\textbf{a})}{\sum_{k}f_k(\textbf{a})}\phi(\Delta(f_{I(\textbf{a,b})})) & \text{if \textbf{b}}\in \text{Neb(\textbf{a})}\\
     0 & \text{if \textbf{b}}\notin \text{Neb(\textbf{a}) and \textbf{a}} \neq \textbf{b}\\
     1 - \sum_{\textbf{b}\in \text{Neb(\textbf{a})}} p_{a_{I(\textbf{a,b})}\to b_{I(\textbf{a,b})}}(a_{-j}) & \text{if \textbf{a}}=\textbf{b}
 \end{cases}
@@ -348,11 +349,11 @@ We first see our transition matrix:
 
 \begin{center}
 \begin{small}
-\begin{equation}
-\begin{bmatrix}
-1 & 0 & 0 & 0\\\frac{1}{2\left(e^{\frac{- f_{2}{\left(a \right)} + f_{2}{\left(b \right)}}{\beta}} + 1\right)} & 1 - \frac{1}{2\left(e^{\frac{f_{1}{\left(b \right)} - f_{1}{\left(d \right)}}{\beta}} + 1\right)} - \frac{1}{2\left(1 + e^{- \frac{f_{2}{\left(a \right)} - f_{2}{\left(b \right)}}{\beta}}\right)} & 0 & \frac{1}{2\left(e^{\frac{f_{1}{\left(b \right)} - f_{1}{\left(d \right)}}{\beta}} + 1\right)}\\\frac{1}{2\left(e^{\frac{- f_{1}{\left(a \right)} + f_{1}{\left(c \right)}}{\beta}} + 1\right)} & 0 & 1 - \frac{1}{2\left(e^{\frac{f_{2}{\left(c \right)} - f_{2}{\left(d \right)}}{\beta}} + 1\right)} - \frac{1}{2\left(1 + e^{- \frac{f_{1}{\left(a \right)} - f_{1}{\left(c \right)}}{\beta}}\right)} & \frac{1}{2\left(e^{\frac{f_{2}{\left(c \right)} - f_{2}{\left(d \right)}}{\beta}} + 1\right)}\\0 & 0 & 0 & 1
-\end{bmatrix}
-\end{equation}
+
+\rotatebox{90}{\begin{equation}\begin{bmatrix}
+1 & 0 & 0 & 0\\\frac{f_{1}{\left(b \right)}}{2 \left(f_{1}{\left(b \right)} + f_{2}{\left(b \right)}\right) \left(e^{\frac{- f_{2}{\left(a \right)} + f_{2}{\left(b \right)}}{\beta}} + 1\right)} & 1 - \frac{f_{2}{\left(b \right)}}{\left(2 f_{1}{\left(b \right)} + 2 f_{2}{\left(b \right)}\right) \left(e^{\frac{f_{1}{\left(b \right)} - f_{1}{\left(d \right)}}{\beta}} + 1\right)} - \frac{f_{1}{\left(b \right)}}{\left(1 + e^{- \frac{f_{2}{\left(a \right)} - f_{2}{\left(b \right)}}{\beta}}\right) \left(2 f_{1}{\left(b \right)} + 2 f_{2}{\left(b \right)}\right)} & 0 & \frac{f_{2}{\left(b \right)}}{2 \left(f_{1}{\left(b \right)} + f_{2}{\left(b \right)}\right) \left(e^{\frac{f_{1}{\left(b \right)} - f_{1}{\left(d \right)}}{\beta}} + 1\right)}\\\frac{f_{2}{\left(c \right)}}{2 \left(f_{1}{\left(c \right)} + f_{2}{\left(c \right)}\right) \left(e^{\frac{- f_{1}{\left(a \right)} + f_{1}{\left(c \right)}}{\beta}} + 1\right)} & 0 & 1 - \frac{f_{1}{\left(c \right)}}{\left(2 f_{1}{\left(c \right)} + 2 f_{2}{\left(c \right)}\right) \left(e^{\frac{f_{2}{\left(c \right)} - f_{2}{\left(d \right)}}{\beta}} + 1\right)} - \frac{f_{2}{\left(c \right)}}{\left(1 + e^{- \frac{f_{1}{\left(a \right)} - f_{1}{\left(c \right)}}{\beta}}\right) \left(2 f_{1}{\left(c \right)} + 2 f_{2}{\left(c \right)}\right)} & \frac{f_{1}{\left(c \right)}}{2 \left(f_{1}{\left(c \right)} + f_{2}{\left(c \right)}\right) \left(e^{\frac{f_{2}{\left(c \right)} - f_{2}{\left(d \right)}}{\beta}} + 1\right)}\\0 & 0 & 0 & 1
+\end{bmatrix}\end{equation}}
+
 \end{small}
 \end{center}
 
@@ -362,7 +363,7 @@ And using the same method as in the other methods of imitation dynamics, we obta
 \begin{large}
 \begin{equation}
 \begin{bmatrix}
-\frac{e^{\frac{f_{1}{\left(b \right)} - f_{1}{\left(d \right)}}{\beta}} + 1}{e^{\frac{f_{1}{\left(b \right)} - f_{1}{\left(d \right)}}{\beta}} +  e^{\frac{- f_{2}{\left(a \right)} + f_{2}{\left(b \right)}}{\beta}} + 2} & \frac{e^{\frac{- f_{2}{\left(a \right)} + f_{2}{\left(b \right)}}{\beta}} + 1}{e^{\frac{f_{1}{\left(b \right)} - f_{1}{\left(d \right)}}{\beta}} + e^{\frac{- f_{2}{\left(a \right)} + f_{2}{\left(b \right)}}{\beta}} + 2}\\\frac{e^{\frac{f_{2}{\left(c \right)} - f_{2}{\left(d \right)}}{\beta}} + 1}{e^{\frac{- f_{1}{\left(a \right)} + f_{1}{\left(c \right)}}{\beta}} + e^{\frac{f_{2}{\left(c \right)} - f_{2}{\left(d \right)}}{\beta}} + 2} & \frac{e^{\frac{- f_{1}{\left(a \right)} + f_{1}{\left(c \right)}}{\beta}} + 1}{e^{\frac{- f_{1}{\left(a \right)} + f_{1}{\left(c \right)}}{\beta}} + e^{\frac{f_{2}{\left(c \right)} - f_{2}{\left(d \right)}}{\beta}} + 2}
+\frac{\left(e^{\frac{f_{1}{\left(b \right)} - f_{1}{\left(d \right)}}{\beta}} + 1\right) f_{1}{\left(b \right)}}{\left(e^{\frac{f_{1}{\left(b \right)} - f_{1}{\left(d \right)}}{\beta}} + 1\right) f_{1}{\left(b \right)} + \left(e^{\frac{- f_{2}{\left(a \right)} + f_{2}{\left(b \right)}}{\beta}} + 1\right) f_{2}{\left(b \right)}} & \frac{\left(e^{\frac{- f_{2}{\left(a \right)} + f_{2}{\left(b \right)}}{\beta}} + 1\right) f_{2}{\left(b \right)}}{\left(e^{\frac{f_{1}{\left(b \right)} - f_{1}{\left(d \right)}}{\beta}} + 1\right) f_{1}{\left(b \right)} + \left(e^{\frac{- f_{2}{\left(a \right)} + f_{2}{\left(b \right)}}{\beta}} + 1\right) f_{2}{\left(b \right)}}\\\frac{\left(e^{\frac{f_{2}{\left(c \right)} - f_{2}{\left(d \right)}}{\beta}} + 1\right) f_{2}{\left(c \right)}}{\left(e^{\frac{- f_{1}{\left(a \right)} + f_{1}{\left(c \right)}}{\beta}} + 1\right) f_{1}{\left(c \right)} + \left(e^{\frac{f_{2}{\left(c \right)} - f_{2}{\left(d \right)}}{\beta}} + 1\right) f_{2}{\left(c \right)}} & \frac{\left(e^{\frac{- f_{1}{\left(a \right)} + f_{1}{\left(c \right)}}{\beta}} + 1\right) f_{1}{\left(c \right)}}{\left(e^{\frac{- f_{1}{\left(a \right)} + f_{1}{\left(c \right)}}{\beta}} + 1\right) f_{1}{\left(c \right)} + \left(e^{\frac{f_{2}{\left(c \right)} - f_{2}{\left(d \right)}}{\beta}} + 1\right) f_{2}{\left(c \right)}}
 \end{bmatrix}
 \end{equation}
 \end{large}
@@ -985,7 +986,9 @@ We can assign the value 0 to non-contribution and 1 contribution in the state sp
          Introspection Dynamics& Introspective Imitation Dynamics\\
          \hline
          &\\
-         TODO&$\displaystyle \left[\begin{matrix}\frac{ e^{\frac{\alpha \left(2 - r\right)}{2 \beta}} + 1)}{ e^{\frac{\alpha \left(2 - r\right)}{2 \beta}} +  e^{\frac{\alpha \left(r - 2\right)}{2 \beta}} + 1} & \frac{e^{\frac{\alpha \left(r - 2\right)}{2 \beta}} + 1}{e^{\frac{\alpha \left(2 - r\right)}{2 \beta}} + e^{\frac{\alpha \left(r - 2\right)}{2 \beta}} + 1}\\\frac{e^{\frac{\alpha \left(2 - r\right)}{2 \beta}} + 1}{e^{\frac{\alpha \left(2 - r\right)}{2 \beta}} + e^{\frac{\alpha \left(r - 2\right)}{2 \beta}} + 1} & \frac{e^{\frac{\alpha \left(r - 2\right)}{2 \beta}} + 1}{e^{\frac{\alpha \left(2 - r\right)}{2 \beta}} + e^{\frac{\alpha \left(r - 2\right)}{2 \beta}} + 1}\end{matrix}\right]$\\
+         TODO&
+         \small
+         $\displaystyle \left[\begin{matrix}\frac{\left(\alpha \epsilon r + 2\right) \left(e^{\frac{\alpha \epsilon \left(2 - r\right)}{2 \beta}} + 1\right)}{\left(\alpha \epsilon r + 2\right) \left(e^{\frac{\alpha \epsilon \left(2 - r\right)}{2 \beta}} + 1\right) + \left(\alpha \epsilon \left(r - 2\right) + 2\right) \left(e^{\frac{\alpha \epsilon \left(r - 2\right)}{2 \beta}} + 1\right)} & \frac{\left(\alpha \epsilon \left(r - 2\right) + 2\right) \left(e^{\frac{\alpha \epsilon \left(r - 2\right)}{2 \beta}} + 1\right)}{\left(\alpha \epsilon r + 2\right) \left(e^{\frac{\alpha \epsilon \left(2 - r\right)}{2 \beta}} + 1\right) + \left(\alpha \epsilon \left(r - 2\right) + 2\right) \left(e^{\frac{\alpha \epsilon \left(r - 2\right)}{2 \beta}} + 1\right)}\\\frac{\left(\alpha \epsilon r + 2\right) \left(e^{\frac{\alpha \epsilon \left(2 - r\right)}{2 \beta}} + 1\right)}{\left(\alpha \epsilon r + 2\right) \left(e^{\frac{\alpha \epsilon \left(2 - r\right)}{2 \beta}} + 1\right) + \left(\alpha \epsilon \left(r - 2\right) + 2\right) \left(e^{\frac{\alpha \epsilon \left(r - 2\right)}{2 \beta}} + 1\right)} & \frac{\left(\alpha \epsilon \left(r - 2\right) + 2\right) \left(e^{\frac{\alpha \epsilon \left(r - 2\right)}{2 \beta}} + 1\right)}{\left(\alpha \epsilon r + 2\right) \left(e^{\frac{\alpha \epsilon \left(2 - r\right)}{2 \beta}} + 1\right) + \left(\alpha \epsilon \left(r - 2\right) + 2\right) \left(e^{\frac{\alpha \epsilon \left(r - 2\right)}{2 \beta}} + 1\right)}\end{matrix}\right]$\\
          &\\
          \hline
     \end{tabular}

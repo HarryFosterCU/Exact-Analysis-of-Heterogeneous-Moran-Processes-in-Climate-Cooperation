@@ -1646,6 +1646,30 @@ def test_compute_fermi_transition_probability_for_infeasible_states_and_no_chang
 
     _ = trivial_fitness_function(source1)  # prevents unused function warning
 
+def test_compute_fermi_transition_probability_for_impossible_transition():
+    """Tests compute_fermi_transition_probability for a
+    transition which introduces a new strategy to the population"""
+
+    def trivial_fitness_function(state, **kwargs):
+        return np.array([i + 1 for i in state])
+
+    source = np.array([1, 1, 0, 0])
+    target = np.array([1, 1, 2, 0])
+
+    selection_intensity = 0.5
+
+    actual_probability = main.compute_imitation_introspection_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        selection_intensity=selection_intensity,
+    )
+
+
+    expected_probability = 0.0
+
+    np.testing.assert_almost_equal(actual_probability, expected_probability)
+
 
 def test_compute_imitation_introspection_transition_probability_for_trivial_fitenss_function():
     """
@@ -1666,6 +1690,7 @@ def test_compute_imitation_introspection_transition_probability_for_trivial_fite
         fitness_function=trivial_fitness_function,
         selection_intensity=selection_intensity,
     )
+
 
     expected_probability = 0.146799513
 
@@ -1694,9 +1719,9 @@ def test_compute_imitation_introspection_transition_probability_for_symbolic_fit
     x = sym.Symbol("x")
     y = sym.Symbol("y")
 
-    expected_probability = (1 / 10) * (1 / (1 + sym.E ** (((x - y) / beta))))
+    expected_probability = (1/5) * (2 * y) * ( 1/ (2 * y  + 3 * x)) * (1 / (1 + sym.E **((x - y) / beta)))
 
-    assert actual_probability == expected_probability
+    assert sym.simplify(actual_probability - expected_probability) == 0
 
 
 def test_compute_imitation_introspection_transition_probability_for_infeasible_states_and_no_change():
@@ -1730,6 +1755,125 @@ def test_compute_imitation_introspection_transition_probability_for_infeasible_s
         target=target2,
         fitness_function=trivial_fitness_function,
         selection_intensity=selection_intensity,
+    )
+
+    assert actual_probability2 is None
+
+    _ = trivial_fitness_function(source1)  # prevents unused function warning
+
+def test_compute_imitation_introspection_for_impossible_transition():
+    """Tests compute_imitation_introspection_transition_probability for a
+    transition which introduces a new strategy to the population"""
+
+    def trivial_fitness_function(state, **kwargs):
+        return np.array([i + 1 for i in state])
+
+    source = np.array([1, 1, 0, 0])
+    target = np.array([1, 1, 2, 0])
+
+    selection_intensity = 0.5
+
+    actual_probability = main.compute_imitation_introspection_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        selection_intensity=selection_intensity,
+    )
+
+
+    expected_probability = 0.0
+
+    np.testing.assert_almost_equal(actual_probability, expected_probability)
+
+def test_compute_introspection_transition_probability_for_trivial_fitness_function():
+    """
+    Tests that the compute_imitation_introspection_transition_probability
+    function returns the correct value for a trivial fitness function."""
+
+    def trivial_fitness_function(state, **kwargs):
+        return np.array([i + 1 for i in state])
+
+    source = np.array([1, 1, 0])
+    target = np.array([1, 1, 2])
+
+    selection_intensity = 0.5
+    number_of_strategies = 3
+
+    actual_probability = main.compute_introspection_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=trivial_fitness_function,
+        selection_intensity=selection_intensity,
+        number_of_strategies=number_of_strategies
+    )
+
+    expected_probability = 0.163668965
+
+    np.testing.assert_almost_equal(actual_probability, expected_probability)
+
+def test_compute_introspection_transition_probability_for_symbolic_fitness_function():
+    """
+    Tests that the compute_imitation_introspection_transition_probability
+    function returns the correct value for a trivial fitness function."""
+
+    def symbolic_fitness_function(state, **kwargs):
+        return np.array([sym.Symbol(f"x_{i}") for i in state])
+
+    source = np.array([1, 1, 0])
+    target = np.array([1, 1, 2])
+
+    selection_intensity = sym.Symbol('Beta')
+    number_of_strategies = sym.Symbol('k')
+    x_0 = sym.Symbol('x_0')
+    x_2 = sym.Symbol('x_2')
+
+    actual_probability = main.compute_introspection_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=symbolic_fitness_function,
+        selection_intensity=selection_intensity,
+        number_of_strategies=number_of_strategies
+    )
+
+    expected_probability = (1 / (3 * (number_of_strategies - 1))) * 1 / (1 + sym.E **((x_0 - x_2) / selection_intensity))
+
+    assert sym.simplify(actual_probability == expected_probability)
+
+
+def test_compute_introspection_transition_probability_for_infeasible_states_and_no_change():
+    """
+    Tests whether compute_introspection_transition_probability returns the correct
+    values when the state transition is not of hamming distance 1"""
+
+    def trivial_fitness_function(state):
+        return np.array([1 for _ in state])
+
+    source1 = np.array([0, 1])
+    target1 = np.array([1, 0])
+    selection_intensity = 0.5
+    number_of_strategies = 2
+
+    actual_probability1 = main.compute_introspection_transition_probability(
+        source=source1,
+        target=target1,
+        fitness_function=trivial_fitness_function,
+        selection_intensity=selection_intensity,
+        number_of_strategies=number_of_strategies,
+    )
+
+    expected_probability1 = 0
+
+    assert expected_probability1 == actual_probability1
+
+    source2 = np.array([0, 1])
+    target2 = np.array([0, 1])
+
+    actual_probability2 = main.compute_introspection_transition_probability(
+        source=source2,
+        target=target2,
+        fitness_function=trivial_fitness_function,
+        selection_intensity=selection_intensity,
+        number_of_strategies=number_of_strategies
     )
 
     assert actual_probability2 is None

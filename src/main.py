@@ -148,8 +148,6 @@ def compute_fermi_transition_probability(
     function. The lower the value, the higher the probability that a player
     will choose the higher fitness strategy in $\phi$
 
-    where each entry represents the fitness of the given individual
-
     Returns
     ---------
     Float: the transition pobability from source to target"""
@@ -185,9 +183,7 @@ def compute_imitation_introspection_transition_probability(
 
     state in introspective imitation dynamics. Must move between states with a]
      
-    Hamming distance of 1. Returns 0 if
-
-    Hamming distance > 1.
+    Hamming distance of 1. Returns 0 if Hamming distance > 1.
 
     Returns None if Hamming distance = 0. For an absorbing state, this will
 
@@ -197,7 +193,7 @@ def compute_imitation_introspection_transition_probability(
 
     The following equation is the subject of this function:
 
-    
+    $\frac{1}{N}\frac{\sum_{a_{j} = b_{I(\textbf{a}, \textbf{b})}}f_j(\textbf{a})}{\sum_{k}f_k(\textbf{a})}\phi(\Delta(f_{I(\textbf{a,b})}))$
 
     Parameters
     ----------
@@ -211,8 +207,6 @@ def compute_imitation_introspection_transition_probability(
     selection_intensity: float or sympy.Symbol: the selection intensity of the
     function. The lower the value, the higher the probability that a player
     will choose the higher fitness strategy in $\phi$
-
-    where each entry represents the fitness of the given individual
 
     Returns
     ---------
@@ -237,6 +231,66 @@ def compute_imitation_introspection_transition_probability(
     return selection_probability * fermi_imitation_function(
         delta=delta, selection_intensity=selection_intensity
     )
+
+def compute_introspection_transition_probability(source, target, fitness_function, selection_intensity, number_of_strategies, **kwargs):
+
+    """
+    Given two states, a fitness function, and a selection intensity, returns
+
+    the transition probability when moving from the source state to the target
+
+    state in introspective imitation dynamics. Must move between states with a]
+     
+    Hamming distance of 1. Returns 0 if Hamming distance > 1.
+
+    Returns None if Hamming distance = 0. 
+
+    This is adressed in the get_transition_matrix function.
+
+    The following equation is the subject of this function:
+
+    $\frac{1}{N(m_j - 1)}\phi(f_i(a) - f_i(b))$
+
+    Parameters
+    ----------
+    source: numpy.array, the starting state
+
+    target: numpy.array, what the source transitions to
+
+    fitness_function: func, The fitness function which maps a state to a
+    numpy.array
+
+    selection_intensity: float or sympy.Symbol: the selection intensity of the
+    function. The lower the value, the higher the probability that a player
+    will choose the higher fitness strategy in $\phi$
+
+    number_of_strategies: the number of strategies available to each player in
+    the population. What we call "k" in the get_state_space function
+
+    Returns
+    ---------
+    Float: the transition pobability from source to target"""
+        
+
+    different_indices = np.where(source != target)
+    if len(different_indices[0]) > 1:
+        return 0
+    if len(different_indices[0]) == 0:
+        return None
+
+    fitness = fitness_function(source, **kwargs)
+    fitness_before = fitness[different_indices][0]
+    fitness_after = fitness_function(target, **kwargs)[different_indices][0]
+
+    selection_probability = 1 / (len(source) * ((number_of_strategies) - 1))
+    
+
+    delta = fitness_before - fitness_after
+
+    return selection_probability * fermi_imitation_function(
+        delta=delta, selection_intensity=selection_intensity
+    )
+
 
 
 def generate_transition_matrix(

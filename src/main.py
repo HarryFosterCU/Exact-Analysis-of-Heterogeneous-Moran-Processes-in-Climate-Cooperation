@@ -158,7 +158,6 @@ def compute_fermi_transition_probability(
     if len(different_indices[0]) == 0:
         return None
     fitness = fitness_function(source, **kwargs)
-    
 
     changes = [
         fermi_imitation_function(
@@ -182,7 +181,7 @@ def compute_imitation_introspection_transition_probability(
     the transition probability when moving from the source state to the target
 
     state in introspective imitation dynamics. Must move between states with a]
-     
+
     Hamming distance of 1. Returns 0 if Hamming distance > 1.
 
     Returns None if Hamming distance = 0. For an absorbing state, this will
@@ -221,7 +220,7 @@ def compute_imitation_introspection_transition_probability(
     fitness = fitness_function(source, **kwargs)
     fitness_before = fitness[different_indices][0]
     fitness_after = fitness_function(target, **kwargs)[different_indices][0]
-    
+
     selection_denominator = fitness.sum() * len(source)
     selection_numerator = fitness[source == target[different_indices]].sum()
     selection_probability = selection_numerator / selection_denominator
@@ -232,18 +231,25 @@ def compute_imitation_introspection_transition_probability(
         delta=delta, selection_intensity=selection_intensity
     )
 
-def compute_introspection_transition_probability(source, target, fitness_function, selection_intensity, number_of_strategies, **kwargs):
 
+def compute_introspection_transition_probability(
+    source,
+    target,
+    fitness_function,
+    selection_intensity,
+    number_of_strategies,
+    **kwargs
+):
     """
     Given two states, a fitness function, and a selection intensity, returns
 
     the transition probability when moving from the source state to the target
 
     state in introspective imitation dynamics. Must move between states with a]
-     
+
     Hamming distance of 1. Returns 0 if Hamming distance > 1.
 
-    Returns None if Hamming distance = 0. 
+    Returns None if Hamming distance = 0.
 
     This is adressed in the get_transition_matrix function.
 
@@ -270,7 +276,6 @@ def compute_introspection_transition_probability(source, target, fitness_functio
     Returns
     ---------
     Float: the transition pobability from source to target"""
-        
 
     different_indices = np.where(source != target)
     if len(different_indices[0]) > 1:
@@ -283,14 +288,12 @@ def compute_introspection_transition_probability(source, target, fitness_functio
     fitness_after = fitness_function(target, **kwargs)[different_indices][0]
 
     selection_probability = 1 / (len(source) * ((number_of_strategies) - 1))
-    
 
     delta = fitness_before - fitness_after
 
     return selection_probability * fermi_imitation_function(
         delta=delta, selection_intensity=selection_intensity
     )
-
 
 
 def generate_transition_matrix(

@@ -1646,6 +1646,7 @@ def test_compute_fermi_transition_probability_for_infeasible_states_and_no_chang
 
     _ = trivial_fitness_function(source1)  # prevents unused function warning
 
+
 def test_compute_fermi_transition_probability_for_impossible_transition():
     """Tests compute_fermi_transition_probability for a
     transition which introduces a new strategy to the population"""
@@ -1664,7 +1665,6 @@ def test_compute_fermi_transition_probability_for_impossible_transition():
         fitness_function=trivial_fitness_function,
         selection_intensity=selection_intensity,
     )
-
 
     expected_probability = 0.0
 
@@ -1690,7 +1690,6 @@ def test_compute_imitation_introspection_transition_probability_for_trivial_fite
         fitness_function=trivial_fitness_function,
         selection_intensity=selection_intensity,
     )
-
 
     expected_probability = 0.146799513
 
@@ -1719,7 +1718,12 @@ def test_compute_imitation_introspection_transition_probability_for_symbolic_fit
     x = sym.Symbol("x")
     y = sym.Symbol("y")
 
-    expected_probability = (1/5) * (2 * y) * ( 1/ (2 * y  + 3 * x)) * (1 / (1 + sym.E **((x - y) / beta)))
+    expected_probability = (
+        (1 / 5)
+        * (2 * y)
+        * (1 / (2 * y + 3 * x))
+        * (1 / (1 + sym.E ** ((x - y) / beta)))
+    )
 
     assert sym.simplify(actual_probability - expected_probability) == 0
 
@@ -1761,6 +1765,7 @@ def test_compute_imitation_introspection_transition_probability_for_infeasible_s
 
     _ = trivial_fitness_function(source1)  # prevents unused function warning
 
+
 def test_compute_imitation_introspection_for_impossible_transition():
     """Tests compute_imitation_introspection_transition_probability for a
     transition which introduces a new strategy to the population"""
@@ -1780,10 +1785,10 @@ def test_compute_imitation_introspection_for_impossible_transition():
         selection_intensity=selection_intensity,
     )
 
-
     expected_probability = 0.0
 
     np.testing.assert_almost_equal(actual_probability, expected_probability)
+
 
 def test_compute_introspection_transition_probability_for_trivial_fitness_function():
     """
@@ -1804,12 +1809,13 @@ def test_compute_introspection_transition_probability_for_trivial_fitness_functi
         target=target,
         fitness_function=trivial_fitness_function,
         selection_intensity=selection_intensity,
-        number_of_strategies=number_of_strategies
+        number_of_strategies=number_of_strategies,
     )
 
     expected_probability = 0.163668965
 
     np.testing.assert_almost_equal(actual_probability, expected_probability)
+
 
 def test_compute_introspection_transition_probability_for_symbolic_fitness_function():
     """
@@ -1822,20 +1828,24 @@ def test_compute_introspection_transition_probability_for_symbolic_fitness_funct
     source = np.array([1, 1, 0])
     target = np.array([1, 1, 2])
 
-    selection_intensity = sym.Symbol('Beta')
-    number_of_strategies = sym.Symbol('k')
-    x_0 = sym.Symbol('x_0')
-    x_2 = sym.Symbol('x_2')
+    selection_intensity = sym.Symbol("Beta")
+    number_of_strategies = sym.Symbol("k")
+    x_0 = sym.Symbol("x_0")
+    x_2 = sym.Symbol("x_2")
 
     actual_probability = main.compute_introspection_transition_probability(
         source=source,
         target=target,
         fitness_function=symbolic_fitness_function,
         selection_intensity=selection_intensity,
-        number_of_strategies=number_of_strategies
+        number_of_strategies=number_of_strategies,
     )
 
-    expected_probability = (1 / (3 * (number_of_strategies - 1))) * 1 / (1 + sym.E **((x_0 - x_2) / selection_intensity))
+    expected_probability = (
+        (1 / (3 * (number_of_strategies - 1)))
+        * 1
+        / (1 + sym.E ** ((x_0 - x_2) / selection_intensity))
+    )
 
     assert sym.simplify(actual_probability == expected_probability)
 
@@ -1873,7 +1883,7 @@ def test_compute_introspection_transition_probability_for_infeasible_states_and_
         target=target2,
         fitness_function=trivial_fitness_function,
         selection_intensity=selection_intensity,
-        number_of_strategies=number_of_strategies
+        number_of_strategies=number_of_strategies,
     )
 
     assert actual_probability2 is None

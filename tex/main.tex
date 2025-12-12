@@ -304,9 +304,21 @@ where \(m_j\) is the number of actions available to individual \(j\).
 Since we assume that all individuals have the same action set with size \(k\), we can replace \(m_j - 1\) with \(k-1\).
 
 Now, Couto also calculated in \cite{Introspection Paper 1} the explicit strategy distribution for an asymmetric interaction between two players. 
-We can adapt these results to define our transition matrix for our example state space \textbf{a,b,c,d}:\\
+We can adapt these results to define our transition matrix for our example
+state space \textbf{a,b,c,d}:\\
 
-%TODO get further results on this section giving the 2x2 case. 
+\begin{equation}
+\tiny
+\begin{bmatrix}
+    1 - \frac{1}{2\left(e^{\frac{f_{2}{\left(a \right)} - f_{2}{\left(b \right)}}{\beta}} + 1\right)} - \frac{1}{2\left(e^{\frac{f_{1}{\left(a \right)} - f_{1}{\left(c \right)}}{\beta}} + 1\right)} & \frac{1}{2\left(e^{\frac{f_{2}{\left(a \right)} - f_{2}{\left(b \right)}}{\beta}} + 1\right)} & \frac{1}{2\left(e^{\frac{f_{1}{\left(a \right)} - f_{1}{\left(c \right)}}{\beta}} + 1\right)} & 0\\\frac{1}{2\left(e^{\frac{- f_{2}{\left(a \right)} + f_{2}{\left(b \right)}}{\beta}} + 1\right)} & 1 - \frac{1}{2\left(e^{\frac{f_{1}{\left(b \right)} - f_{1}{\left(d \right)}}{\beta}} + 1\right)} - \frac{1}{2\left(1 + e^{- \frac{f_{2}{\left(a \right)} - f_{2}{\left(b \right)}}{\beta}}\right)} & 0 & \frac{1}{2\left(e^{\frac{f_{1}{\left(b \right)} - f_{1}{\left(d \right)}}{\beta}} + 1\right)}\\\frac{1}{2\left(e^{\frac{- f_{1}{\left(a \right)} + f_{1}{\left(c \right)}}{\beta}} + 1\right)} & 0 & 1 - \frac{1}{2\left(e^{\frac{f_{2}{\left(c \right)} - f_{2}{\left(d \right)}}{\beta}} + 1\right)} - \frac{1}{2\left(1 + e^{- \frac{f_{1}{\left(a \right)} - f_{1}{\left(c \right)}}{\beta}}\right)} & \frac{1}{2\left(e^{\frac{f_{2}{\left(c \right)} - f_{2}{\left(d \right)}}{\beta}} + 1\right)}\\0 & \frac{1}{2\left(e^{\frac{- f_{1}{\left(b \right)} + f_{1}{\left(d \right)}}{\beta}} + 1\right)} & \frac{1}{2\left(e^{\frac{- f_{2}{\left(c \right)} + f_{2}{\left(d \right)}}{\beta}} + 1\right)} & 1 - \frac{1}{2\left(1 + e^{- \frac{f_{2}{\left(c \right)} - f_{2}{\left(d \right)}}{\beta}}\right)} - \frac{1}{2\left(1 +    e^{- \frac{f_{1}{\left(b \right)} - f_{1}{\left(d \right)}}{\beta}}\right)}
+\end{bmatrix}
+\end{equation}
+
+%this goes off the page, need to sort - probably use $\phi$ notation for it.
+
+We then consider the steady state vectors for this system.
+For this, we take the left eigenvector of the transition matrix, which is given by:
+
 
 
 
@@ -1018,20 +1030,31 @@ We can assign the value 0 to non-contribution and 1 contribution in the state sp
 \begin{table}[!h]
     \centering
     \Large
-    \begin{tabular}{|c|c|}
-    \hline
-         Moran Process&Fermi Imitation Dynamics\\
+        \begin{tabular}{|c|c|}
+        \hline
+        Moran Process & Introspection Dynamics \\
+        \hline
+        $\displaystyle
+        \left[\begin{matrix}
+        \frac{\alpha \epsilon r + 2}{\alpha \epsilon r + \alpha \epsilon (r - 2) + 4} &
+        \frac{\alpha \epsilon (r - 2) + 2}{\alpha \epsilon r + \alpha \epsilon (r - 2) + 4} \\
+        \frac{\alpha \epsilon r + 2}{\alpha \epsilon r + \alpha \epsilon (r - 2) + 4} &
+        \frac{\alpha \epsilon (r - 2) + 2}{\alpha \epsilon r + \alpha \epsilon (r - 2) + 4}
+        \end{matrix}\right]$
+        &
+        \tiny
+        $\begin{bmatrix}
+        \frac{1}{e^{\frac{\alpha \epsilon (r - 2)}{2 \beta}} + 1} & \frac{e^{\frac{\alpha \epsilon (r - 2)}{2 \beta}}}{2 \left(e^{\frac{\alpha \epsilon (r - 2)}{2 \beta}} + 1\right)} & \frac{e^{\frac{\alpha \epsilon (r - 2)}{2 \beta}}}{2 \left(e^{\frac{\alpha \epsilon (r - 2)}{2 \beta}} + 1\right)} & 0 \\
+        \frac{1}{2 \left(e^{\frac{\alpha \epsilon (r - 2)}{2 \beta}} + 1\right)} & \frac{1}{2} & 0 & \frac{1}{2 \left(e^{\frac{\alpha \epsilon (2 - r)}{2 \beta}} + 1\right)} \\
+        \frac{1}{2 \left(e^{\frac{\alpha \epsilon (r - 2)}{2 \beta}} + 1\right)} & 0 & \frac{1}{2} & \frac{1}{2 \left(e^{\frac{\alpha \epsilon (2 - r)}{2 \beta}} + 1\right)} \\
+        0 & \frac{1}{2 \left(e^{\frac{\alpha \epsilon (r - 2)}{2 \beta}} + 1\right)} & \frac{1}{2 \left(e^{\frac{\alpha \epsilon (r - 2)}{2 \beta}} + 1\right)} & \frac{e^{\frac{\alpha \epsilon (r - 2)}{2 \beta}}}{e^{\frac{\alpha \epsilon (r - 2)}{2 \beta}} + 1}
+        \end{bmatrix}
+        $\\
          \hline
-         &\\
-         $\displaystyle \left[\begin{matrix}\frac{\frac{\alpha r}{2} + \beta}{\alpha r - \alpha + 2 \beta} & \frac{\frac{\alpha r}{2} - \alpha + \beta}{\alpha r - \alpha + 2 \beta}\\\frac{\frac{\alpha r}{2} + \beta}{\alpha r - \alpha + 2 \beta} & \frac{\frac{\alpha r}{2} - \alpha + \beta}{\alpha r - \alpha + 2 \beta}\end{matrix}\right]$
-         & $\displaystyle \left[\begin{matrix}\frac{ e^{\frac{\alpha}{\beta}}}{e^{\frac{\alpha}{\beta}} + 1} & \frac{1}{e^{\frac{\alpha}{\beta}} + 1}\\\frac{ e^{\frac{\alpha}{\beta}}}{e^{\frac{\alpha}{\beta}} + 1} & \frac{1}{e^{\frac{\alpha}{\beta}} + 1}\end{matrix}\right]$ \\
-         &\\
+         Fermi Imitation Dynamics & Introspective Imitation Dynamics\\
          \hline
-         Introspection Dynamics& Introspective Imitation Dynamics\\
-         \hline
-         &\\
-         TODO&
-         \small
+         $\displaystyle \left[\begin{matrix}\frac{ e^{\frac{\alpha}{\beta}}}{e^{\frac{\alpha}{\beta}} + 1} & \frac{1}{e^{\frac{\alpha}{\beta}} + 1}\\\frac{ e^{\frac{\alpha}{\beta}}}{e^{\frac{\alpha}{\beta}} + 1} & \frac{1}{e^{\frac{\alpha}{\beta}} + 1}\end{matrix}\right]$
+         & \tiny
          $\displaystyle \left[\begin{matrix}\frac{\left(\alpha \epsilon r + 2\right) \left(e^{\frac{\alpha \epsilon \left(2 - r\right)}{2 \beta}} + 1\right)}{\left(\alpha \epsilon r + 2\right) \left(e^{\frac{\alpha \epsilon \left(2 - r\right)}{2 \beta}} + 1\right) + \left(\alpha \epsilon \left(r - 2\right) + 2\right) \left(e^{\frac{\alpha \epsilon \left(r - 2\right)}{2 \beta}} + 1\right)} & \frac{\left(\alpha \epsilon \left(r - 2\right) + 2\right) \left(e^{\frac{\alpha \epsilon \left(r - 2\right)}{2 \beta}} + 1\right)}{\left(\alpha \epsilon r + 2\right) \left(e^{\frac{\alpha \epsilon \left(2 - r\right)}{2 \beta}} + 1\right) + \left(\alpha \epsilon \left(r - 2\right) + 2\right) \left(e^{\frac{\alpha \epsilon \left(r - 2\right)}{2 \beta}} + 1\right)}\\\frac{\left(\alpha \epsilon r + 2\right) \left(e^{\frac{\alpha \epsilon \left(2 - r\right)}{2 \beta}} + 1\right)}{\left(\alpha \epsilon r + 2\right) \left(e^{\frac{\alpha \epsilon \left(2 - r\right)}{2 \beta}} + 1\right) + \left(\alpha \epsilon \left(r - 2\right) + 2\right) \left(e^{\frac{\alpha \epsilon \left(r - 2\right)}{2 \beta}} + 1\right)} & \frac{\left(\alpha \epsilon \left(r - 2\right) + 2\right) \left(e^{\frac{\alpha \epsilon \left(r - 2\right)}{2 \beta}} + 1\right)}{\left(\alpha \epsilon r + 2\right) \left(e^{\frac{\alpha \epsilon \left(2 - r\right)}{2 \beta}} + 1\right) + \left(\alpha \epsilon \left(r - 2\right) + 2\right) \left(e^{\frac{\alpha \epsilon \left(r - 2\right)}{2 \beta}} + 1\right)}\end{matrix}\right]$\\
          &\\
          \hline
@@ -1039,6 +1062,7 @@ We can assign the value 0 to non-contribution and 1 contribution in the state sp
     \caption{A table of absorption probabilities for different population dynamics in the homogeneous public goods game. The row correspond to which state \textbf{b} or \textbf{c} we begin in, and the column corresponds to which state \textbf{a} or \textbf{d} we are absorbed into. Thus the right hand row is the absorption probability for full contribution, and the left hand row is the absorption probability for no contribution.}
     \label{tab:placeholder}
 \end{table}
+
 
 We see that in the homogeneous case of the 2 player public goods game, the absorption probabilities do not depend on which transitive state you begin in.
 This is clear, as the states \(\textbf{b} = (0,1)\) and \(\textbf{c} = (1,0)\)
@@ -1053,16 +1077,30 @@ effect of r on our population in various \(\alpha\) values:
 \begin{figure}[!h]
 \centering
 
-\includegraphics[width=0.45\textwidth]{./src/img/absorption_probabilities_N_eq_2_homogeneous_fermi_r_alpha/main.pdf}
+\includegraphics[width=0.45\textwidth]{./src/img/absorption_probabilities_vary_r_fix_alpha/main.pdf}
 \hfill
 
-\vspace{1em}
-
-\hfill
-
-
-\caption{Four images in a 2×2 arrangement.}
+\caption{The absorption probability of the homogeneous public goods game for varying \(r\) at different values of \(\alpha\)}
 \end{figure}
+
+The main point of interest here is the comparison betwee the Moran process and
+introspective imitation dynamics.
+We see that in the case of \(N=2\), the Moran process has a higher
+absorption probability than introspective imitation dynamics for \(r<N\),
+however it has a lower probability for \(r>N\).
+Now, consider the fact that for \(r>N\), one should always contribute if acting
+rationally, due to the fact that even by contributing themself, they will
+always make a profit. 
+Conversely, for \(r<1\), one should never contribute in any population, as even
+with all players contributing, all make a loss.
+Thus, the most realistic population dynamic is that which has the highest
+absorption probability for \(r>N\), and also the lowest absorption probability
+for \(r<1\). 
+When compared to the Moran process, we have that these considerations favour
+introspective imitation dynamics.
+
+Now let us consider the impact of different selection intensities on the
+absorption probability of these dynamics.
 
 
 

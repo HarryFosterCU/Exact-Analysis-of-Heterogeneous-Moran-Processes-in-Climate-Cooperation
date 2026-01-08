@@ -117,7 +117,8 @@ behaves very similarly to the ``climate clubs" in \cite{Climate Clubs}.
 
 
 \section{The Model}
-In this section, we examine the underlying framework governing a heterogeneous game. We begin by defining a population of individuals and the actions which they may take, and then we see different methods by which we can model the evolution of a population over time.
+In this section, similarly to \cite{Introspection Paper 1,Introspection Paper 2}we examine the underlying framework modelling dynamic processes on a fully heterogeneous population. 
+We begin by defining a population of individuals and the actions which they may take, and then we see different methods by which we can model the evolution of a population over time.
 
 \subsection{An Initial System}
 
@@ -130,19 +131,35 @@ In this section, we examine the underlying framework governing a heterogeneous g
 
 Now let $h(\textbf{a, b})$ denote the Hamming distance~\cite{Hamming_Distance} between two states \(\textbf{a}, \textbf{b} \in S\). 
 The set of states \textbf{b} such that $h(\textbf{a, b}) = 1$ is defined as Neb(\textbf{a}), the ``Neighbourhood set of a state" \cite{Introspection Paper 2}.
-Our system will be in the form of a Markov chain~\cite{Markov_Chain} which moves between states with a probability \(>0\) if and only if $h(\textbf{a, b}) \leq 1$. 
+Our system will be in the form of a Markov chain~\cite{Stewart_Textbook} which moves between states with a probability \(>0\) if and only if $h(\textbf{a, b}) \leq 1$. 
 We call the index at which \textbf{a} and \textbf{b} differ the \textit{index of difference}, denoted \(I(\textbf{a,b})\) \cite{Introspection Paper 2}.
 We shall look at different population dynamics by which we may model such a Markov chain.
 
 \subsection{Population Dynamics} 
 
+In this section, we give an overview of various population dynamics.
+This includes the following well-known dynamics, adapted to a fully
+heterogeneous population:
+
+\begin{itemize}
+  \item The Moran process, first described in \cite{Moran_Original}
+  \item Fermi Imitation Dynamics, as famously used in \cite{Szabo_Toke}
+  \item Introspection Dynamics, a more modern dynamic defined in \cite{Introspection Paper 1}
+\end{itemize}
+
+We also introduce a new dynamic called ``Introspective Imitation Dynamics''.
+This is a novel dynamic particularly suited to the process of learning from
+others in a heterogeneous population.
+
 \subsubsection{The Moran Process}
-The Moran process \cite{Nowak 2006} is a population corresponding to the following algorithm:
+The Moran process \cite{Nowak 2006} is a dynamic corresponding to the following algorithm:
 \begin{enumerate}
     \item A player is chosen to be duplicated with a probability proportional to their fitness in the population
     \item A player is chosen with probability $\frac{1}{N}$ to be removed from the population
 \end{enumerate}
-Let \((a_{-j})\) denote the state from the perspective of \({a_j}\), so that \(\textbf{a} = (a_j, a_{-j})\). Then, the entry \(T_\textbf{a,b}\) of a transition matrix \(T\) in which each row and column correspond to a state in \(S\) is defined as the probability of a transition $\textbf{a} = (a_1, a_2, \dots, a_N) \to \textbf{b} = (b_1, b_2, \dots, b_N)$. For the Moran process, this is as follows:\\
+Let \((a_{-j})\) denote the state from the perspective of \({a_j}\), so that
+\(\textbf{a} = (a_j, a_{-j})\). 
+Then, the entry \(T_\textbf{a,b}\) of a transition matrix \(T\) in which each row and column correspond to a state in \(S\) is defined as the probability of a transition $\textbf{a} = (a_1, a_2, \dots, a_N) \to \textbf{b} = (b_1, b_2, \dots, b_N)$. For the Moran process, this is as follows:\\
 \begin{large}
     \begin{equation}
         T_\textbf{a,b} = p_{a_{I(\textbf{a,b})}\to b_{I(\textbf{a,b})}}(a_{-j}) = 
@@ -156,14 +173,16 @@ Let \((a_{-j})\) denote the state from the perspective of \({a_j}\), so that \(\
 \end{large}
 
 An important case which proceeds from (\ref{eqn:Moran_Probability_Function}) is that of a transition \(\textbf{a} \to \textbf{b}\) where \(\textbf{b}\) contains an individual of a \textit{type} not found in \(\textbf{a}\). 
-For example, the transition $(0,1) \to (0,2)$. This would be forbidden by the intuition of a standard Moran process, as the new individual is the duplication of another individual in \(\textbf{a}\). 
-However, we can see that the standard formula yields \(p_{v,u}\) = 0 because \(\nexists\) \(a_i \in \textbf{a}: a_i = b_{i^*}\). \\
+For example, the transition \((0,1) \to (0,2)\). 
+This would be forbidden by the intuition of a standard Moran process, as the new individual is the duplication of another individual in \(\textbf{a}\). 
+However, we can see that the standard formula yields \(p_{v,u}\) = 0 because
+there does not exist \(a_i \in \textbf{a}: a_i = b_{i^*}\). \\
 
 We can now discuss one of the key ideas in the Moran process. As no new action types can be introduced to the population once they are fully removed, we have a set of absorbing states \textbf{a} such that \(a_1 = a_2 =...\), for which we have $p_{\textbf{a} \to\textbf{a}} = 1$. 
 We denote the set of absorbing states $S^{\gamma}$.
-We therefore have that the Moran process forms an absorbing Markov chain, and we can investigate the probability of the population being absorbed into each absorbing state.\\
+We therefore have that the Moran process forms an absorbing Markov chain \cite{Stewart_Textbook}, and we can investigate the probability of the population being absorbed into each absorbing state.\\
 
-To show how we use this, consider a game with two players, each playing one of two actions. We have a state space
+Consider a game with two players, each playing one of two actions. We have a state space
 \(\textbf{a} = (0,0), \textbf{b} = (0,1), \textbf{c} = (1,0), \textbf{d} = (1,1)\), and our transition matrix \(T\) would take the form
 \begin{center}
 \begin{equation}
@@ -176,7 +195,7 @@ To show how we use this, consider a game with two players, each playing one of t
 
 Our transition matrix represents the probability of transitioning from the state represented by the row to the state represented by the column.
 Here our columns represent \textbf{a},\textbf{b}, \textbf{c} and \textbf{d} from left to right, and the rows represent these states in the same order from top to bottom.\\
-Now, by taking the fundamental matrix of \(T\) and performing a right multiplication by \(R\), the matrix with entries which represent transitions from transitive states to absorbing states\cite{Markov_Chain}, we can obtain the absorption matrix for this system.
+Now, by taking the fundamental matrix of \(T\) and performing a right multiplication by \(R\), the matrix with entries which represent transitions from transitive states to absorbing states\cite{Stewart_Textbook}, we can obtain the absorption matrix for this system.
 For the above game, we find the following equation:\\
 \begin{center}
 %\begin{small}
@@ -199,8 +218,14 @@ And solve to find our absorption matrix:
 \end{equation}
 \end{center}
 
-In this matrix, the rows represent our initial transitive state (in our system, row 1 represents \textbf{b} and row 2 represents \textbf{c}), and our columns represent which state the system is absorbed into (with \textbf{a} on the left, and \textbf{d} on the right). 
-It is immediately clear from this result that the probability of the system ending up in a particular absorbing state does not rely on the fitness of individuals in the absorbing state, but rather their fitness in the transitive states. Thus, players can remain in a state which could be bettered by a single change, however they will not make such a change if no individual of another type exists in the population.
+In this matrix, the rows represent our initial transitive state 
+(in our system, row 1 represents \textbf{b} and row 2 represents \textbf{c}),
+ and our columns represent which state the system is absorbed into (with \textbf{a} on the left, and \textbf{d} on the right). 
+It is immediately clear from this result that the probability of the system
+ending up in a particular absorbing state does not rely on the fitness of
+individuals in the absorbing state, 
+but rather their fitness in the transitive states. 
+Thus, players can remain in a state which could be bettered by a single change, however they will not make such a change if no individual of another type exists in the population.
 
 
 %The final case in (\ref{eqn:Moran_Probability_Function}) corresponds to a transition from \(\textbf{a}\) to itself. 
@@ -212,19 +237,34 @@ It is immediately clear from this result that the probability of the system endi
 
 
 \subsubsection{Fermi Imitation Dynamics}
-Another method by which we can calculate the probability of one player copying the strategy of another is by using the Fermi function.
-Consider a Markov chain where at each time step, one player is chosen with probability \(\frac{1}{N}\) to be the ``focal" player \(a_i\), and they compare their strategy with another player \(a_j\) chosen with probability \(\frac{1}{N-1}\). 
-Then, \(a_i\) copies the strategy of \(a_j\) with a probability according to the Fermi function:
-\begin{equation}
-    \phi(f_{i}(\textbf{a}) - f_{j}(\textbf{a})) = \frac{1}{1 + e^{\left({\frac{f_{i}(\textbf{a}) - f_{j}(\textbf{a}) }{\beta}}\right)}}
-\end{equation}
+The Fermi Imitation Dynamic is another method of modelling evolution in a
+population.
+It models the following process:
+
+\begin{itemize}
+  \item Two players, \(i\) and \(j\) are selected at random
+  \item Player \(i\) copies the action type of the player \(j\) with a
+  probability according to the Fermi function \(
+    \phi(f_{i}(\textbf{a}) - f_{j}(\textbf{a})) = \frac{1}{1 + e^{\left({\frac{f_{i}(\textbf{a}) - f_{j}(\textbf{a}) }{\beta}}\right)}}\)
+\end{itemize}
+
 Where \(\beta\) is the selection intensity of the system. 
-This method has been commonly used in studies of evolutionary games, for example \cite{Maa, Lei, fermi_example}. \\
+This method has been commonly used in studies of evolutionary games, for
+example \cite{Maa, Lei, fermi_example,Szabo_Toke}.
+
+Unlike a Moran Process, we can see that the players are not selected with a
+probability proportional to their fitness.
+However, Fermi Imitation Dynamics compared the fitness after the selection of
+players.
+This means that in Fermi Imitation Dynamics, there is not necessarily a player
+changing action in each timestep, whereas in a Moran process, there is always a
+player changing action type
+(although it may be a change to the same action type that they are currently performing)
 We now define our transition matrix according to the Fermi function:
 
 \begin{large}
     \begin{equation}
-        T_\textbf{a,b} = p_{a_{I(\textbf{a,b})}\to b_{I(\textbf{a,b})}}(a_{-j}) = 
+        T_\textbf{a,b}  = 
         \begin{cases}
             \frac{1}{N(N-1)}\sum_{a_j=b_{I(\textbf{a,b})}}\phi(f_{\text{I(\textbf{a,b})}}(a) - f_{j}(\textbf{a})))& \text{if }\textbf{b} \in \text{Neb(\textbf{a})}\\
             0 & \text{if }\textbf{b} \notin \text{Neb(\textbf{a}) and \textbf{a}}\neq \textbf{b}\\
@@ -234,7 +274,18 @@ We now define our transition matrix according to the Fermi function:
     \end{equation}
 \end{large}
 
-Here we see how the Fermi function can be used to define the transition probability between states in a Markov chain. Importantly, we see that the first case of equation \ref{eqn:imitation_prob} is always in the interval \((0,1)\), as the Fermi function always takes a value on \((0,1)\), and the summation term is at most \(N-1\) values of said function, and thus takes a value \(<N-1\).
+Here we see how the Fermi function can be used to define the transition
+probability between states in a Markov chain. 
+Importantly, we see that the
+first case of equation \ref{eqn:imitation_prob} is always in the interval
+\((0,1)\), 
+as the Fermi function always takes a value on \((0,1)\), 
+and the
+summation term is at most \(N-1\) values of said function, 
+and thus takes a
+value \(<N-1\).
+
+
 %Now, we must show that the sum of each row in our transition matrix adds to 1.
 %By the definition of case 3 in equation \ref{eqn:imitation_prob}, we have that our rows will sum to at least, and so we must simply show that the rows calculated by case 1 sum to \(<1\).\\
 
@@ -273,20 +324,38 @@ and using our previous method, we can acquire our absorption matrix:
 \end{large}
 \end{center}
 
-This function shows that once again, our absorption probabilities rely on the fitness of players in transitive states and not those of players in the absorbing states. %TODO: sentence to lead onto the next section
+This shows that, similarly to the Moran process, our absorption probabilities
+rely on the fitness of players in transitive states and not those of players in
+the absorbing states.
+Thus, this dynamic is still not fully suited for modelling a heterogeneous
+system as a player can commonly copy a high-fitness strategy without
+considering the impact on their own fitness, and in some cases may enter an
+absorbing state with a transition which worsens their position with a high
+probability.
+
+We will now see a dynamic where players consider the impact of action type
+transitions on their own fitness.
 
 \subsubsection{Introspection Dynamics}
-We will now look at a model of population dynamics in which players do not consider the payoffs of other individuals in the population, but instead at their own possible payoffs. In this dynamic, the following process take place \cite{Introspection Paper 1}
+In introspection dynamics, the following process take place \cite{Introspection Paper 1}
 \begin{enumerate}
-    \item A random player is chosen with probability \(\frac{1}{N}\) to reconsider their strategy \(a_{i,k}\)
-    \item Said player chooses another possible strategy, \(a_{i,l}\), from the set of all possible strategies. 
+    \item A player \(i\) is chosen with probability \(\frac{1}{N}\) to reconsider their strategy \(a_{i,k}\)
+    \item Player \(i\) chooses another possible strategy, \(a_{i,l}\), from the set of all possible strategies. 
     \item The chosen player replaces their strategy with probability \(p_{a_{I(\textbf{a,b})}\to b_{I(\textbf{a,b})}}(a_{-I(\textbf{a,b})}) = \phi (\Delta f_{I(\textbf{a,b})})\), where \(\Delta f_{I(\textbf{a,b})} = f_{I(a,b)}(\textbf{a})  - f_{I(a,b)}(\textbf{b})\) is the difference between the possible fitness of the new strategy and the fitness of the player's current strategy.
 \end{enumerate}
-This process is especially strong in a heterogeneous population. 
-This is because in some cases using imitation dynamics, a player may copy a strategy due it's fitness when played by another individual in the population, despite the fact that such a strategy actually has a lower payoff for the focal player than their current strategy.
-In introspection dynamics, players do not consider the fitness of other individuals, and so cannot be fooled by high fitness strategies with attributes different to that of our focal player.
+\cite{Introspection Paper 1} considers this process for
+the two player case, and it is expanded to multiple players in
+\cite{Introspection Paper 2}.
 
-Couto \cite{Introspection Paper 2} defines the transition matrix for a process according to introspection dynamics as follows:
+This process is well suited to a heterogeneous population. 
+This is because in some cases using imitation dynamics, a player may copy a
+strategy due it's fitness when played by another individual in the population,
+despite the fact that such a strategy actually has a lower payoff for the focal player than their current strategy.
+In introspection dynamics, players do not consider the fitness of other
+individuals, and so cannot be fooled by high fitness strategies with attributes
+different to that of our focal player.
+
+The transition matrix for the introspection dynamics process~\cite{Introspection Paper 2} is given by:
 
 \[
 T_{\textbf{a,b}} =
@@ -331,8 +400,11 @@ Therefore, we define a steady state vector \textbf{u} according to the method Co
 
 
 \subsubsection{Introspective Imitation Dynamics}
+
 Introspection dynamics allows players to learn based on their own fitness, resulting in a reduced probability of state changes that worsen the focal individual's fitness in a heterogeneous population.
-Now we consider a population dynamic that utilises this property of introspection dynamics but within the context of an imitative process.
+Now we consider a population dynamic that utilises this property of
+introspection dynamics but within the context of an imitative process.
+Consider a population of \(N\) players with the same action set.
 We define the introspective imitation process as follows:
 
 \begin{enumerate}
@@ -406,521 +478,20 @@ Below, we see a diagram showing the classification of the population dynamics sh
 \hline
 Extrinsic Strategy Analysis & Intrinsic Strategy Analysis\\
 \hline
-% Figure 1
-\begin{tikzpicture}[scale=0.6]
-
-%================ FIRST BOX ==================
-\draw (0,0) rectangle (4,4);
-
-
-\draw (0.5,3.5) rectangle (1.5,2.5);
-
-% Stripey diamond (sparser)
-\begin{scope}
-  \clip (2.5,3) -- (3,3.5) -- (3.5,3) -- (3,2.5) -- cycle;
-  \foreach \x in {2.0,2.1,...,4.0} {
-    \draw (\x,2.2) -- (\x+1,3.8);
-  }
-\end{scope}
-\draw (2.5,3) -- (3,3.5) -- (3.5,3) -- (3,2.5) -- cycle;
-
-% Cross-hatched circle (sparser)
-\begin{scope}
-  \clip (1,1.5) circle (0.5);
-  \foreach \x in {0.3,0.4,...,1.7} {
-    \draw (\x,1) -- (\x,2);
-  }
-  \foreach \y in {1,1.1,...,2} {
-    \draw (0.3,\y) -- (1.7,\y);
-  }
-\end{scope}
-\draw (1,1.5) circle (0.5);
-
-% Triangle (plain)
-\draw (3,1.5) -- (2.5,0.7) -- (3.5,0.7) -- cycle;
-\node (triA) at (3,0.7) {}; % anchor for arrow
-
-
-%================ SECOND BOX ==================
-\draw (5,0) rectangle (9,4);
-
-
-
-% Draw the bounding box
-\draw (5,0) rectangle (9,4);
-
-% Small rectangle in the top-left
-\draw (5.5,3.5) rectangle (6.5,2.5);
-
-% Stripey diamond (sparser)
-\begin{scope}
-\clip (7.5,3) -- (8,3.5) -- (8.5,3) -- (8,2.5) -- cycle;
-\foreach \x in {7.0,7.1,...,9.0} {
-\draw (\x,2.2) -- (\x+1,3.8);
-}
-\end{scope}
-\draw (7.5,3) -- (8,3.5) -- (8.5,3) -- (8,2.5) -- cycle;
-
-% Cross-hatched circle (sparser)
-\begin{scope}
-\clip (6,1.5) circle (0.5);
-\foreach \x in {5.3,5.4,...,6.7} {
-\draw (\x,1) -- (\x,2);
-}
-\foreach \y in {1,1.1,...,2} {
-\draw (5.3,\y) -- (6.7,\y);
-}
-\end{scope}
-\draw (6,1.5) circle (0.5);
-
-% Dotted triangle in the bottom-right corner
-\draw[thick, dotted] (7.5,0.7) -- (8.5,0.7) -- (8,1.5) -- cycle;
-
-\draw[dotted, thick] (8,3) circle (0.8cm);
-
-% Triangle (plain)
-
-
-
-
-
-
-\draw (10,0) rectangle (14,4);
-
-%square
-
-\draw (10.5,3.5) rectangle (11.5,2.5);
-
-% Stripey diamond
-\begin{scope}
-  \clip (12.5,3) -- (13,3.5) -- (13.5,3) -- (13,2.5) -- cycle;
-  \foreach \x in {12.0,12.1,...,14.0} {
-    \draw (\x,2.2) -- (\x+1,3.8);
-  }
-\end{scope}
-\draw (12.5,3) -- (13,3.5) -- (13.5,3) -- (13,2.5) -- cycle;
-
-% Cross-hatched circle
-\begin{scope}
-  \clip (11,1.5) circle (0.5);
-  \foreach \x in {10.3,10.4,...,11.7} {
-    \draw (\x,1) -- (\x,2);
-  }
-  \foreach \y in {1,1.1,...,2} {
-    \draw (10.3,\y) -- (11.7,\y);
-  }
-\end{scope}
-\draw (11,1.5) circle (0.5);
-
-% Triangle
-\begin{scope}
-  \clip (13,1.5) -- (12.5,0.7) -- (13.5,0.7) -- cycle;
-  \foreach \x in {11.5,11.6,...,15} {
-    \draw (\x,0.0) -- (\x+1.2,1.4);
-  }
-\end{scope}
-\draw (13,1.5) -- (12.5,0.7) -- (13.5,0.7) -- cycle;
-\node (triC) at (13,0.75) {};
-
-
-%================ ARROW FROM FIRST → THIRD ==================
-
-\draw[->, thick] (4,2) -- (5,2);   % Arrow from box 1 → box 2
-\draw[->, thick] (9,2) -- (10,2);  % Arrow from box 2 → box 3
-
-
-
-\node at (2,4.5) {\textbf{Selection}};
-\node at (7,4.5) {\textbf{Selection \(\propto f\)}};
-\node at (12,4.5) {\textbf{Update}};
-
-\node at (7, 5.5) {\textbf{Moran Process}};
-
-
-
-\draw[dotted, thick] (3,1) circle (0.9cm);
-\end{tikzpicture}
+\input{Figures/Tikz/Moran_Process/main.tikz}
 &
-% Figure 2
-\begin{tikzpicture}[scale=0.6]
-
-%================ FIRST BOX ==================
-\draw (0,0) rectangle (4,4);
-
-
-\draw (0.5,3.5) rectangle (1.5,2.5);
-
-% Stripey diamond (sparser)
-\begin{scope}
-  \clip (2.5,3) -- (3,3.5) -- (3.5,3) -- (3,2.5) -- cycle;
-  \foreach \x in {2.0,2.1,...,4.0} {
-    \draw (\x,2.2) -- (\x+1,3.8);
-  }
-\end{scope}
-\draw (2.5,3) -- (3,3.5) -- (3.5,3) -- (3,2.5) -- cycle;
-
-% Cross-hatched circle (sparser)
-\begin{scope}
-  \clip (1,1.5) circle (0.5);
-  \foreach \x in {0.3,0.4,...,1.7} {
-    \draw (\x,1) -- (\x,2);
-  }
-  \foreach \y in {1,1.1,...,2} {
-    \draw (0.3,\y) -- (1.7,\y);
-  }
-\end{scope}
-\draw (1,1.5) circle (0.5);
-
-% Triangle (plain)
-\draw (3,1.5) -- (2.5,0.7) -- (3.5,0.7) -- cycle;
-\node (triA) at (3,0.7) {}; % anchor for arrow
-
-
-%================ SECOND BOX ==================
-\draw (5,0) rectangle (9,4);
-% middle comparison: empty triangle < filled triangle
-\node[scale=1.5] at (5.5,2) {$f($};
-\node[scale=1.5] at (7.5,2) {$f($};
-\begin{scope}[shift={(6.15,2)}, scale=0.75]
-    % --- plain (empty) triangle ---
-    \draw (0.15,0.5) -- (-0.35,-0.5) -- (0.65,-0.5) -- cycle;
-
-    % --- less-than symbol ---
-    \node at (1.15,0) {$<$};
-
-    % --- filled black triangle ---
-    \fill[black] (2.75,0.5) -- (2.25,-0.5) -- (3.25,-0.5) -- cycle;
-\end{scope}
-\node[scale=1.5] at (6.75,2) {$)$};
-\node[scale=1.5] at (8.65,2) {$)$};
-
-
-
-
-
-
-\draw (10,0) rectangle (14,4);
-
-%square
-
-\draw (10.5,3.5) rectangle (11.5,2.5);
-
-% Stripey diamond
-\begin{scope}
-  \clip (12.5,3) -- (13,3.5) -- (13.5,3) -- (13,2.5) -- cycle;
-  \foreach \x in {12.0,12.1,...,14.0} {
-    \draw (\x,2.2) -- (\x+1,3.8);
-  }
-\end{scope}
-\draw (12.5,3) -- (13,3.5) -- (13.5,3) -- (13,2.5) -- cycle;
-
-% Cross-hatched circle
-\begin{scope}
-  \clip (11,1.5) circle (0.5);
-  \foreach \x in {10.3,10.4,...,11.7} {
-    \draw (\x,1) -- (\x,2);
-  }
-  \foreach \y in {1,1.1,...,2} {
-    \draw (10.3,\y) -- (11.7,\y);
-  }
-\end{scope}
-\draw (11,1.5) circle (0.5);
-
-% Triangle
-\begin{scope}
-  \clip (13,1.5) -- (12.5,0.7) -- (13.5,0.7) -- cycle;
-  \foreach \x in {11.5,11.6,...,15} {
-    \draw (\x,0.0) -- (\x+1.2,1.4);
-  }
-\end{scope}
-\fill[black] (13,1.5) -- (12.5,0.7) -- (13.5,0.7) -- cycle;
-\node (triC) at (13,0.75) {};
-
-
-%================ ARROW FROM FIRST → THIRD ==================
-
-\draw[->, thick] (4,2) -- (5,2);   % Arrow from box 1 → box 2
-\draw[->, thick] (9,2) -- (10,2);  % Arrow from box 2 → box 3
-
-
-\node at (2,4.5) {\textbf{Selection}};
-\node at (7,4.5) {\textbf{Comparison}};
-\node at (12,4.5) {\textbf{Update}};
-
-\node at (7, 5.5) {\textbf{Introspection Dynamics}};
-
-
-\draw[dotted, thick] (3,1) circle (0.9cm);
-\end{tikzpicture}
+\input{Figures/Tikz/Introspection_Dynamics/main.tikz}
 \\
 &\\
+\input{Figures/Tikz/Fermi/main.tikz}
 &\\
-% Figure 3
-\begin{tikzpicture}[scale=0.6]
-
-%================ FIRST BOX ==================
-\draw (0,0) rectangle (4,4);
-
-
-\draw (0.5,3.5) rectangle (1.5,2.5);
-
-% Stripey diamond (sparser)
-\begin{scope}
-  \clip (2.5,3) -- (3,3.5) -- (3.5,3) -- (3,2.5) -- cycle;
-  \foreach \x in {2.0,2.1,...,4.0} {
-    \draw (\x,2.2) -- (\x+1,3.8);
-  }
-\end{scope}
-\draw (2.5,3) -- (3,3.5) -- (3.5,3) -- (3,2.5) -- cycle;
-
-% Cross-hatched circle (sparser)
-\begin{scope}
-  \clip (1,1.5) circle (0.5);
-  \foreach \x in {0.3,0.4,...,1.7} {
-    \draw (\x,1) -- (\x,2);
-  }
-  \foreach \y in {1,1.1,...,2} {
-    \draw (0.3,\y) -- (1.7,\y);
-  }
-\end{scope}
-\draw (1,1.5) circle (0.5);
-
-% Triangle (plain)
-\draw (3,1.5) -- (2.5,0.7) -- (3.5,0.7) -- cycle;
-\node (triA) at (3,0.7) {}; % anchor for arrow
-
-
-%================ SECOND BOX ==================
-\draw (5,0) rectangle (9,4);
-% middle comparison: empty triangle < small striped diamond
-
-\node[scale=1.5] at (5.5,2) {$f($};
-\node[scale=1.5] at (7.5,2) {$f($};
-\begin{scope}[shift={(6.15,2)}, scale=0.75]
-    % --- plain (empty) triangle ---
-    \draw (0.15,0.5) -- (-0.35,-0.5) -- (0.65,-0.5) -- cycle;
-
-    % --- less-than symbol ---
-    \node at (1.15,0) {$<$};
-
-    % outline
-    \begin{scope}[shift={(2.75,0)}, scale=0.55]
-        \draw[thick] (0,1) -- (1,0) -- (0,-1) -- (-1,0) -- cycle;
-
-        % stripes
-        
-            \clip (0,1) -- (1,0) -- (0,-1) -- (-1,0) -- cycle;
-            \foreach \x in {-2,-1.75,...,2} {
-                \draw[black!50] (\x,-2) -- (\x+2,2);
-            }
-\end{scope}
-\end{scope}
-\node[scale=1.5] at (6.75,2) {$)$};
-\node[scale=1.5] at (8.65,2) {$)$};
-
-
-
-
-
-
-
-
-\draw (10,0) rectangle (14,4);
-
-%square
-
-\draw (10.5,3.5) rectangle (11.5,2.5);
-
-% Stripey diamond
-\begin{scope}
-  \clip (12.5,3) -- (13,3.5) -- (13.5,3) -- (13,2.5) -- cycle;
-  \foreach \x in {12.0,12.1,...,14.0} {
-    \draw (\x,2.2) -- (\x+1,3.8);
-  }
-\end{scope}
-\draw (12.5,3) -- (13,3.5) -- (13.5,3) -- (13,2.5) -- cycle;
-
-% Cross-hatched circle
-\begin{scope}
-  \clip (11,1.5) circle (0.5);
-  \foreach \x in {10.3,10.4,...,11.7} {
-    \draw (\x,1) -- (\x,2);
-  }
-  \foreach \y in {1,1.1,...,2} {
-    \draw (10.3,\y) -- (11.7,\y);
-  }
-\end{scope}
-\draw (11,1.5) circle (0.5);
-
-% Triangle
-\begin{scope}
-  \clip (13,1.5) -- (12.5,0.7) -- (13.5,0.7) -- cycle;
-  \foreach \x in {11.5,11.6,...,15} {
-    \draw (\x,0.0) -- (\x+1.2,1.4);
-  }
-\end{scope}
-\draw (13,1.5) -- (12.5,0.7) -- (13.5,0.7) -- cycle;
-\node (triC) at (13,0.75) {};
-
-
-%================ ARROW FROM FIRST → THIRD ==================
-
-\draw[->, thick] (4,2) -- (5,2);   % Arrow from box 1 → box 2
-\draw[->, thick] (9,2) -- (10,2);  % Arrow from box 2 → box 3
-
-
-\node at (2,4.5) {\textbf{Selection}};
-\node at (7,4.5) {\textbf{Comparison}};
-\node at (12,4.5) {\textbf{Update}};
-
-\node at (7, 5.5) {\textbf{Fermi Imitation Dynamics}};
-
-
-\draw[dotted, thick] (3,3) circle (0.8cm);
-\draw[dotted, thick] (3,1) circle (0.9cm);
-\end{tikzpicture}
 &
-% Figure 4
-
 \\
 \hline
 \multicolumn{2}{|c|}{Both Extrinsic and Intrinsic Strategy Analysis}\\
 \hline
 \multicolumn{2}{|c|}{ 
-\begin{tikzpicture}[scale=0.6]
-
-%================ FIRST BOX ==================
-\draw (0,0) rectangle (4,4);
-
-\draw (0.5,3.5) rectangle (1.5,2.5);
-
-% Stripey diamond (sparser)
-\begin{scope}
-  \clip (2.5,3) -- (3,3.5) -- (3.5,3) -- (3,2.5) -- cycle;
-  \foreach \x in {2.0,2.1,...,4.0} {
-    \draw (\x,2.2) -- (\x+1,3.8);
-  }
-\end{scope}
-\draw (2.5,3) -- (3,3.5) -- (3.5,3) -- (3,2.5) -- cycle;
-
-% Cross-hatched circle (sparser)
-\begin{scope}
-  \clip (1,1.5) circle (0.5);
-  \foreach \x in {0.3,0.4,...,1.7} {
-    \draw (\x,1) -- (\x,2);
-  }
-  \foreach \y in {1,1.1,...,2} {
-    \draw (0.3,\y) -- (1.7,\y);
-  }
-\end{scope}
-\draw (1,1.5) circle (0.5);
-
-% Triangle (plain)
-\draw (3,1.5) -- (2.5,0.7) -- (3.5,0.7) -- cycle;
-
-
-%================ 2nd box (SHIFTED RIGHT) ==================
-\draw (6,0) rectangle (10,4);
-\node at (8,4.5) {\textbf{Selection \(\propto f\)}};
-
-\draw (6.5,3.5) rectangle (7.5,2.5);
-
-\begin{scope}
-  \clip (8.5,3) -- (9,3.5) -- (9.5,3) -- (9,2.5) -- cycle;
-  \foreach \x in {8.0,8.1,...,10.0} {
-    \draw (\x,2.2) -- (\x+1,3.8);
-  }
-\end{scope}
-\draw (8.5,3) -- (9,3.5) -- (9.5,3) -- (9,2.5) -- cycle;
-
-\begin{scope}
-  \clip (7,1.5) circle (0.5);
-  \foreach \x in {6.3,6.4,...,7.7} {
-    \draw (\x,1) -- (\x,2);
-  }
-  \foreach \y in {1,1.1,...,2} {
-    \draw (6.3,\y) -- (7.7,\y);
-  }
-\end{scope}
-\draw (7,1.5) circle (0.5);
-
-\draw (9,1.5) -- (8.5,0.7) -- (9.5,0.7) -- cycle;
-
-\draw[dotted, thick] (9,3) circle (0.9cm);
-
-
-%================ 3rd box (SHIFTED RIGHT) ==================
-\draw (12,0) rectangle (16,4);
-
-\node[scale=1.5] at (12.55,2) {$f($};
-\node[scale=1.5] at (14.55,2) {$f($};
-\begin{scope}[shift={(13.2,2)}, scale=0.75]
-    % --- plain (empty) triangle ---
-    \draw (0.15,0.5) -- (-0.35,-0.5) -- (0.65,-0.5) -- cycle;
-
-    % --- less-than symbol ---
-    \node at (1.15,0) {$<$};
-
-    % --- stripey black triangle ---
-    \draw (2.75,0.5) -- (2.25,-0.5) -- (3.25,-0.5) -- cycle;
-
-    \clip (2.75,0.5) -- (2.25,-0.5) -- (3.25,-0.5) -- cycle;
-        \foreach \x in {-1.05,-0.95,...,3.25} {
-            \draw (\x,-1) -- (\x+2,1);
-        }
-\end{scope}
-\node[scale=1.5] at (13.7,2) {$)$};
-\node[scale=1.5] at (15.7,2) {$)$};
-
-
-%================ 4th box (SHIFTED RIGHT) ==================
-\draw (18,0) rectangle (22,4);
-
-\draw (18.5,3.5) rectangle (19.5,2.5);
-
-\begin{scope}
-  \clip (20.5,3) -- (21,3.5) -- (21.5,3) -- (21,2.5) -- cycle;
-  \foreach \x in {20.0,20.1,...,22.0} {
-    \draw (\x,2.2) -- (\x+1,3.8);
-  }
-\end{scope}
-\draw (20.5,3) -- (21,3.5) -- (21.5,3) -- (21,2.5) -- cycle;
-
-\begin{scope}
-  \clip (19,1.5) circle (0.5);
-  \foreach \x in {18.3,18.4,...,19.7} {
-    \draw (\x,1) -- (\x,2);
-  }
-  \foreach \y in {1,1.1,...,2} {
-    \draw (18.3,\y) -- (19.7,\y);
-  }
-\end{scope}
-\draw (19,1.5) circle (0.5);
-
-\begin{scope}
-  \clip (21,1.5) -- (20.5,0.7) -- (21.5,0.7) -- cycle;
-  \foreach \x in {18.5,18.6,...,22} {
-    \draw (\x,0.0) -- (\x+1.2,1.4);
-  }
-\end{scope}
-\draw (21,1.5) -- (20.5,0.7) -- (21.5,0.7) -- cycle;
-
-
-%================ ARROWS (SHIFTED RIGHT) ==================
-\draw[->, thick] (4,2) -- (6,2);    
-\draw[->, thick] (10,2) -- (12,2);   
-\draw[->, thick] (16,2) -- (18,2);   
-
-
-%================ HEADERS ==================
-\node at (2,4.5) {\textbf{Selection}};
-\node at (12,5.5) {\textbf{Introspective Imitation Dynamics}};
-\node at (14,4.5) {\textbf{Comparison}};
-\node at (20,4.5) {\textbf{Update}};
-
-\draw[dotted, thick] (3,1) circle (0.9cm);
-
-\end{tikzpicture}
+\input{Figures/Tikz/Introspective_Imitation/main.tikz}
 }\\
 \hline
 \end{tabular}
@@ -933,7 +504,8 @@ Extrinsic Strategy Analysis & Intrinsic Strategy Analysis\\
 
 \subsection{The Standard Model and Transformations}
 
-In this section, we shall see how different population dynamics can be applied to the classical public goods game. 
+In this section, we shall see how different population dynamics can be applied
+to the classical public goods game. \cite{Calculus_Of_Selfishness, Evolutionary_Games_Textbook}
 In this game, individuals choose whether or not to contribute to a public resource pool. 
 In the end, the total resource is multiplied by some factor \(r > 1\) and distributed equally between each player. This model often encourages a behaviour known as ``free-riding" \cite{Climate Clubs}, where players refuse to contribute to the pool and simply take the benefit provided by other individuals' contribution. 
 The classic problem of a public goods game is to provide an environment where such free-riding is less profitable than contributing to the public good.\\
@@ -1012,7 +584,7 @@ However, we will now have a bound on \(\beta\) depending on the values of \(\alp
 
 
 \subsection{The Homogeneous Case}
-The most simple type of public goods game is the homogeneous public goods game.
+The most common type of public goods game is the homogeneous public goods game.\cite{Calculus_Of_Selfishness}
 In this game, we consider that we have a constant \(\alpha_i = \alpha\) for all players \(a_i\).
 In this case, we take the payoff function:
 \begin{large}
@@ -1128,25 +700,39 @@ Chuang Lei et al (2010) - Heterogeneity of allocation promotes cooperation in pu
 Lucas S. Flores et al (2023) - Heterogeneous contributions can jeopardize cooperation in the public goods game
 \bibitem{Hamming_Distance}
 Dave K. Kythe, Prem K. Kythe (2012) - Algebraic and Stochastic Coding Theory
-\bibitem{Markov_Chain}
+\bibitem{Stewart_Textbook}
 William J. Stewart (2009) - Probability, Markov Chains, Queues, and Simulation: The Mathematical Basis of Performance Modeling
 \bibitem{Climate Clubs}
 William Nordhaus (2015) - Climate Clubs: Overcoming Free-riding in International Climate Policy
 \bibitem{Nowak 2006}
 Martin A. Nowak (2006) - Evolutionary Dynamics: Exploring the Equations of Life
 \bibitem{CBAM}
-Regulation (EU) 2023/956 of the European Parliament and of the Council of 10 May 2023 establishing a carbon border adjustment mechanism (Text with EEA relevance)
+Regulation (EU) 2023/956 of the European Parliament and of the Council of 10
+May 2023 establishing a carbon border adjustment mechanism (Text with EEA
+relevance)
+\bibitem{Introspection Paper 1}
+ M C Couto et al 2022: Introspection dynamics: a simple model of
+counterfactual learning in asymmetric games
 \bibitem{Introspection Paper 2}
 Marta C. Couto, Saptarshi Pal (2023) - Introspection Dynamics in Asymmetric Multiplayer Games 
 \bibitem{Evolutionary_Games_Textbook}
 Josef Hofbauer, Karl Sigmund (1998, 2003) - Evolutionary Games and Population Dynamics
 \bibitem{fermi_example}
 Matjaž PercCorresponding Author; Jesús Gómez-Gardeñes; Attila Szolnoki; Luis M. Floría; Yamir Moreno(2013) - Evolutionary dynamics of group interactions on structured populations: a review
-\bibitem{Introspection Paper 1}
- M C Couto et al 2022: Introspection dynamics: a simple model of
-counterfactual learning in asymmetric games
 \bibitem{Fudenberg_Imhof}
-Drew Fudenberg and Lorens A. Imhof (2006): Imitation processes with small mutations
+Drew Fudenberg and Lorens A. Imhof (2006) - Imitation processes with small
+mutations
+\bibitem{Moran_Original}
+P.A.P Moran (1958): Random processes in genetics
+\bibitem{Szabo_Toke}
+György Szabó and Csaba Tőke (1998) - Evolutionary prisoner’s dilemma game on a
+square lattice
+\bibitem{Calculus_Of_Selfishness}
+Karl Sigmund (2010) - The Calculus of Selfishness
+\bibitem{Tragedy_Of_Commons}
+Weitz, J. S., Eksin, C., Paarporn, K., Brown, S. P., and Ratcliff, W. C. (2016)
+- An oscillating tragedy of the commons in replicator dynamics with
+game-environment feedback.
 \end{thebibliography}
 
 

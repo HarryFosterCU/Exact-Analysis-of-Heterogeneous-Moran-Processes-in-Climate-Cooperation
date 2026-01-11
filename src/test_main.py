@@ -1598,3 +1598,4 @@ def test_get_steady_state_symbolic_errors():
 
     with pytest.raises(ValueError):
         main.get_steady_state_symbolic(test_no_solution_matrix_symbolic)
+    

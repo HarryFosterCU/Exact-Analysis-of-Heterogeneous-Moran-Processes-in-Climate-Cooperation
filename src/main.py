@@ -514,3 +514,4 @@ def get_steady_state(transition_matrix, symbolic=False):
         return get_steady_state_numeric(transition_matrix)
     else:
         return get_steady_state_symbolic(transition_matrix)
+    return get_steady_state_symbolic(transition_matrix)

@@ -434,3 +434,84 @@ def get_dirichlet_contribution_vector(N, alpha_rule, M, **kwargs):
         realisation = np.random.dirichlet(alpha=alphas, size=100).mean(axis=0)
 
     return realisation * M
+
+
+def get_steady_state_numeric(transition_matrix):
+    """
+    Returns the steady state vector of a given transition matrix that is
+    entirely numeric. The steady state is calculated as the left eigenvector of
+    the transition matrix of a Markov chain which corresponds to the eigenvalue
+    1.
+
+    Parameters
+    ----------
+    transition_matrix - numpy.array or sympy.Matrix, a transition matrix.
+
+    Returns
+    ----------
+    numpy.array - steady state of transition_matrix."""
+    try:
+        vals, vecs = np.linalg.eig(transition_matrix.transpose())
+
+        one_eigenvector = vecs.transpose()[np.argmin(np.abs(vals - 1))]
+
+        return (one_eigenvector / np.sum(one_eigenvector)).transpose()
+    except:
+        raise ValueError(
+            "Error during runtime. Common errors include incorrect matrix formatting or symbolic values in the matrix"
+        )
+
+
+def get_steady_state_symbolic(transition_matrix):
+    """
+    Returns the steady state vectors of a given transition matrix. The steady
+    state is calculated as the left eigenvector of the transition matrix of a
+    Markov chain. This is achieved by noticing that this is equivalent to
+    solving $xA = x$ is equivalent to $(A^T - I)x^T = 0$. Thus, we find the
+    right-nullspace of $(A^T - I)$.
+
+    Parameters
+    ----------
+    transition_matrix - numpy.array or sympy.Matrix, a transition matrix.
+
+    Returns
+    ----------
+    numpy.array - steady state of transition_matrix. For the symbolic case,
+    this will always be simplified.
+    """
+    transition_matrix = sym.Matrix(transition_matrix)
+
+    nullspace = (transition_matrix.T - sym.eye(transition_matrix.rows)).nullspace()
+
+    try:
+        one_eigenvector = nullspace[0]
+    except:
+        raise ValueError("No eigenvector found")
+
+    return np.array(sym.simplify(one_eigenvector / sum(one_eigenvector)).T)[0]
+
+
+def get_steady_state(transition_matrix, symbolic=False):
+    """
+    Returns the steady state vectors of a given transition matrix. This
+    is useful for the analysis of non-absorbing Markov chains. This function
+    chooses between the functions for dealing with symbolic and numeric values.
+
+    Parameters
+    ----------
+    transition_matrix - numpy.array or sympy.Matrix, a transition matrix.
+
+    symbolic - bool, whether or not the transition matrix contains sympy
+    symbolic values.
+
+    Returns
+    ----------
+    numpy.array - steady state of transition_matrix. For the symbolic case,
+    this will always be simplified.
+    """
+
+    if symbolic is False:
+        return get_steady_state_numeric(transition_matrix)
+    else:
+        return get_steady_state_symbolic(transition_matrix)
+    return get_steady_state_symbolic(transition_matrix)

@@ -260,7 +260,7 @@ def extract_R_symbolic(transition_matrix):
     return R
 
 
-def generate_absorption_matrix_numerical(transition_matrix):
+def approximate_absorption_matrix(transition_matrix):
     """
     Given a transition matrix, NOT allowing for symbolic values,
 
@@ -290,7 +290,7 @@ def generate_absorption_matrix_numerical(transition_matrix):
     return B
 
 
-def generate_absorption_matrix_symbolic(transition_matrix):
+def calculate_absorption_matrix(transition_matrix):
     """
     Given a transition matrix, allowing for symbolic values,
 

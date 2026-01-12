@@ -955,9 +955,9 @@ def test_extract_R_symbolic_for_purely_symbolic_transition_matrix():
     )
 
 
-def test_generate_absorption_matrix_numerical_for_numeric_transition_matrix():
+def test_approximate_absorption_matrix_for_numeric_transition_matrix():
     """
-    Tests the generate_absorption_matrix_numerical function for an entirely
+    Tests the approximate_absorption_matrix function for an entirely
 
     numeric transition matrix"""
 
@@ -974,13 +974,13 @@ def test_generate_absorption_matrix_numerical_for_numeric_transition_matrix():
 
     np.testing.assert_array_almost_equal(
         expected_absorption_matrix,
-        main.generate_absorption_matrix_numerical(transition_matrix=transition_matrix),
+        main.approximate_absorption_matrix(transition_matrix=transition_matrix),
     )
 
 
-def test_generate_absorption_matrix_symbolic_for_symbolic_transition_matrix():
+def test_calculate_absorption_matrix_for_symbolic_transition_matrix():
     """
-    Tests the generate_absorption_matrix_symbolic function for an symbolic
+    Tests the calculate_absorption_matrix function for an symbolic
 
     transition matrix"""
 
@@ -1001,13 +1001,13 @@ def test_generate_absorption_matrix_symbolic_for_symbolic_transition_matrix():
 
     np.testing.assert_array_almost_equal(
         expected_absorption_matrix,
-        main.generate_absorption_matrix_symbolic(transition_matrix=transition_matrix),
+        main.calculate_absorption_matrix(transition_matrix=transition_matrix),
     )
 
 
-def test_generate_absorption_matrix_numerical_for_standard_transition_matrix():
+def test_approximate_absorption_matrix_for_standard_transition_matrix():
     """
-    Tests the generate_absorption_matrix_numerical function for an entirely
+    Tests the approximate_absorption_matrix function for an entirely
 
     numeric transition matrix"""
 
@@ -1024,13 +1024,13 @@ def test_generate_absorption_matrix_numerical_for_standard_transition_matrix():
 
     np.testing.assert_array_almost_equal(
         expected_absorption_matrix,
-        main.generate_absorption_matrix_numerical(transition_matrix=transition_matrix),
+        main.approximate_absorption_matrix(transition_matrix=transition_matrix),
     )
 
 
-def test_generate_absorption_matrix_symbolic_for_standard_transition_matrix():
+def test_calculate_absorption_matrix_for_standard_transition_matrix():
     """
-    Tests the generate_absorption_matrix_symbolic function for a standard
+    Tests the calculate_absorption_matrix function for a standard
     symbolic transition matrix"""
 
     A = sym.Symbol("A")
@@ -1050,7 +1050,7 @@ def test_generate_absorption_matrix_symbolic_for_standard_transition_matrix():
 
     np.testing.assert_array_almost_equal(
         expected_absorption_matrix,
-        main.generate_absorption_matrix_symbolic(transition_matrix=transition_matrix),
+        main.calculate_absorption_matrix(transition_matrix=transition_matrix),
     )
 
 
@@ -1094,7 +1094,7 @@ def test_generate_absorption_matrix_functions_accuracy_for_r_values():
         omega=omega,
     )
 
-    absorption_matrix = main.generate_absorption_matrix_symbolic(transition_matrix)
+    absorption_matrix = main.calculate_absorption_matrix(transition_matrix)
 
     symbolic_expression = sym.lambdify(
         (r, alpha, omega), sym.Matrix(absorption_matrix)[0, 1], "numpy"
@@ -1105,9 +1105,9 @@ def test_generate_absorption_matrix_functions_accuracy_for_r_values():
     np.testing.assert_array_almost_equal(expected_results, obtained_results)
 
 
-def test_generate_absorption_matrix_symbolic_for_5_by_5_symbolic_transition_matrix():
+def test_calculate_absorption_matrix_for_5_by_5_symbolic_transition_matrix():
     """
-    Tests the generate_absorption_matrix_symbolic function for a 5x5 symbolic
+    Tests the calculate_absorption_matrix function for a 5x5 symbolic
 
     transition matrix"""
 
@@ -1134,7 +1134,7 @@ def test_generate_absorption_matrix_symbolic_for_5_by_5_symbolic_transition_matr
 
     expected_absorption_matrix = ((I - Q) ** -1) * R
 
-    obtained_absorption_matrix = main.generate_absorption_matrix_symbolic(
+    obtained_absorption_matrix = main.calculate_absorption_matrix(
         transition_matrix=transition_matrix
     )
 

@@ -1418,93 +1418,9 @@ def test_get_dirichlet_contribution_vector_raises_type_error_for_many_alphas():
         main.get_dirichlet_contribution_vector(N=N, alpha_rule=small_alpha_rule, M=15)
 
 
-def test_get_steady_state_for_trivial_transition_matrix():
+def test_approximate_steady_state_for_trivial_transition_matrix():
     """
-    Tests whether the get_steady_state function returns the correct matrix for
-    a 2x2 transition matrix with the simple form [[p, 1-p], [p,1-p]] for both
-    symbolic and numeric values for p"""
-
-    p = sym.Symbol("p")
-
-    symbolic_matrix = sym.Matrix([[p, 1 - p], [p, 1 - p]])
-
-    expected_symbolic_output = np.array([p, 1 - p])
-
-    np.testing.assert_array_equal(
-        expected_symbolic_output, main.get_steady_state(symbolic_matrix, symbolic=True)
-    )
-
-    numeric_matrix = np.array([[0.7, 0.3], [0.7, 0.3]])
-
-    expected_numeric_output = np.array([0.7, 0.3])
-
-    np.testing.assert_allclose(
-        expected_numeric_output, main.get_steady_state(numeric_matrix, symbolic=False)
-    )
-
-
-def test_get_steady_state_for_absorbing_numeric_transition_matrix():
-    """
-    Tests whether the get_steady_state function still returns the correct value
-    if the matrix passed to it is absorbing and numeric. It should return a
-    steady state corresponding to just the absorbing state of the transition
-    matrix"""
-
-    transition_matrix = np.array([[1, 0, 0], [0.5, 0.3, 0.2], [0, 0.5, 0.5]])
-
-    expected_output = np.array([1, 0, 0])
-
-    np.testing.assert_array_equal(
-        expected_output, main.get_steady_state(transition_matrix)
-    )
-
-
-def test_get_steady_state_for_absorbing_symbolic_transition_matrix():
-    """
-    Tests whether the get_steady_state function still returns the correct value
-    if the matrix passed to it is absorbing and symbolic. It should return a
-    steady state corresponding to just the absorbing state of the transition
-    matrix"""
-
-    p = sym.Symbol("p")
-
-    transition_matrix = np.array([[p, 1 - p - 0.2, 0.2], [0, 1, 0], [0.3, 0.5, 0.2]])
-
-    expected_output = np.array([0, 1, 0])
-
-    np.testing.assert_array_equal(
-        expected_output, main.get_steady_state(transition_matrix, symbolic=True)
-    )
-
-
-def test_get_steady_state_errors():
-    """
-    Tests whether the errors in get_steady_state are correctly raised for:
-    - Misuse of symbolic values
-    - Poorly formatted matrix
-    - Symbolic matrix with no real solutions"""
-
-    p = sym.Symbol("P")
-
-    test_symbolic_matrix = np.array([[p, 1 - p], [p, 1 - p]])
-
-    with pytest.raises(ValueError):
-        main.get_steady_state(test_symbolic_matrix, symbolic=False)
-
-    test_rectangle_matrix = np.array([[1], [2], [3]])
-
-    with pytest.raises(ValueError):
-        main.get_steady_state(test_rectangle_matrix, symbolic=False)
-
-    test_no_solution_matrix_symbolic = np.array([[p, 0], [0, p]])
-
-    with pytest.raises(ValueError):
-        main.get_steady_state(test_no_solution_matrix_symbolic, symbolic=True)
-
-
-def test_get_steady_state_numeric_for_trivial_transition_matrix():
-    """
-    Tests get_steady_state_numeric for a trivial transition matrix
+    Tests approximate_steady_state for a trivial transition matrix
     """
 
     numeric_matrix = np.array([[0.4, 0.6], [0.4, 0.6]])
@@ -1512,13 +1428,13 @@ def test_get_steady_state_numeric_for_trivial_transition_matrix():
     expected_numeric_output = np.array([0.4, 0.6])
 
     np.testing.assert_allclose(
-        expected_numeric_output, main.get_steady_state_numeric(numeric_matrix)
+        expected_numeric_output, main.approximate_steady_state(numeric_matrix)
     )
 
 
-def test_get_steady_state_numeric_for_absorbing_transition_matrix():
+def test_approximate_steady_state_for_absorbing_transition_matrix():
     """
-    Tests get_steady_state_numeric for an absorbing transition matrix
+    Tests approximate_steady_state for an absorbing transition matrix
     """
 
     numeric_matrix = np.array(
@@ -1528,13 +1444,13 @@ def test_get_steady_state_numeric_for_absorbing_transition_matrix():
     expected_numeric_output = np.array([1, 0, 0, 0])
 
     np.testing.assert_allclose(
-        expected_numeric_output, main.get_steady_state_numeric(numeric_matrix)
+        expected_numeric_output, main.approximate_steady_state(numeric_matrix)
     )
 
 
-def test_get_steady_state_numeric_errors():
+def test_approximate_steady_state_errors():
     """
-    Tests whether the errors in get_steady_state_numeric are correctly raised for:
+    Tests whether the errors in approximate_steady_state are correctly raised for:
     - Misuse of symbolic values
     - Poorly formatted matrix"""
 
@@ -1543,17 +1459,17 @@ def test_get_steady_state_numeric_errors():
     test_symbolic_matrix = np.array([[p, 1 - p], [p, 1 - p]])
 
     with pytest.raises(ValueError):
-        main.get_steady_state_numeric(test_symbolic_matrix)
+        main.approximate_steady_state(test_symbolic_matrix)
 
     test_rectangle_matrix = np.array([[1], [2], [3]])
 
     with pytest.raises(ValueError):
-        main.get_steady_state_numeric(test_rectangle_matrix)
+        main.approximate_steady_state(test_rectangle_matrix)
 
 
-def test_get_steady_state_symbolic_for_trivial_transition_matrix():
+def test_calculate_steady_state_for_trivial_transition_matrix():
     """
-    Tests whether the get_steady_state_symbolic function returns the correct matrix for
+    Tests whether the calculate_steady_state function returns the correct matrix for
     a 2x2 transition matrix with the simple form [[p, 1-p], [p,1-p]]"""
 
     p = sym.Symbol("p")
@@ -1566,13 +1482,13 @@ def test_get_steady_state_symbolic_for_trivial_transition_matrix():
     expected_symbolic_output = np.array([0.5 + p + q, 0.5 - p - q])
 
     np.testing.assert_array_almost_equal(
-        expected_symbolic_output, main.get_steady_state_symbolic(symbolic_matrix)
+        expected_symbolic_output, main.calculate_steady_state(symbolic_matrix)
     )
 
 
-def test_get_steady_state_symbolic_for_absorbing_symbolic_transition_matrix():
+def test_calculate_steady_state_for_absorbing_symbolic_transition_matrix():
     """
-    Tests whether the get_steady_state_symbolic function still returns the
+    Tests whether the calculate_steady_state function still returns the
     correct value if the matrix passed to it is absorbing and symbolic. It
     should return a steady state corresponding to just the absorbing state of
     the transition matrix"""
@@ -1584,11 +1500,11 @@ def test_get_steady_state_symbolic_for_absorbing_symbolic_transition_matrix():
     expected_output = np.array([0, 1, 0])
 
     np.testing.assert_array_equal(
-        expected_output, main.get_steady_state_symbolic(transition_matrix)
+        expected_output, main.calculate_steady_state(transition_matrix)
     )
 
 
-def test_get_steady_state_symbolic_errors():
+def test_calculate_steady_state_errors():
     """
     Tests whether the errors in get_steady_state are correctly raised for:
     Symbolic matrix with no real solutions"""
@@ -1597,4 +1513,4 @@ def test_get_steady_state_symbolic_errors():
     test_no_solution_matrix_symbolic = np.array([[p, 0], [0, p]])
 
     with pytest.raises(ValueError):
-        main.get_steady_state_symbolic(test_no_solution_matrix_symbolic)
+        main.calculate_steady_state(test_no_solution_matrix_symbolic)

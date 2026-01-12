@@ -436,12 +436,12 @@ def get_dirichlet_contribution_vector(N, alpha_rule, M, **kwargs):
     return realisation * M
 
 
-def get_steady_state_numeric(transition_matrix):
+def approximate_steady_state(transition_matrix):
     """
     Returns the steady state vector of a given transition matrix that is
-    entirely numeric. The steady state is calculated as the left eigenvector of
-    the transition matrix of a Markov chain which corresponds to the eigenvalue
-    1.
+    entirely numeric. The steady state is approximated as the left eigenvector
+    of the transition matrix of a Markov chain which corresponds to the
+    eigenvalue 1.
 
     Parameters
     ----------
@@ -462,7 +462,7 @@ def get_steady_state_numeric(transition_matrix):
         )
 
 
-def get_steady_state_symbolic(transition_matrix):
+def calculate_steady_state(transition_matrix):
     """
     Returns the steady state vectors of a given transition matrix. The steady
     state is calculated as the left eigenvector of the transition matrix of a
@@ -489,29 +489,3 @@ def get_steady_state_symbolic(transition_matrix):
         raise ValueError("No eigenvector found")
 
     return np.array(sym.simplify(one_eigenvector / sum(one_eigenvector)).T)[0]
-
-
-def get_steady_state(transition_matrix, symbolic=False):
-    """
-    Returns the steady state vectors of a given transition matrix. This
-    is useful for the analysis of non-absorbing Markov chains. This function
-    chooses between the functions for dealing with symbolic and numeric values.
-
-    Parameters
-    ----------
-    transition_matrix - numpy.array or sympy.Matrix, a transition matrix.
-
-    symbolic - bool, whether or not the transition matrix contains sympy
-    symbolic values.
-
-    Returns
-    ----------
-    numpy.array - steady state of transition_matrix. For the symbolic case,
-    this will always be simplified.
-    """
-
-    if symbolic is False:
-        return get_steady_state_numeric(transition_matrix)
-    else:
-        return get_steady_state_symbolic(transition_matrix)
-    return get_steady_state_symbolic(transition_matrix)

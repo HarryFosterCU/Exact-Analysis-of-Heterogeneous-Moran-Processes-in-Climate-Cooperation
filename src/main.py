@@ -36,7 +36,7 @@ def get_state_space(N, k):
     return state_space
 
 
-def compute_transition_probability(source, target, fitness_function, **kwargs):
+def compute_moran_transition_probability(source, target, fitness_function, **kwargs):
     """
     Given two states and a fitness function, returns the transition probability
 
@@ -64,7 +64,7 @@ def compute_transition_probability(source, target, fitness_function, **kwargs):
 
     Returns
     ---------
-    Float: the transition pobability
+    Float: the transition pobability from source to target
     """
     different_indices = np.where(source != target)
     if len(different_indices[0]) > 1:
@@ -77,7 +77,228 @@ def compute_transition_probability(source, target, fitness_function, **kwargs):
     return numerator / denominator
 
 
-def generate_transition_matrix(state_space, fitness_function, symbolic=False, **kwargs):
+def fermi_imitation_function(delta, selection_intensity=0.5, **kwargs):
+    """
+    Given the fitness of the focal individual who changes action type, and the
+
+    target individual who is being copied, as well as the selection intensity,
+
+    returns $\phi(a_i, a_j) = \frac{1}{1 + \exp({\frac{f(a_{i}) - f(a_{j})
+    }{\beta}})}$
+
+    Selection intensity is set to 0.5 by default, as is common according to:
+
+    Xiaojian Maa, Ji Quana, Xianjia Wang (2021): Effect of reputation-based
+    heterogeneous investment on cooperation in spatial public goods games
+
+
+    Parameters
+    -----------
+
+    fitness_focal: float or sym.Symbol, the fitness of the individual who can
+    change action type
+
+    fitness_target: float or sym.Symbol, the fitness of the individual who may
+    have their action type copied
+
+    selection_intensity: float or sym.Symbol, a parameter which determines the
+    effect the difference in fitness has on the transition probability. As
+    selection_intensity goes to infinity, the probability of transitioning goes
+    to $\frac{1}{2}$
+    """
+
+    return 1 / (1 + sym.E ** ((delta) / selection_intensity))
+
+
+def compute_fermi_transition_probability(
+    source, target, fitness_function, selection_intensity, **kwargs
+):
+    """
+    Given two states, a fitness function, and a selection intensity, returns
+
+    the transition probability when moving from the source state to the target
+
+    state. Must move between states with a Hamming distance of 1. Returns 0 if
+
+    Hamming distance > 1.
+
+    Returns None if Hamming distance = 0. For an absorbing state, this will
+
+    naturally return 0 for all off-diagonal entries, and None on the diagonal.
+
+    This is adressed in the get_transition_matrix function.
+
+    The following equation is the subject of this function:
+
+    $\sum_{a_j=b_{i^*}}^N\frac{1}{N(N-1)}\phi(f_i(a) - f(a_j))$
+
+    where $\phi(f_i(a) - f(a_j)) = \frac{1}{1 + \exp({\frac{f(a_{i}) - f(a_{j})
+    }{\beta}})}$
+
+    Parameters
+    ----------
+    source: numpy.array, the starting state
+
+    target: numpy.array, what the source transitions to
+
+    fitness_function: func, The fitness function which maps a state to a
+    numpy.array
+
+    selection_intensity: float or sympy.Symbol: the selection intensity of the
+    function. The lower the value, the higher the probability that a player
+    will choose the higher fitness strategy in $\phi$
+
+    Returns
+    ---------
+    Float: the transition pobability from source to target"""
+
+    different_indices = np.where(source != target)
+    if len(different_indices[0]) > 1:
+        return 0
+    if len(different_indices[0]) == 0:
+        return None
+    fitness = fitness_function(source, **kwargs)
+
+    changes = [
+        fermi_imitation_function(
+            delta=fitness[different_indices] - fitness[i],
+            selection_intensity=selection_intensity,
+            **kwargs,
+        )
+        for i in np.where(source == target[different_indices])
+    ]
+
+    scalar = 1 / (len(source) * (len(source) - 1))
+    return (scalar * np.array(changes)).sum()
+
+
+def compute_imitation_introspection_transition_probability(
+    source, target, fitness_function, selection_intensity, **kwargs
+):
+    """
+    Given two states, a fitness function, and a selection intensity, returns
+
+    the transition probability when moving from the source state to the target
+
+    state in introspective imitation dynamics. Must move between states with a]
+
+    Hamming distance of 1. Returns 0 if Hamming distance > 1.
+
+    Returns None if Hamming distance = 0. For an absorbing state, this will
+
+    naturally return 0 for all off-diagonal entries, and None on the diagonal.
+
+    This is adressed in the get_transition_matrix function.
+
+    The following equation is the subject of this function:
+
+    $\frac{1}{N}\frac{\sum_{a_{j} = b_{I(\textbf{a}, \textbf{b})}}f_j(\textbf{a})}{\sum_{k}f_k(\textbf{a})}\phi(\Delta(f_{I(\textbf{a,b})}))$
+
+    Parameters
+    ----------
+    source: numpy.array, the starting state
+
+    target: numpy.array, what the source transitions to
+
+    fitness_function: func, The fitness function which maps a state to a
+    numpy.array
+
+    selection_intensity: float or sympy.Symbol: the selection intensity of the
+    function. The lower the value, the higher the probability that a player
+    will choose the higher fitness strategy in $\phi$
+
+    Returns
+    ---------
+    Float: the transition pobability from source to target"""
+
+    different_indices = np.where(source != target)
+    if len(different_indices[0]) > 1:
+        return 0
+    if len(different_indices[0]) == 0:
+        return None
+
+    fitness = fitness_function(source, **kwargs)
+    fitness_before = fitness[different_indices][0]
+    fitness_after = fitness_function(target, **kwargs)[different_indices][0]
+
+    selection_denominator = fitness.sum() * len(source)
+    selection_numerator = fitness[source == target[different_indices]].sum()
+    selection_probability = selection_numerator / selection_denominator
+
+    delta = fitness_before - fitness_after
+
+    return selection_probability * fermi_imitation_function(
+        delta=delta, selection_intensity=selection_intensity
+    )
+
+
+def compute_introspection_transition_probability(
+    source,
+    target,
+    fitness_function,
+    selection_intensity,
+    number_of_strategies,
+    **kwargs
+):
+    """
+    Given two states, a fitness function, and a selection intensity, returns
+
+    the transition probability when moving from the source state to the target
+
+    state in introspective imitation dynamics. Must move between states with a]
+
+    Hamming distance of 1. Returns 0 if Hamming distance > 1.
+
+    Returns None if Hamming distance = 0.
+
+    This is adressed in the get_transition_matrix function.
+
+    The following equation is the subject of this function:
+
+    $\frac{1}{N(m_j - 1)}\phi(f_i(a) - f_i(b))$
+
+    Parameters
+    ----------
+    source: numpy.array, the starting state
+
+    target: numpy.array, what the source transitions to
+
+    fitness_function: func, The fitness function which maps a state to a
+    numpy.array
+
+    selection_intensity: float or sympy.Symbol: the selection intensity of the
+    function. The lower the value, the higher the probability that a player
+    will choose the higher fitness strategy in $\phi$
+
+    number_of_strategies: the number of strategies available to each player in
+    the population. What we call "k" in the get_state_space function
+
+    Returns
+    ---------
+    Float: the transition pobability from source to target"""
+
+    different_indices = np.where(source != target)
+    if len(different_indices[0]) > 1:
+        return 0
+    if len(different_indices[0]) == 0:
+        return None
+
+    fitness = fitness_function(source, **kwargs)
+    fitness_before = fitness[different_indices][0]
+    fitness_after = fitness_function(target, **kwargs)[different_indices][0]
+
+    selection_probability = 1 / (len(source) * ((number_of_strategies) - 1))
+
+    delta = fitness_before - fitness_after
+
+    return selection_probability * fermi_imitation_function(
+        delta=delta, selection_intensity=selection_intensity
+    )
+
+
+def generate_transition_matrix(
+    state_space, fitness_function, compute_transition_probability, **kwargs
+):
     """
     Given a state space and a fitness function, returns the transition matrix
 
@@ -87,7 +308,12 @@ def generate_transition_matrix(state_space, fitness_function, symbolic=False, **
     ----------
     state_space: numpy.array, the state space for the transition matrix.
 
-    fitness_function: function, should return a size N numpy.array when passed a state
+    fitness_function: function, should return a size N numpy.array when passed
+    a state
+
+    compute_transition_probability: function, takes a source state, a target
+    state, and a fitness function, and returns the probability of transitioning
+    from the source state to the target state
 
     Returns
     ----------

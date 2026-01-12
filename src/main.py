@@ -260,7 +260,7 @@ def extract_R_symbolic(transition_matrix):
     return R
 
 
-def generate_absorption_matrix_numerical(transition_matrix):
+def approximate_absorption_matrix(transition_matrix):
     """
     Given a transition matrix, NOT allowing for symbolic values,
 
@@ -290,7 +290,7 @@ def generate_absorption_matrix_numerical(transition_matrix):
     return B
 
 
-def generate_absorption_matrix_symbolic(transition_matrix):
+def calculate_absorption_matrix(transition_matrix):
     """
     Given a transition matrix, allowing for symbolic values,
 
@@ -326,40 +326,6 @@ def generate_absorption_matrix_symbolic(transition_matrix):
     B = (I - Q_symbolic) ** -1 * R_symbolic
 
     return sym.Matrix(B)
-
-
-def generate_absorption_matrix(transition_matrix, symbolic=False):
-    """
-    Given a transition matrix, calls the correct function for finding
-
-    the absorption matrix.
-
-    Parameters:
-    --------------
-
-    transition_matrix: numpy.array, the transition matrix
-
-    symbolic: bool, whether or not the transition matrix has any symbolic
-
-    (sympy) values
-
-    Returns:
-    ------------
-
-    numpy.array if symbolic == False, else sym.Matri., the absorption
-
-    probabilities in the form:
-
-    entry i,j = probability of transitive state i being absorbed into
-
-    absorbing state j
-    """
-
-    if symbolic == False:
-
-        return generate_absorption_matrix_numerical(transition_matrix=transition_matrix)
-
-    return generate_absorption_matrix_symbolic(transition_matrix=transition_matrix)
 
 
 def get_deterministic_contribution_vector(contribution_rule, N, **kwargs):

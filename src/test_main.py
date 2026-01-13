@@ -1889,3 +1889,4 @@ def test_compute_introspection_transition_probability_for_infeasible_states_and_
     assert actual_probability2 is None
 
     _ = trivial_fitness_function(source1)  # prevents unused function warning
+

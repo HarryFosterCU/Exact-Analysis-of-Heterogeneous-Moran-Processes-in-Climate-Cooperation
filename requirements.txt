@@ -4,3 +4,4 @@ black==25.9.0
 numpy==2.3.3
 sympy==1.14.0
 scipy==1.16.3
+pytest-benchmark==5.2.3

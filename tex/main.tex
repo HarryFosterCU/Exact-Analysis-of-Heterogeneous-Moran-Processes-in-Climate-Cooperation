@@ -27,8 +27,8 @@ Evolutionary game theory has long been at the forefront of the study of
 emergent cooperation, showing how a strategy that is seemingly unfavourable for
 the individual, but beneficial to the collective, can become dominant in
 systems of rational actors. This is often shown through the study of games such
-as the iterated prisoner's dilemma\cite{IPD1,IPD2} and the snowdrift
-game\cite{Snowdrift1}. These examples, however, only allow for pairwise
+as the iterated prisoner's dilemma\cite{10.1371/journal.pone.0304641,b5d8eed6-6ac7-35c7-953f-9af57df3f45e} and the snowdrift
+game\cite{PhysRevE.84.020902}. These examples, however, only allow for pairwise
 interactions, which does not accurately represent many real-world scenarios.
 Therefore, we look at a common game used to model the sharing of resources and
 interactions between multiple people - the public goods game.\\
@@ -44,41 +44,39 @@ one player may wish to contribute \(x\) units to the public good, however they
 do not have enough wealth available to spare such a contribution. Heterogeneity
 allows us to give varying attributes to the different actors in order to
 simulate such situations. These attributes can be encoded into the players
-themselves as separate to the game, for example the reputation in \cite{Maa},
-exist within the strategies of the players \cite{Lei, Flores}, or they may
-exist within the actual payoffs which the players receive. We will look at
-multiple different ways in which heterogeneity can be implemented in order to
-model different scenarios.\\
+themselves as separate to the game, for example the reputation in \cite{MA2021111353},
+they may exist within the strategies of the players \cite{LEI20104708, PhysRevE.108.024111}, or they may
+exist within the actual payoffs which the players receive.\\
 
 In much of the literature, we see heterogeneous public goods game being played
 graphically. By this I mean that in much research, players are placed on graphs
-(often regular square lattices, as in \cite{Maa, Flores}) and participate in
+(often regular square lattices, as in \cite{MA2021111353, PhysRevE.108.024111}) and participate in
 multiple public goods games at the same time, with their payoff being the
 combined payoff from all their games. This gives even more weight to the
 decision to cooperate or defect, and allows players to interact in scenarios
 with many different levels of these heterogeneous attributes. We also see many
-ideas for what these attributes could be based upon. \cite{Maa} takes the idea
+ideas for what these attributes could be based upon. \cite{MA2021111353} takes the idea
 of that players could build a reputation through their decisions across
 multiple generations, with players refusing to contribute higher amounts to
 groups made up of those who have a reputation for defection. While this is a
 dynamically updating heterogeneous attribute, some have proposed static
 attributes based on inherent properties of the individuals, such as in
-\cite{Lei} where the players participate in different amounts of games, and
+\cite{LEI20104708} where the players participate in different amounts of games, and
 contribute different amounts based on this factor.\\
 
 In both of the above cases, it is shown that an increased scrutiny of
 heterogeneous attributes in a spatial public goods game is beneficial to the
-emergence of cooperation, though for different reasons. In \cite{Maa}, we see
+emergence of cooperation, though for different reasons. In \cite{MA2021111353}, we see
 that increasing such scrutiny obviously harms defectors, as they receive
 reduced payoffs based on their low reputation due to being unable to coerce
-high contributions from other players. \cite{Lei}, however, finds that if we
+high contributions from other players. \cite{LEI20104708}, however, finds that if we
 encourage players to cooperate with those in a similar number of games to them,
 here done by tuning the \(\beta\) parameter, the high-degree defector nodes are
 unable to gather a large payoff, and so will be unable to spread their
 defection to their neighbours. If you encourage players to interact with those
 with different degrees, however, then middle-degree defectors will make heavy losses and be unable to survive.\\
 
-\cite{Flores} shows how the benefits of this heterogeneity are not always as
+\cite{PhysRevE.108.024111} shows how the benefits of this heterogeneity are not always as
 pronounced as it may seem. When the contribution is not calculated by some
 attribute, but rather is an attribute in and of itself (essentially becoming a
 new strategy) then even in systems where contribution dominates, we will see
@@ -98,10 +96,10 @@ initial invasion of defectors - an occurrence which relies on a high enough
 
 We also see that a potential climate club may soon be forming within the
 European Union. While it functions slightly differently to the classic example
-in \cite{Climate Clubs}, it follows the same principles of encouraging
+in \cite{10.1257/aer.15000001}, it follows the same principles of encouraging
 countries to join the group by punishing those outside of the club, in order to
 attempt to reduce overall carbon emissions. This is the ``Carbon Border
-Adjustment Mechanism" \cite{CBAM}. Currently, all goods within the EU require
+Adjustment Mechanism" \cite{EU_CBAM_2023}. Currently, all goods within the EU require
 taxation based on their carbon footprint, however imported goods from outside
 cannot be subject to such taxes. CBAM aims to prevent foreign goods from
 gaining benefits due to environmentally harmful practices by enforcing that EU
@@ -111,13 +109,13 @@ country already levies a tax on their own goods (similar to the EU's carbon
 tax), then this cost will be taken into consideration, and fewer certificates
 must be purchased. This discourages the importation of goods from countries
 which do not levy a similar tax on their own items, forming a structure which
-behaves very similarly to the ``climate clubs" in \cite{Climate Clubs}.
+behaves very similarly to the ``climate clubs" in \cite{10.1257/aer.15000001}.
 
 
 
 
 \section{The Model}
-In this section, similarly to \cite{Introspection Paper 1,Introspection Paper 2}we examine the underlying framework modelling dynamic processes on a fully heterogeneous population. 
+In this section, similarly to \cite{Couto2022,Couto2023}we examine the underlying framework modelling dynamic processes on a fully heterogeneous population. 
 We begin by defining a population of individuals and the actions which they may take, and then we see different methods by which we can model the evolution of a population over time.
 
 \subsection{An Initial System}
@@ -129,10 +127,11 @@ We begin by defining a population of individuals and the actions which they may 
     \item A strictly positive fitness function \(f:S \to \mathbb{R}^N\). We define \(f_{i}(\textbf{a})\) as \(i^{th}\) entry of \(f(\textbf{a})\)
 \end{itemize}
 
-Now let $h(\textbf{a, b})$ denote the Hamming distance~\cite{Hamming_Distance} between two states \(\textbf{a}, \textbf{b} \in S\). 
-The set of states \textbf{b} such that $h(\textbf{a, b}) = 1$ is defined as Neb(\textbf{a}), the ``Neighbourhood set of a state" \cite{Introspection Paper 2}.
-Our system will be in the form of a Markov chain~\cite{Stewart_Textbook} which moves between states with a probability \(>0\) if and only if $h(\textbf{a, b}) \leq 1$. 
-We call the index at which \textbf{a} and \textbf{b} differ the \textit{index of difference}, denoted \(I(\textbf{a,b})\) \cite{Introspection Paper 2}.
+Now let $h(\textbf{a, b})$ denote the Hamming distance between two states
+\(\textbf{a}, \textbf{b} \in S\) \cite{kythe-book}. 
+The set of states \textbf{b} such that $h(\textbf{a, b}) = 1$ is defined as Neb(\textbf{a}), the ``Neighbourhood set of a state" \cite{Couto2023}.
+Our system will be in the form of a Markov chain~\cite{f66ea2a5-f1c3-3855-8dc0-e3047d83298e} which moves between states with a probability \(>0\) if and only if $h(\textbf{a, b}) \leq 1$. 
+We call the index at which \textbf{a} and \textbf{b} differ the \textit{index of difference}, denoted \(I(\textbf{a,b})\) \cite{Couto2023}.
 We shall look at different population dynamics by which we may model such a Markov chain.
 
 \subsection{Population Dynamics} 
@@ -142,9 +141,10 @@ This includes the following well-known dynamics, adapted to a fully
 heterogeneous population:
 
 \begin{itemize}
-  \item The Moran process, first described in \cite{Moran_Original}
-  \item Fermi Imitation Dynamics, as famously used in \cite{Szabo_Toke}
-  \item Introspection Dynamics, a more modern dynamic defined in \cite{Introspection Paper 1}
+  \item The Moran process, first described in \cite{Moran_1958}
+  \item Fermi Imitation Dynamics, a common choice of dynamic often adapted to
+  the study of cooperation on a graph \cite{MA2021111353, LEI20104708, PhysRevE.58.69}
+  \item Introspection Dynamics, a more modern dynamic defined in \cite{Couto2022}
 \end{itemize}
 
 We also introduce a new dynamic called ``Introspective Imitation Dynamics''.
@@ -152,7 +152,7 @@ This is a novel dynamic particularly suited to the process of learning from
 others in a heterogeneous population.
 
 \subsubsection{The Moran Process}
-The Moran process \cite{Nowak 2006} is a dynamic corresponding to the following algorithm:
+The Moran process \cite{568a8a9c-d8ae-3d24-9fc2-3d33340230e7} is a dynamic corresponding to the following algorithm:
 \begin{enumerate}
     \item A player is chosen to be duplicated with a probability proportional to their fitness in the population
     \item A player is chosen with probability $\frac{1}{N}$ to be removed from the population
@@ -180,7 +180,7 @@ there does not exist \(a_i \in \textbf{a}: a_i = b_{i^*}\). \\
 
 We can now discuss one of the key ideas in the Moran process. As no new action types can be introduced to the population once they are fully removed, we have a set of absorbing states \textbf{a} such that \(a_1 = a_2 =...\), for which we have $p_{\textbf{a} \to\textbf{a}} = 1$. 
 We denote the set of absorbing states $S^{\gamma}$.
-We therefore have that the Moran process forms an absorbing Markov chain \cite{Stewart_Textbook}, and we can investigate the probability of the population being absorbed into each absorbing state.\\
+We therefore have that the Moran process forms an absorbing Markov chain \cite{f66ea2a5-f1c3-3855-8dc0-e3047d83298e}, and we can investigate the probability of the population being absorbed into each absorbing state.\\
 
 Consider a game with two players, each playing one of two actions. We have a state space
 \(\textbf{a} = (0,0), \textbf{b} = (0,1), \textbf{c} = (1,0), \textbf{d} = (1,1)\), and our transition matrix \(T\) would take the form
@@ -195,7 +195,7 @@ Consider a game with two players, each playing one of two actions. We have a sta
 
 Our transition matrix represents the probability of transitioning from the state represented by the row to the state represented by the column.
 Here our columns represent \textbf{a},\textbf{b}, \textbf{c} and \textbf{d} from left to right, and the rows represent these states in the same order from top to bottom.\\
-Now, by taking the fundamental matrix of \(T\) and performing a right multiplication by \(R\), the matrix with entries which represent transitions from transitive states to absorbing states\cite{Stewart_Textbook}, we can obtain the absorption matrix for this system.
+Now, by taking the fundamental matrix of \(T\) and performing a right multiplication by \(R\), the matrix with entries which represent transitions from transitive states to absorbing states\cite{f66ea2a5-f1c3-3855-8dc0-e3047d83298e}, we can obtain the absorption matrix for this system.
 For the above game, we find the following equation:\\
 \begin{center}
 %\begin{small}
@@ -242,7 +242,9 @@ population.
 It models the following process:
 
 \begin{itemize}
-  \item Two players, \(i\) and \(j\) are selected at random
+  \item Two players, \(i\) and \(j\) are selected at random. Unlike
+  \cite{PhysRevE.58.69}, the player \(j\) does not have to be the neighbour of
+  player \(i\).
   \item Player \(i\) copies the action type of the player \(j\) with a
   probability according to the Fermi function \(
     \phi(f_{i}(\textbf{a}) - f_{j}(\textbf{a})) = \frac{1}{1 + e^{\left({\frac{f_{i}(\textbf{a}) - f_{j}(\textbf{a}) }{\beta}}\right)}}\)
@@ -250,7 +252,7 @@ It models the following process:
 
 Where \(\beta\) is the selection intensity of the system. 
 This method has been commonly used in studies of evolutionary games, for
-example \cite{Maa, Lei, fermi_example,Szabo_Toke}.
+example \cite{MA2021111353, LEI20104708, hofbauer_sigmund_1998,PhysRevE.58.69}.
 
 Unlike a Moran Process, we can see that the players are not selected with a
 probability proportional to their fitness.
@@ -337,15 +339,15 @@ We will now see a dynamic where players consider the impact of action type
 transitions on their own fitness.
 
 \subsubsection{Introspection Dynamics}
-In introspection dynamics, the following process take place \cite{Introspection Paper 1}
+In introspection dynamics, the following process take place \cite{Couto2022}
 \begin{enumerate}
     \item A player \(i\) is chosen with probability \(\frac{1}{N}\) to reconsider their strategy \(a_{i,k}\)
     \item Player \(i\) chooses another possible strategy, \(a_{i,l}\), from the set of all possible strategies. 
     \item The chosen player replaces their strategy with probability \(p_{a_{I(\textbf{a,b})}\to b_{I(\textbf{a,b})}}(a_{-I(\textbf{a,b})}) = \phi (\Delta f_{I(\textbf{a,b})})\), where \(\Delta f_{I(\textbf{a,b})} = f_{I(a,b)}(\textbf{a})  - f_{I(a,b)}(\textbf{b})\) is the difference between the possible fitness of the new strategy and the fitness of the player's current strategy.
 \end{enumerate}
-\cite{Introspection Paper 1} considers this process for
+\cite{Couto2022} considers this process for
 the two player case, and it is expanded to multiple players in
-\cite{Introspection Paper 2}.
+\cite{Couto2023}.
 
 This process is well suited to a heterogeneous population. 
 This is because in some cases using imitation dynamics, a player may copy a
@@ -355,7 +357,7 @@ In introspection dynamics, players do not consider the fitness of other
 individuals, and so cannot be fooled by high fitness strategies with attributes
 different to that of our focal player.
 
-The transition matrix for the introspection dynamics process~\cite{Introspection Paper 2} is given by:
+The transition matrix for the introspection dynamics process~\cite{Couto2023} is given by:
 
 \[
 T_{\textbf{a,b}} =
@@ -372,7 +374,7 @@ T_{\textbf{a,b}} =
 where \(m_j\) is the number of actions available to individual \(j\). 
 Since we assume that all individuals have the same action set with size \(k\), we can replace \(m_j - 1\) with \(k-1\).
 
-Now, Couto also calculated in \cite{Introspection Paper 1} the explicit strategy distribution for an asymmetric interaction between two players. 
+Now, Couto also calculated in \cite{Couto2022} the explicit strategy distribution for an asymmetric interaction between two players. 
 We can adapt these results to define our transition matrix for our example
 state space \textbf{a,b,c,d}:\\
 
@@ -392,7 +394,7 @@ For this, we take the left eigenvector of the transition matrix, which is given 
 
 
 Unlike in the case of imitation dynamics, there are no absorbing states for a Markov chain transitioning according to imitation dynamics.
-Therefore, we define a steady state vector \textbf{u} according to the method Couto uses in \cite{Introspection Paper 1}. 
+Therefore, we define a steady state vector \textbf{u} according to the method Couto uses in \cite{Couto2022}. 
 
 %TODO get steady state vector
 
@@ -505,9 +507,9 @@ Extrinsic Strategy Analysis & Intrinsic Strategy Analysis\\
 \subsection{The Standard Model and Transformations}
 
 In this section, we shall see how different population dynamics can be applied
-to the classical public goods game. \cite{Calculus_Of_Selfishness, Evolutionary_Games_Textbook}
+to the public goods game. \cite{2bbcfd92-fcd5-38d1-b7a0-bc6a2aadbc64, hofbauer_sigmund_1998}
 In this game, individuals choose whether or not to contribute to a public resource pool. 
-In the end, the total resource is multiplied by some factor \(r > 1\) and distributed equally between each player. This model often encourages a behaviour known as ``free-riding" \cite{Climate Clubs}, where players refuse to contribute to the pool and simply take the benefit provided by other individuals' contribution. 
+In the end, the total resource is multiplied by some factor \(r > 1\) and distributed equally between each player. This model often encourages a behaviour known as ``free-riding" \cite{10.1257/aer.15000001}, where players refuse to contribute to the pool and simply take the benefit provided by other individuals' contribution. 
 The classic problem of a public goods game is to provide an environment where such free-riding is less profitable than contributing to the public good.\\
 
 We can model a public goods game by providing the following payoff function:\\
@@ -522,7 +524,7 @@ In the homogeneous public goods game, we have that \(\alpha_j\) can only take on
 
 Note that \(\pi(v_j)\) can be negative, and such cannot be used as our fitness function for the Moran process. Therefore, we must look at some transformation of \(\pi\) to use as our fitness function.\\
 
-A common method \cite{Nowak 2006} for this is to apply the exponential function to our payoff function. By using \(e^{\beta \sigma}\) as our fitness function we will have positive values, however this particular approach gives, in the case of the Moran process:
+A common method \cite{568a8a9c-d8ae-3d24-9fc2-3d33340230e7} for this is to apply the exponential function to our payoff function. By using \(e^{\beta \sigma}\) as our fitness function we will have positive values, however this particular approach gives, in the case of the Moran process:
 
 \begin{large}
     \begin{equation}
@@ -584,7 +586,7 @@ However, we will now have a bound on \(\beta\) depending on the values of \(\alp
 
 
 \subsection{The Homogeneous Case}
-The most common type of public goods game is the homogeneous public goods game.\cite{Calculus_Of_Selfishness}
+The most simple type of public goods game is the homogeneous public goods game.\cite{2bbcfd92-fcd5-38d1-b7a0-bc6a2aadbc64}
 In this game, we consider that we have a constant \(\alpha_i = \alpha\) for all players \(a_i\).
 In this case, we take the payoff function:
 \begin{large}
@@ -683,57 +685,6 @@ absorption probability of these dynamics.
 When we look at a public goods game, we often generalise the players to all receive the same return. However, in the real world this is often not the case. 
 
 
-
-\newpage
-\begin{thebibliography}{9}
-\bibitem{IPD1}
-Vince Knight, Marc Harper, Nikoleta Glynatsi et al (2024) - Recognising and evaluating the effectiveness of extortion in the Iterated Prisoner’s Dilemma
-\bibitem{IPD2}
-Robert Axelrod (1980) - Effective Choice in the Prisoner’s Dilemma
-\bibitem{Snowdrift1}
-Zhenyu Wang, Nigel Goldenfeld (2011) - Theory of cooperation in a micro‑organismal snowdrift game
-\bibitem{Maa}
-Xiaoiian Maa et al (2021) - Effect of reputation-based heterogeneous investment on cooperation in spatial public goods game
-\bibitem{Lei}
-Chuang Lei et al (2010) - Heterogeneity of allocation promotes cooperation in public goods games
-\bibitem{Flores}
-Lucas S. Flores et al (2023) - Heterogeneous contributions can jeopardize cooperation in the public goods game
-\bibitem{Hamming_Distance}
-Dave K. Kythe, Prem K. Kythe (2012) - Algebraic and Stochastic Coding Theory
-\bibitem{Stewart_Textbook}
-William J. Stewart (2009) - Probability, Markov Chains, Queues, and Simulation: The Mathematical Basis of Performance Modeling
-\bibitem{Climate Clubs}
-William Nordhaus (2015) - Climate Clubs: Overcoming Free-riding in International Climate Policy
-\bibitem{Nowak 2006}
-Martin A. Nowak (2006) - Evolutionary Dynamics: Exploring the Equations of Life
-\bibitem{CBAM}
-Regulation (EU) 2023/956 of the European Parliament and of the Council of 10
-May 2023 establishing a carbon border adjustment mechanism (Text with EEA
-relevance)
-\bibitem{Introspection Paper 1}
- M C Couto et al 2022: Introspection dynamics: a simple model of
-counterfactual learning in asymmetric games
-\bibitem{Introspection Paper 2}
-Marta C. Couto, Saptarshi Pal (2023) - Introspection Dynamics in Asymmetric Multiplayer Games 
-\bibitem{Evolutionary_Games_Textbook}
-Josef Hofbauer, Karl Sigmund (1998, 2003) - Evolutionary Games and Population Dynamics
-\bibitem{fermi_example}
-Matjaž PercCorresponding Author; Jesús Gómez-Gardeñes; Attila Szolnoki; Luis M. Floría; Yamir Moreno(2013) - Evolutionary dynamics of group interactions on structured populations: a review
-\bibitem{Fudenberg_Imhof}
-Drew Fudenberg and Lorens A. Imhof (2006) - Imitation processes with small
-mutations
-\bibitem{Moran_Original}
-P.A.P Moran (1958): Random processes in genetics
-\bibitem{Szabo_Toke}
-György Szabó and Csaba Tőke (1998) - Evolutionary prisoner’s dilemma game on a
-square lattice
-\bibitem{Calculus_Of_Selfishness}
-Karl Sigmund (2010) - The Calculus of Selfishness
-\bibitem{Tragedy_Of_Commons}
-Weitz, J. S., Eksin, C., Paarporn, K., Brown, S. P., and Ratcliff, W. C. (2016)
-- An oscillating tragedy of the commons in replicator dynamics with
-game-environment feedback.
-\end{thebibliography}
-
-
+\bibliographystyle{plain}
+\bibliography{bibliography.bib}
 \end{document}

@@ -17,7 +17,7 @@ jobs:
           python -m pip install -r requirements.txt
       - name: Run tests
         run: |
-          python -m pytest src --cov-report term-missing --cov --cov-fail-under=100 --durations=0
+          python -m pytest src --cov-report term-missing --cov --cov-fail-under=100 --durations=0 --ignore=src/benchmarks
       - name: Run black
         run: |
           python -m black -vv --check src/

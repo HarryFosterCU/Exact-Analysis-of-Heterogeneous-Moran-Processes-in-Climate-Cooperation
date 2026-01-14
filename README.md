@@ -32,3 +32,25 @@ To format code according to black:
 ```
 $ python -m black src
 ```
+
+### Benchmarks
+
+To run all benchmarks:
+
+    $ pytest -vv .\benchmarks\
+
+To run benchmarks for a specific benchmark file:
+
+    $ pytest -vv .\benchmarks\<file_name>.py
+
+To compare benchmarks to another branch:
+
+    $ ... pytest --benchmark-compare=<file_name_comparing_to> --benchmark-compare-fail=min:5%
+
+To output benchmark data to a specific named file:
+
+    $ ... pytest --benchmark-only --benchmark-save=<file_name>
+
+To specificy benchmark parameters:
+
+    $ ...

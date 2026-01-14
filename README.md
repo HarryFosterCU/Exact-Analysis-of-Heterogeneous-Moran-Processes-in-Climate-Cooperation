@@ -37,11 +37,11 @@ $ python -m black src
 
 To run all benchmarks:
 
-    $ pytest -vv .\benchmarks\
+    $ python -m pytest -vv .\src\benchmarks\
 
 To run benchmarks for a specific benchmark file:
 
-    $ pytest -vv .\benchmarks\<file_name>.py
+    $ python -m pytest -vv .\src\benchmarks\<file_name>.py
 
 To compare benchmarks to another branch:
 
@@ -50,7 +50,3 @@ To compare benchmarks to another branch:
 To output benchmark data to a specific named file:
 
     $ ... pytest --benchmark-only --benchmark-save=<file_name>
-
-To specificy benchmark parameters:
-
-    $ ...

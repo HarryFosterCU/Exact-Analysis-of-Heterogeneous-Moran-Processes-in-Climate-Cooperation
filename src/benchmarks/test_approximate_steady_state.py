@@ -97,8 +97,7 @@ def test_approximate_steady_state_for_full_uniform_matrix(n, benchmark):
 
 
 def test_approximate_steady_state_for_specific_four_by_four(benchmark):
-    """Benchmarks the approximate_steady_state function that uses the left
-    eigenvector approximation"""
+    """A benchmark with a specific 4 by 4 matrix"""
 
     transition_matrix = np.array(
         [

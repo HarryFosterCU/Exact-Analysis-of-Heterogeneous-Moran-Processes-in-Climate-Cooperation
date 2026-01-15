@@ -4,7 +4,6 @@ import pathlib
 import sys
 
 file_path = pathlib.Path(__file__)
-
 root_path = (file_path / "../../../../").resolve()
 
 sys.path.append(str(root_path))

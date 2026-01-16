@@ -35,8 +35,7 @@ parser.add_argument("--r", type=float, default=None)
 parser.add_argument("--beta", type=float, default=None)
 parser.add_argument("--epsilon", type=float, default=None)
 
-parser.add_argument("--lim", type=bool, default=False)
-parser.add_argument("--max", type=int, default=None)
+parser.add_argument("--iterations", type=int, default=None)
 parser.add_argument("--inc", type=float, default=None)
 
 args = parser.parse_args()
@@ -50,8 +49,7 @@ alpha_h = args.alpha_h if args.alpha_h is not None else 0.2
 r = args.r if args.r is not None else 1.5
 beta = args.beta if args.beta is not None else 0.01
 epsilon = args.epsilon if args.epsilon is not None else 0.001
-lim = args.lim
-max_runs = args.max if args.max is not None else None
+iterations = args.iterations if args.iterations is not None else -1
 inc = args.inc if args.inc is not None else 1.1
 
 """Check which values are to be incremented"""
@@ -136,8 +134,7 @@ with open(file_path.parent / "data.csv", mode="a", newline="") as f:
             ]
         )
 
-if lim:
-    runs = 0
+runs = 0
 
 if __name__ == "__main__":
     while True:
@@ -145,6 +142,7 @@ if __name__ == "__main__":
             if parameter_variability[parameter] == False:
                 continue
             for current_process in processes.keys():
+                id = uuid.uuid4()
 
                 contributions = main.get_deterministic_contribution_vector(
                     cr.binomial_contribution_rule,
@@ -166,8 +164,6 @@ if __name__ == "__main__":
                 )
 
                 if current_process == "Introspection":
-
-                    id = uuid.uuid4()
 
                     result = main.approximate_steady_state(transition_matrix)[-1]
 
@@ -200,7 +196,6 @@ if __name__ == "__main__":
                         writer = csv.writer(f)
 
                         for starting_player in range(variable_values["N"]):
-                            id = uuid.uuid4()
                             result = absorption[starting_player, -1]
                             for i in range(variable_values["N"]):
                                 writer.writerow(
@@ -225,7 +220,6 @@ if __name__ == "__main__":
                     variable_values[parameter] = math.ceil(variable_values[parameter])
                 else:
                     variable_values[parameter] = variable_values[parameter] * inc
-        if lim:
-            runs += 1
-            if runs == max_runs:
-                break
+        runs += 1
+        if runs == iterations:
+            break

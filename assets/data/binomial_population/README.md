@@ -13,9 +13,8 @@ alpha_h: The higher contribution
 r: The ratio/return on investment
 beta: Selection intensity
 epsilon: Also selection intensity (see documentation)
-lim: Whether to impose a limit on the amount of data generated
-max: The amount of data to generate (only relavent if lim is True)
-inc: The ratio at which parameters are incremented at each time step
+iterations: The amount of data to generate
+inc: When a parameter is incremented, it is multiplied by inc
 
 This generates data according to the binomial contribution rule
 

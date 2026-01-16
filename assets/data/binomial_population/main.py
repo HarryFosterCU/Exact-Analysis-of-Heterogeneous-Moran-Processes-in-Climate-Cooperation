@@ -36,7 +36,7 @@ parser.add_argument("--beta", type=float, default=None)
 parser.add_argument("--epsilon", type=float, default=None)
 
 parser.add_argument("--iterations", type=int, default=None)
-parser.add_argument("--inc", type=float, default=None)
+parser.add_argument("--increment", type=float, default=None)
 
 args = parser.parse_args()
 
@@ -50,9 +50,9 @@ r = args.r if args.r is not None else 1.5
 beta = args.beta if args.beta is not None else 0.01
 epsilon = args.epsilon if args.epsilon is not None else 0.001
 iterations = args.iterations if args.iterations is not None else -1
-inc = args.inc if args.inc is not None else 1.1
+increment = args.increment if args.increment is not None else 1.1
 
-"""Check which values are to be incremented"""
+"""Check which values are to be incrementremented"""
 
 parameter_variability = {
     "N": args.N is None,
@@ -216,10 +216,10 @@ if __name__ == "__main__":
                                 )
 
                 if isinstance(variable_values[parameter], int) is True:
-                    variable_values[parameter] = variable_values[parameter] * inc
+                    variable_values[parameter] = variable_values[parameter] * increment
                     variable_values[parameter] = math.ceil(variable_values[parameter])
                 else:
-                    variable_values[parameter] = variable_values[parameter] * inc
+                    variable_values[parameter] = variable_values[parameter] * increment
         runs += 1
         if runs == iterations:
             break

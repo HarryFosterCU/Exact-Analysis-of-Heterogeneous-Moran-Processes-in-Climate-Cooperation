@@ -14,7 +14,7 @@ r: The ratio/return on investment
 beta: Selection intensity
 epsilon: Also selection intensity (see documentation)
 iterations: The amount of data to generate
-inc: When a parameter is incremented, it is multiplied by inc
+increment: When a parameter is incremented, it is multiplied by increment
 
 This generates data according to the binomial contribution rule
 

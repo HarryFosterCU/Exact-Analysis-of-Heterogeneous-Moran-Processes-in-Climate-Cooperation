@@ -18,6 +18,9 @@ jobs:
       - name: Run tests
         run: |
           python -m pytest src --cov-report term-missing --cov --cov-fail-under=100 --durations=0 --ignore=src/benchmarks
-      - name: Run black
+      - name: Run black on src
         run: |
           python -m black -vv --check src/
+      - name: Run black on assets
+        run: |
+          python -m black -vv --check assets/

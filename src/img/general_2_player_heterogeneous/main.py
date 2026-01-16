@@ -114,7 +114,7 @@ expression_moran_p1 = sym.lambdify(
 )
 
 
-d_values = np.linspace(0, 2, 2000)
+d_values = np.linspace(0, 2, 4000)
 
 
 fig, axes = plt.subplots(2, 2, figsize=(10, 10))
@@ -149,8 +149,8 @@ for alpha_i in np.array([2, 3, 4, 5]):
         d_values, d_for_imispection, label="Introspective Imitation Dynamics", zorder=2
     )
 
-    ax.set_title(r"Starting Player 1, $\alpha =$" + str(alpha_i))
-    ax.set_xlabel("Player 2's fraction of player 1's contribution", fontsize=14)
+    ax.set_title(r"$v_0=(C, D)$, $\alpha =$" + str(alpha_i))
+    ax.set_xlabel(r"$\alpha_2 / \alpha_1$", fontsize=14)
     ax.set_ylabel(r"$\rho_{C,C}$", fontsize=14)
     axis += 1
 handles, labels = axes[0].get_legend_handles_labels()

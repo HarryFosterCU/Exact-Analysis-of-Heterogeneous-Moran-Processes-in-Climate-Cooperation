@@ -25,9 +25,7 @@ import src.contribution_rules as cr
 
 """Parse arguments given in command line"""
 
-parser = argparse.ArgumentParser(
-        description="Model parameters passed via command line"
-    )
+parser = argparse.ArgumentParser(description="Model parameters passed via command line")
 
 parser.add_argument("--N", type=int, default=None)
 parser.add_argument("--n", type=int, default=None)
@@ -79,20 +77,17 @@ variable_values = {
 }
 
 processes = {
-    "MP": main.compute_moran_transition_probability,
-    "Fermi": main.compute_fermi_transition_probability,
-    "II": main.compute_imitation_introspection_transition_probability,
-    "Intro":main.compute_introspection_transition_probability
+    "Moran Process": main.compute_moran_transition_probability,
+    "Fermi Imitation": main.compute_fermi_transition_probability,
+    "Introspective Imitation": main.compute_imitation_introspection_transition_probability,
+    "Introspection": main.compute_introspection_transition_probability,
 }
 
 """Define fitness function"""
 
+
 def heterogeneous_contribution_fitness_function(
-    state,
-    epsilon,
-    r,
-    contribution_vector,
-    **kwargs
+    state, epsilon, r, contribution_vector, **kwargs
 ):
     """Public goods fitness function where each player contributes H times
 
@@ -100,13 +95,22 @@ def heterogeneous_contribution_fitness_function(
 
     total_goods = (
         r
-        * sum(action * contribution for action, contribution in zip(state, contribution_vector))
+        * sum(
+            action * contribution
+            for action, contribution in zip(state, contribution_vector)
+        )
         / len(state)
     )
 
-    payoff_vector = np.array([total_goods - (action * contribution) for action, contribution in zip(state, contribution_vector)])
+    payoff_vector = np.array(
+        [
+            total_goods - (action * contribution)
+            for action, contribution in zip(state, contribution_vector)
+        ]
+    )
 
     return 1 + (payoff_vector * epsilon)
+
 
 """Check if data file exists"""
 
@@ -114,38 +118,55 @@ file_exists = os.path.isfile(file_path.parent / "data.csv")
 with open(file_path.parent / "data.csv", mode="a", newline="") as f:
     writer = csv.writer(f)
 
-    if not file_exists:
-        writer.writerow(["UID", "N", "M", "i", r"$\alpha_{i}$", "First Contributor", "r", r"$\beta$", r"$\epsilon$", r"$\rho_{C}", r"$p_{C}$","Process"])
+    if file_exists is False:
+        writer.writerow(
+            [
+                "UID",
+                "N",
+                "M",
+                "i",
+                r"$\alpha_{i}$",
+                "First Contributor",
+                "r",
+                r"$\beta$",
+                r"$\epsilon$",
+                r"$\rho_{C}",
+                r"$p_{C}$",
+                "Process",
+            ]
+        )
 
 if lim:
     runs = 0
 
 if __name__ == "__main__":
-    while True:   
+    while True:
         for parameter in parameter_variability.keys():
             if parameter_variability[parameter] == False:
                 continue
             for current_process in processes.keys():
-                print(variable_values["N"])
-                contributions = main.get_deterministic_contribution_vector(cr.binomial_contribution_rule, 
-                N=variable_values["N"], 
-                n=variable_values["n"],
-                M=variable_values["M"], 
-                alpha_h = variable_values["alpha_h"])
 
-                transition_matrix = main.generate_transition_matrix(
-                    state_space = main.get_state_space(N=variable_values["N"], k=2),
-                    fitness_function = heterogeneous_contribution_fitness_function,
-                    compute_transition_probability = processes[current_process],
-                    contribution_vector = contributions,
-                    r = variable_values["r"],
-                    epsilon = variable_values["epsilon"],
-                    selection_intensity = variable_values["beta"],
-                    number_of_strategies = 2,
+                contributions = main.get_deterministic_contribution_vector(
+                    cr.binomial_contribution_rule,
+                    N=variable_values["N"],
+                    n=variable_values["n"],
+                    M=variable_values["M"],
+                    alpha_h=variable_values["alpha_h"],
                 )
 
-                if current_process == "Intro":
-                    
+                transition_matrix = main.generate_transition_matrix(
+                    state_space=main.get_state_space(N=variable_values["N"], k=2),
+                    fitness_function=heterogeneous_contribution_fitness_function,
+                    compute_transition_probability=processes[current_process],
+                    contribution_vector=contributions,
+                    r=variable_values["r"],
+                    epsilon=variable_values["epsilon"],
+                    selection_intensity=variable_values["beta"],
+                    number_of_strategies=2,
+                )
+
+                if current_process == "Introspection":
+
                     id = uuid.uuid4()
 
                     result = main.approximate_steady_state(transition_matrix)[-1]
@@ -154,12 +175,26 @@ if __name__ == "__main__":
                         writer = csv.writer(f)
 
                         for i in range(variable_values["N"]):
-                            writer.writerow([id, variable_values["N"], variable_values["M"], i, contributions[i], None, variable_values["r"], variable_values["beta"], variable_values["epsilon"], None, result, current_process])
-                
+                            writer.writerow(
+                                [
+                                    id,
+                                    variable_values["N"],
+                                    variable_values["M"],
+                                    i,
+                                    contributions[i],
+                                    None,
+                                    variable_values["r"],
+                                    variable_values["beta"],
+                                    variable_values["epsilon"],
+                                    None,
+                                    result,
+                                    current_process,
+                                ]
+                            )
+
                 else:
 
                     absorption = main.approximate_absorption_matrix(transition_matrix)
-
 
                     with open(file_path.parent / "data.csv", mode="a", newline="") as f:
                         writer = csv.writer(f)
@@ -168,9 +203,24 @@ if __name__ == "__main__":
                             id = uuid.uuid4()
                             result = absorption[starting_player, -1]
                             for i in range(variable_values["N"]):
-                                writer.writerow([id, variable_values["N"], variable_values["M"], i, contributions[i], starting_player, variable_values["r"], variable_values["beta"], variable_values["epsilon"], result, None, current_process])
+                                writer.writerow(
+                                    [
+                                        id,
+                                        variable_values["N"],
+                                        variable_values["M"],
+                                        i,
+                                        contributions[i],
+                                        starting_player,
+                                        variable_values["r"],
+                                        variable_values["beta"],
+                                        variable_values["epsilon"],
+                                        result,
+                                        None,
+                                        current_process,
+                                    ]
+                                )
 
-                if isinstance(variable_values[parameter], int):
+                if isinstance(variable_values[parameter], int) is True:
                     variable_values[parameter] = variable_values[parameter] * inc
                     variable_values[parameter] = math.ceil(variable_values[parameter])
                 else:
@@ -179,6 +229,3 @@ if __name__ == "__main__":
             runs += 1
             if runs == max_runs:
                 break
-
-                    
-

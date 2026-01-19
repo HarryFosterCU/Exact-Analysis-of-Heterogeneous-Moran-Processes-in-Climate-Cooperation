@@ -1,0 +1,107 @@
+import main
+import numpy as np
+import sympy as sym
+
+
+def heterogeneous_contribution_pgg_fitness_function(
+    state, epsilon, r, contribution_vector, **kwargs
+):
+    """Public goods fitness function where players contribute a different
+    amount. They then have a return of 1 + (payoff * selection_intensity). This
+    is the selection intensity $\epsilon$, which determines the effect of
+    payoff on a player's fitness.
+    
+    Parameters
+    -----------
+    
+    state: numpy.array, the ordered set of actions each player takes; 1 for
+    contributing, 0 for free-riding.
+    
+    epsilon: float, the selection intensity determining the effect of payoff on
+    a player's fitness. Must satisfy $0 < \epsilon < max_i(\frac{N}{(N-r)\alpha_i})$ if r<N
+    
+    r: float, the parameter which the public goods is multiplied by
+    
+    contribution_vector: numpy.array, the value which each player contributes
+    
+    Returns
+    -------
+    
+    numpy.array: an ordered vector of each player's fitness."""
+
+    total_goods = (
+        r
+        * sum(
+            action * contribution
+            for action, contribution in zip(state, contribution_vector)
+        )
+        / len(state)
+    )
+
+    payoff_vector = np.array(
+        [
+            total_goods - (action * contribution)
+            for action, contribution in zip(state, contribution_vector)
+        ]
+    )
+
+    return 1 + (payoff_vector * epsilon)
+
+
+def homogeneous_pgg_fitness_function(state, alpha, r, epsilon):
+    """
+    Public goods fitness function where all players contribute the same amount.
+    They therefore have a return of 1 + (selection_intensity * payoff), This
+    is the selection intensity $\epsilon$, which determines the effect of
+    payoff on a player's fitness.
+    
+    Parameters
+    -----------
+    state: numpy.array, the ordered set of actions each player takes
+
+    alpha: float, each player's contribution
+
+    r: float, the parameter which the public goods is multiplied by
+
+    epsilon: float, the selection intensity determining the effect of payoff on
+    a player's fitness. Must satisfy $0 < \epsilon < \frac{N}{(N-r)\alpha}$ if r<N
+    
+    Returns
+    -------
+    numpy.array: an ordered array of each player's fitness"""
+    number_of_contributors = state.sum()
+    revenue = r * alpha * (number_of_contributors) / (len(state))
+    payoff = np.array([revenue - alpha * x for x in state])
+    return (1) + (epsilon * payoff)
+
+def general_four_state_fitness_function(state, **kwargs):
+    """
+    Returns a general fitness function for each player according to the rule
+    $f_i(x)$ is the fitness of player i in state x, indexed from 1.
+    
+    In this case, the states correspond to:
+    $a=(0,0)$, $b=(0,1)$, $c=(1,0)$, $d=(1,1)$
+    This is the same state space as we have in the Population Dynamics section
+    of main.tex.
+    
+    Parameters
+    -----------
+    state: numpy.array, the ordered set of actions each player takes
+    
+    Returns
+    -------
+    numpy.array: an ordered array of each player's fitness"""
+
+    f = sym.Function("f")
+    if (state == np.array([0, 0])).all():
+        state_symbol = sym.Symbol("a")
+    elif (state == np.array([0, 1])).all():
+        state_symbol = sym.Symbol("b")
+    elif (state == np.array([1, 0])).all():
+        state_symbol = sym.Symbol("c")
+    elif (state == np.array([1, 1])).all():
+        state_symbol = sym.Symbol("d")
+
+    return np.array(
+        [sym.Function(f"f_{i+1}")(state_symbol) for i, j in enumerate(state)]
+    )

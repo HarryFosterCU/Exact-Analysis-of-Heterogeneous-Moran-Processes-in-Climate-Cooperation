@@ -1,8 +1,7 @@
 Code required to run:
 
 python .\assets\data\linear_population\main.py --N=<int> --M=<int>
---r=<float> --beta=<float> --epsilon=<float> --lim=<bool>
---max=<int> --increment=<float>
+--r=<float> --beta=<float> --epsilon=<float> --iterations=<int> --increment=<float>
 
 The following are the definitions of the above parameters:
 
@@ -13,7 +12,7 @@ beta: Selection intensity
 epsilon: Also selection intensity (see documentation)
 iterations: The amount of data to generate. All parameters being incremented
 once is considered 1 iteration.
-increment: When a parameter is incremented, it is multiplied by increment
+increment: When a parameter is incremented, it is multiplied by this amount
 
 This generates data according to the binomial contribution rule
 

@@ -14,7 +14,7 @@ iterations: The amount of data to generate. All parameters being incremented
 once is considered 1 iteration.
 increment: When a parameter is incremented, it is multiplied by this amount
 
-This generates data according to the binomial contribution rule
+This generates data according to the linear contribution rule
 
 We save data in the following order:
 

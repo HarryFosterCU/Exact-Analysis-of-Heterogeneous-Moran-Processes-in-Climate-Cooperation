@@ -48,7 +48,7 @@ def heterogeneous_contribution_pgg_fitness_function(
     return 1 + (payoff_vector * epsilon)
 
 
-def homogeneous_pgg_fitness_function(state, alpha, r, epsilon):
+def homogeneous_pgg_fitness_function(state, alpha, r, epsilon, **kwargs):
     """
     Public goods fitness function where all players contribute the same amount.
     They therefore have a return of 1 + (selection_intensity * payoff), This
@@ -69,15 +69,20 @@ def homogeneous_pgg_fitness_function(state, alpha, r, epsilon):
     Returns
     -------
     numpy.array: an ordered array of each player's fitness"""
-    number_of_contributors = state.sum()
-    revenue = r * alpha * (number_of_contributors) / (len(state))
-    payoff = np.array([revenue - alpha * x for x in state])
-    return (1) + (epsilon * payoff)
+    homogeneous_contribution_vector = np.array([alpha for _ in enumerate(state)])
+    return heterogeneous_contribution_pgg_fitness_function(
+        state=state,
+        epsilon=epsilon,
+        r=r,
+        contribution_vector=homogeneous_contribution_vector,
+        **kwargs,
+    )
 
 
 def general_four_state_fitness_function(state, **kwargs):
     """
-    Returns a general fitness function for each player according to the rule
+    Returns a general fitness function for each player in a general 2 player population,
+    according to the rule
     $f_i(x)$ is the fitness of player i in state x, indexed from 1.
 
     In this case, the states correspond to:
@@ -96,11 +101,11 @@ def general_four_state_fitness_function(state, **kwargs):
     f = sym.Function("f")
     if (state == np.array([0, 0])).all():
         state_symbol = sym.Symbol("a")
-    elif (state == np.array([0, 1])).all():
+    if (state == np.array([0, 1])).all():
         state_symbol = sym.Symbol("b")
-    elif (state == np.array([1, 0])).all():
+    if (state == np.array([1, 0])).all():
         state_symbol = sym.Symbol("c")
-    elif (state == np.array([1, 1])).all():
+    if (state == np.array([1, 1])).all():
         state_symbol = sym.Symbol("d")
 
     return np.array(

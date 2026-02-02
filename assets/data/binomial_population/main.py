@@ -34,7 +34,6 @@ parser.add_argument("--alpha_h", type=float, default=None)
 parser.add_argument("--r", type=float, default=None)
 parser.add_argument("--beta", type=float, default=None)
 parser.add_argument("--epsilon", type=float, default=None)
-
 parser.add_argument("--iterations", type=int, default=None)
 parser.add_argument("--increment", type=float, default=None)
 

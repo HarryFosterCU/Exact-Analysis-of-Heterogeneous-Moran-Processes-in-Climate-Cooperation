@@ -13,14 +13,13 @@ def test_heterogeneous_contribution_pgg_fitness_function_for_homogeneous_contrib
 
     homogeneous_contributions = np.array([2, 2, 2])
     state = np.array([1, 0, 1])
-    epsilon = 0.3
     r = 1.8
 
     actual_return = ff.heterogeneous_contribution_pgg_fitness_function(
-        state=state, contribution_vector=homogeneous_contributions, r=r, epsilon=epsilon
+        state=state, contribution_vector=homogeneous_contributions, r=r
     )
 
-    expected_return = np.array([1.12, 1.72, 1.12])
+    expected_return = np.array([0.4, 2.4, 0.4])
 
     np.testing.assert_allclose(actual_return, expected_return)
 
@@ -32,17 +31,15 @@ def test_heterogeneous_contribution_pgg_fitness_function_for_heterogeneous_numer
 
     heterogeneous_contributions = np.array([1, 3, 4, 8])
     state = np.array([1, 1, 1, 1])
-    epsilon = 0.25
     r = 2.1
 
     actual_return = ff.heterogeneous_contribution_pgg_fitness_function(
         state=state,
         contribution_vector=heterogeneous_contributions,
         r=r,
-        epsilon=epsilon,
     )
 
-    expected_return = np.array([2.85, 2.35, 2.1, 1.1])
+    expected_return = np.array([7.4, 5.4, 4.4, 0.4])
 
     np.testing.assert_allclose(actual_return, expected_return)
 
@@ -57,18 +54,16 @@ def test_heterogeneous_contribution_pgg_fitness_function_for_heterogeneous_symbo
 
     heterogeneous_contributions = np.array([a, b])
     state = np.array([1, 1])
-    epsilon = sym.Symbol("epsilon")
     r = sym.Symbol("r")
 
     actual_return = ff.heterogeneous_contribution_pgg_fitness_function(
         state=state,
         contribution_vector=heterogeneous_contributions,
         r=r,
-        epsilon=epsilon,
     )
 
-    expected_return_p1 = 1 + epsilon * (r * (a + b) / 2 - a)
-    expected_return_p2 = 1 + epsilon * (r * (a + b) / 2 - b)
+    expected_return_p1 = r * (a + b) / 2 - a
+    expected_return_p2 = r * (a + b) / 2 - b
 
     expected_return = np.array([expected_return_p1, expected_return_p2])
 
@@ -82,17 +77,15 @@ def test_heterogeneous_contribution_pgg_fitness_function_for_heterogeneous_no_co
 
     heterogeneous_contributions = np.array([8, 41, 28, 19])
     state = np.array([0, 0, 0, 0])
-    epsilon = 0.25
     r = 3
 
     actual_return = ff.heterogeneous_contribution_pgg_fitness_function(
         state=state,
         contribution_vector=heterogeneous_contributions,
         r=r,
-        epsilon=epsilon,
     )
 
-    expected_return = np.array([1, 1, 1, 1])
+    expected_return = np.array([0, 0, 0, 0])
 
     np.testing.assert_allclose(actual_return, expected_return)
 
@@ -104,14 +97,11 @@ def test_homogeneous_pgg_fitness_function_for_numeric_value():
 
     alpha = 2
     state = np.array([1, 1, 0, 1, 0, 0])
-    epsilon = 0.5
     r = 2
 
-    actual_return = ff.homogeneous_pgg_fitness_function(
-        state=state, alpha=alpha, r=r, epsilon=epsilon
-    )
+    actual_return = ff.homogeneous_pgg_fitness_function(state=state, alpha=alpha, r=r)
 
-    expected_return = np.array([1, 1, 2, 1, 2, 2])
+    expected_return = np.array([0, 0, 2, 0, 2, 2])
 
     np.testing.assert_allclose(actual_return, expected_return)
 
@@ -123,15 +113,12 @@ def test_homogeneous_pgg_fitness_function_for_symbolic_values():
 
     alpha = sym.Symbol("alpha")
     state = np.array([1, 1, 0])
-    epsilon = sym.Symbol("epsilon")
     r = sym.Symbol("r")
 
-    actual_return = ff.homogeneous_pgg_fitness_function(
-        state=state, alpha=alpha, r=r, epsilon=epsilon
-    )
+    actual_return = ff.homogeneous_pgg_fitness_function(state=state, alpha=alpha, r=r)
 
-    contributor_payment = 1 + epsilon * ((2 * r * alpha / 3) - alpha)
-    defector_payment = 1 + epsilon * ((2 * r * alpha / 3))
+    contributor_payment = (2 * r * alpha / 3) - alpha
+    defector_payment = 2 * r * alpha / 3
 
     expected_return = np.array(
         [contributor_payment, contributor_payment, defector_payment]
@@ -147,14 +134,11 @@ def test_homogeneous_pgg_fitness_function_for_no_contribution():
 
     alpha = 2
     state = np.array([0, 0, 0])
-    epsilon = 0.3
     r = 1.8
 
-    actual_return = ff.homogeneous_pgg_fitness_function(
-        state=state, alpha=alpha, r=r, epsilon=epsilon
-    )
+    actual_return = ff.homogeneous_pgg_fitness_function(state=state, alpha=alpha, r=r)
 
-    expected_return = np.array([1, 1, 1])
+    expected_return = np.array([0, 0, 0])
 
     np.testing.assert_array_equal(actual_return, expected_return)
 

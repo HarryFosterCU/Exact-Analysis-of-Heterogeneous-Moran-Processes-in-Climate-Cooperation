@@ -1,24 +1,18 @@
-import main
 import numpy as np
 import sympy as sym
 
 
 def heterogeneous_contribution_pgg_fitness_function(
-    state, epsilon, r, contribution_vector, **kwargs
+    state, r, contribution_vector, **kwargs
 ):
     """Public goods fitness function where players contribute a different
-    amount. They then have a return of 1 + (payoff * selection_intensity). This
-    is the selection intensity $\epsilon$, which determines the effect of
-    payoff on a player's fitness.
+    amount.
 
     Parameters
     -----------
 
     state: numpy.array, the ordered set of actions each player takes; 1 for
     contributing, 0 for free-riding.
-
-    epsilon: float, the selection intensity determining the effect of payoff on
-    a player's fitness. Must satisfy $0 < \epsilon < max_i(\frac{N}{(N-r)\alpha_i})$ if r<N
 
     r: float, the parameter which the public goods is multiplied by
 
@@ -45,10 +39,10 @@ def heterogeneous_contribution_pgg_fitness_function(
         ]
     )
 
-    return 1 + (payoff_vector * epsilon)
+    return payoff_vector
 
 
-def homogeneous_pgg_fitness_function(state, alpha, r, epsilon, **kwargs):
+def homogeneous_pgg_fitness_function(state, alpha, r, **kwargs):
     """
     Public goods fitness function where all players contribute the same amount.
     They therefore have a return of 1 + (selection_intensity * payoff), This
@@ -72,7 +66,6 @@ def homogeneous_pgg_fitness_function(state, alpha, r, epsilon, **kwargs):
     homogeneous_contribution_vector = np.array([alpha for _ in enumerate(state)])
     return heterogeneous_contribution_pgg_fitness_function(
         state=state,
-        epsilon=epsilon,
         r=r,
         contribution_vector=homogeneous_contribution_vector,
         **kwargs,

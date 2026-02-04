@@ -152,21 +152,27 @@ We also introduce a new dynamic called ``Introspective Imitation Dynamics''.
 This is a novel dynamic particularly suited to the process of learning from
 others in a heterogeneous population.
 
-\subsubsection{Transformations of the Fitness Function}
-
-For some population dynamics, we require our fitness function $\pi$ to be
-positive. As such, we define $f_i(\textbf{a}) = 1 + \epsilon\pi_i(\textbf{a})$,
-for a tunable parameter $\epsilon$. We call $\epsilon$ the selection intensity
-of the system, and it determines to what extent a player considers the payoff
-when making their decision. A lower value of \(\epsilon\) will result in less
-emphasis being placed on the payoff in decision making.
-
-Population dynamics that utilise the Fermi function \cite{PhysRevE.58.69} use a
-parameter \(\beta\) called the choice intensity of the function. This parameter
-determines the extent to which a player considers the difference between their
-current payoff and another payoff when making decisions. This can either be
-their own possible payoff upon switching, or the payoff of another individual
-in the population, depending on the dynamic.
+\subsubsection{Choice and Selection intensity}
+In Moran-process-type dynamics, which model biological evolution, we introduce a
+parameter \(\epsilon\) referred to as \emph{selection intensity} via the mapping
+\[
+f_i(\mathbf{a}) = 1 + \epsilon \pi_i(\mathbf{a}).
+\]
+Appropriate bounds on \(\epsilon\) ensure that the fitness values \(f_i\) remain
+non-negative, which is necessary for the reproduction probabilities in the Moran
+process to be well-defined.
+Smaller values of \(\epsilon\) correspond to weaker selection, placing less
+emphasis on payoff differences in the evolutionary update. In the limiting case
+\(\epsilon = 0\), the process reduces to neutral drift, in which reproduction is
+independent of payoff. % TODO: add reference
+In contrast, population dynamics based on the Fermi update rule
+\cite{PhysRevE.58.69} employ a parameter \(\beta\), which we refer to as the
+\emph{choice intensity}. This parameter determines how sensitively individuals
+respond to payoff differences when making decisions. Depending on the specific
+dynamic under consideration, these payoff differences may arise from comparing
+an individual's current payoff with that of another individual in the population,
+or from comparing their current payoff with the payoff they would obtain by
+switching strategy.
 
 \subsubsection{The Moran Process}
 The Moran process \cite{568a8a9c-d8ae-3d24-9fc2-3d33340230e7} is a dynamic corresponding to the following algorithm:
@@ -451,7 +457,7 @@ We define the introspective imitation process as follows:
     \item A focal player is chosen at random to reconsider their strategy
     \item Another player \(a_j\) in the population is chosen with a probability
    proportional to their fitness within the population to have their strategy considered
-    \item The focal player changes their strategy with probability $\phi(\Delta(f_{I(\textbf{a,b})}))$
+    \item The focal player changes their strategy with probability \(\phi(\Delta(f_{I(\textbf{a,b})}))\)
 \end{enumerate}
 
 
@@ -470,7 +476,7 @@ This models a behaviour where individuals learn from each other, but do not blin
 Instead, players look to others to see what action they \textit{could} play,
 but judge based on their own fitness to decide what action they \textit{should}
 play.\\
-Importantly, we also notice that Introspective Imitation Dynamics takes into
+Note that Introspective Imitation Dynamics takes into
 account both selection intensity and choice intensity. This means that both the
 level to which a player's fitness is considered when their strategy is being chosen for
 consideration, and also how much it is considered when choosing whether to
@@ -549,54 +555,58 @@ Extrinsic Strategy Analysis & Intrinsic Strategy Analysis\\
 
 \section{The Public Goods Game}
 
-%\subsection{The Standard Model and Transformations}
+\subsection{The Standard Model and Transformations}
 
-%In this section, we shall see how different population dynamics can be applied
-%to the public goods game. \cite{2bbcfd92-fcd5-38d1-b7a0-bc6a2aadbc64, hofbauer_sigmund_1998}
-%In this game, individuals choose whether or not to contribute to a public resource pool. 
-%In the end, the total resource is multiplied by some factor \(r > 1\) and distributed equally between each player. This model often encourages a behaviour known as ``free-riding" \cite{10.1257/aer.15000001}, where players refuse to contribute to the pool and simply take the benefit provided by other individuals' contribution. 
-%The classic problem of a public goods game is to provide an environment where such free-riding is less profitable than contributing to the public good.\\
+In this section, we shall see how different population dynamics can be applied
+to the public goods game. \cite{2bbcfd92-fcd5-38d1-b7a0-bc6a2aadbc64, hofbauer_sigmund_1998}
+In this game, individuals choose whether or not to contribute to a public resource pool. 
+In the end, the total resource is multiplied by some factor \(r > 1\) and distributed equally between each player. This model often encourages a behaviour known as ``free-riding" \cite{10.1257/aer.15000001}, where players refuse to contribute to the pool and simply take the benefit provided by other individuals' contribution. 
+The classic problem of a public goods game is to provide an environment where such free-riding is less profitable than contributing to the public good.\\
 
-%We can model a public goods game by providing the following payoff function:\\
-%\begin{large}
-%\begin{equation}
- %   \pi_i(\textbf{a}) = \frac{r\sum_{j=1}^N{\alpha_j}}{N} - \alpha_i
-  %  \label{eqn:General Model}
-%\end{equation}
-%\end{large}\\
-%(where \(\alpha_j\) is the contribution by individual j.) 
-%In the homogeneous public goods game, we have that \(\alpha_j\) can only take one of two values: some constant \(\alpha\) if individual j cooperates, and 0 if not. However, the heterogeneous game will require a more tailored \(\alpha_j\).\\
+We can model a public goods game by providing the following payoff function:\\
+\begin{large}
+\begin{equation}
+   \pi_i(\textbf{a}) = \frac{r\sum_{j=1}^N{\alpha_j}}{N} - \alpha_i
+  \label{eqn:General Model}
+\end{equation}
+\end{large}\\
+(where \(\alpha_j\) is the contribution by individual j.) 
+In the homogeneous public goods game, we have that \(\alpha_j\) can only take one of two values: some constant \(\alpha\) if individual j cooperates, and 0 if not. However, the heterogeneous game will require a more tailored \(\alpha_j\).\\
 
-%Note that \(\pi(v_j)\) can be negative, and such cannot be used as our fitness function for the Moran process. Therefore, we must look at some transformation of \(\pi\) to use as our fitness function.\\
+Note that \(\pi(v_j)\) can be negative, and such cannot be used as our fitness
+function for the Moran process. Therefore, we must look at some transformation
+of \(\pi\) to use as our fitness function \(f\). This is the \(f\) previously
+defined for the Moran process and Introspective Imitation Dynamics.\\
 
-%A common method \cite{568a8a9c-d8ae-3d24-9fc2-3d33340230e7} for this is to apply the exponential function to our payoff function. By using \(e^{\beta \sigma}\) as our fitness function we will have positive values, however this particular approach gives, in the case of the Moran process:
+A common method \cite{568a8a9c-d8ae-3d24-9fc2-3d33340230e7} for this is to apply the exponential function to our payoff function. By using \(e^{\beta \sigma}\) as our fitness function we will have positive values, however this particular approach gives, in the case of the Moran process:
 
-%\begin{large}
- %   \begin{equation}
-  %      \frac{\sum_{a_i = b_{I(\textbf{a,b})}}{e^{\frac{\beta r\sum_{j=1}^N{\alpha_j}}{N} - \alpha_i}}}{\sum_{a_i}e^{\frac{\beta r\sum_{j=1}^N{\alpha_j}}{N} - \alpha_i}}
-   % \end{equation}
-%\end{large}\\
+\begin{large}
+    \begin{equation}
+        \frac{\sum_{a_i = b_{I(\textbf{a,b})}}{e^{\frac{\beta r\sum_{j=1}^N{\alpha_j}}{N} - \alpha_i}}}{\sum_{a_i}e^{\frac{\beta r\sum_{j=1}^N{\alpha_j}}{N} - \alpha_i}}
+    \end{equation}
+\end{large}\\
 
-%Now, as \(e^r\) does not rely on \(v\), we can take this out of the sum and acquire the following:
+Now, as \(e^r\) does not rely on \(v\), we can take this out of the sum and acquire the following:
 
-%\begin{large}
- %   \begin{equation}
-  %      \frac{e^{\frac{\beta r\sum_{j=1}^N{\alpha_j}}{N}}\sum_{a_i = b_{I(\textbf{a,b})}}{e^{ - \alpha_i}}}{e^{\frac{\beta r\sum_{j=1}^N{\alpha_j}}{N}}\sum_{a_i}e^{-C_{v_i}}} = \frac{\sum_{a_i = b_{I(\textbf{a,b})}}{e^{ - \alpha_i}}}{\sum_{a_i}e^{-\alpha_i}}
-   % \end{equation}
-%\end{large}\\
+\begin{large}
+    \begin{equation}
+        \frac{e^{\frac{\beta r\sum_{j=1}^N{\alpha_j}}{N}}\sum_{a_i = b_{I(\textbf{a,b})}}{e^{ - \alpha_i}}}{e^{\frac{\beta r\sum_{j=1}^N{\alpha_j}}{N}}\sum_{a_i}e^{-C_{v_i}}} = \frac{\sum_{a_i = b_{I(\textbf{a,b})}}{e^{ - \alpha_i}}}{\sum_{a_i}e^{-\alpha_i}}
+    \end{equation}
+\end{large}\\
 
-%and we see that in this case, \(p_{a_j\to b_j}(a_{-j})\) would not rely on \(r\). 
-%Therefore, let us consider some other methods of guaranteeing a positive fitness function.\\
+and we see that in this case, \(p_{a_j\to b_j}(a_{-j})\) would not rely on \(r\). 
 
-%The first of these is known as the "shifted linear" transformation. We take, for some small tunable \(\epsilon\):
-%\begin{large}
- %   \begin{equation}
-  %      f_i(\textbf{a}) = \pi_i(\textbf{a}) - \min_{j} \pi_j(\textbf{a}) + \beta
-   % \end{equation}
-    %\label{eqn:Shifted_linear}
-%\end{large}
-%This guarantees a positive value, with the lowest fitness taking the value \(\epsilon\), a parameter that can be chosen based on the system in question.
-%However, in the homogeneous case, as we can see in appendix[?], this mapping creates a fitness function which does not rely on \(r\), and so we cannot use this method.\\
+We may also consider the ``shifted linear" transformation. We take, for some small tunable \(\epsilon\):
+\begin{large}
+    \begin{equation}
+        f_i(\textbf{a}) = \pi_i(\textbf{a}) - \min_{j} \pi_j(\textbf{a}) + \beta
+    \end{equation}
+    \label{eqn:Shifted_linear}
+\end{large}
+This guarantees a positive value, with the lowest fitness taking the value \(\epsilon\), a parameter that can be chosen based on the system in question.
+However, in the homogeneous case, this mapping
+creates a fitness function which does not rely on \(r\), and so we cannot use
+this method.\\
 
 %TODO - make appendix with the following:
 %\begin{large}
@@ -613,15 +623,11 @@ Extrinsic Strategy Analysis & Intrinsic Strategy Analysis\\
 %\end{large}\\
 
 
-%Another type of mapping that we can use is the ``Affine-linear mapping". In
+Another type of mapping that we can use is the ``Affine-linear mapping". In
 this, for some tunable \(\epsilon\), we take the following:
 
-%As \(\epsilon\) is a selection intensity parameter, this method both provides us a strictly positive fitness function for a well defined \(\epsilon\), and also allows us to control the selection intensity of the Moran process. 
-%Unlike in other population dynamics, this is not already defined within the Moran process, and so this is another benefit of using the affine-linear mapping.
-%Thus, we take this mapping of \(\pi\) as our fitness function.\\
-%In order to avoid having two selection intensity parameters, we can define \(\beta=1\) in this case, and allow \(\epsilon = \frac{1}{\beta}\), in order that we have \(\pi_i = 1 + \frac{f_i}{\beta}\).
-%Thus in the Fermi function we preserve the power of \(e^{\frac{\Delta(f)}{\beta}}\) for some selection intensity \(\beta\).
-%However, we will now have a bound on \(\beta\) depending on the values of \(\alpha\) in our public goods game, as we must define a strictly positive fitness function.
+As \(\epsilon\) is a selection intensity parameter, this method both provides us a strictly positive fitness function for a well defined \(\epsilon\), and also allows us to control the selection intensity of the Moran process. 
+This is the process by which we define \(f\) in this paper.\\
 
 
 \subsection{The Homogeneous Case}

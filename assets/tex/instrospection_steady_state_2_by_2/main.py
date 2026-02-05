@@ -35,7 +35,7 @@ transition_matrix = main.generate_transition_matrix(
     state_space=state_space,
     fitness_function=fitness_function_2_by_2,
     compute_transition_probability=main.compute_introspection_transition_probability,
-    selection_intensity=beta,
+    choice_intensity=beta,
     number_of_strategies=2
     )
 
@@ -46,4 +46,4 @@ with open(
     file_path.parent / "main.tex",
     "w",
 ) as f:
-    f.write(sym.latex(sym.Matrix(general_heterogeneous_absorption_matrix_n_2)))
+    f.write(sym.latex(sym.Matrix(steady_state)))

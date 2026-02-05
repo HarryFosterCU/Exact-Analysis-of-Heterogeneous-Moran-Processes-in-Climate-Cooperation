@@ -30,7 +30,7 @@ as the iterated prisoner's dilemma\cite{10.1371/journal.pone.0304641,b5d8eed6-6a
 game\cite{PhysRevE.84.020902}. These examples, however, only allow for pairwise
 interactions, which does not accurately represent many real-world scenarios.
 Therefore, we look at a common game used to model the sharing of resources and
-interactions between multiple people - the public goods game.\\
+interactions between multiple people - the public goods game.
 
 In order to further tailor the idea of a public goods game to real world
 scenarios, we introduce the idea of heterogeneity to the system. Often in the
@@ -45,7 +45,7 @@ allows us to give varying attributes to the different actors in order to
 simulate such situations. These attributes can be encoded into the players
 themselves as separate to the game, for example the reputation in \cite{MA2021111353},
 they may exist within the strategies of the players \cite{LEI20104708, PhysRevE.108.024111}, or they may
-exist within the actual payoffs which the players receive.\\
+exist within the actual payoffs which the players receive.
 
 In much of the literature, we see heterogeneous public goods game being played
 graphically. By this I mean that in much research, players are placed on graphs
@@ -61,7 +61,7 @@ groups made up of those who have a reputation for defection. While this is a
 dynamically updating heterogeneous attribute, some have proposed static
 attributes based on inherent properties of the individuals, such as in
 \cite{LEI20104708} where the players participate in different amounts of games, and
-contribute different amounts based on this factor.\\
+contribute different amounts based on this factor.
 
 In both of the above cases, it is shown that an increased scrutiny of
 heterogeneous attributes in a spatial public goods game is beneficial to the
@@ -73,7 +73,7 @@ encourage players to cooperate with those in a similar number of games to them,
 here done by tuning the \(\beta\) parameter, the high-degree defector nodes are
 unable to gather a large payoff, and so will be unable to spread their
 defection to their neighbours. If you encourage players to interact with those
-with different degrees, however, then middle-degree defectors will make heavy losses and be unable to survive.\\
+with different degrees, however, then middle-degree defectors will make heavy losses and be unable to survive.
 
 \cite{PhysRevE.108.024111} shows how the benefits of this heterogeneity are not always as
 pronounced as it may seem. When the contribution is not calculated by some
@@ -82,7 +82,7 @@ new strategy) then even in systems where contribution dominates, we will see
 low-value contributions act as a sort of defection against the most globally
 beneficial strategies. Therefore, we can see that the emergence of cooperation
 is not the end of the story in some cases, and we must look at what sort of
-cooperation it is that we have fostered the emergence of.\\
+cooperation it is that we have fostered the emergence of.
 
 One common theme in the spatial public goods game is the manner in which
 cooperation spreads. An initial ``invasion" of defectors leads to cooperation
@@ -91,7 +91,7 @@ profitable than their defecting neighbours. Therefore, the cooperating clusters
 will influence the nearby defectors to join in, which eventually spreads
 throughout the system. This relies on the ability of the clusters to resist the
 initial invasion of defectors - an occurrence which relies on a high enough
-\(r\) value (the positive multiplier of the contribution to the public good).\\
+\(r\) value (the positive multiplier of the contribution to the public good).
 
 We also see that a potential climate club may soon be forming within the
 European Union. While it functions slightly differently to the classic example
@@ -199,11 +199,11 @@ An important case which proceeds from (\ref{eqn:Moran_Probability_Function}) is 
 For example, the transition \((0,1) \to (0,2)\). 
 This would be forbidden by the intuition of a standard Moran process, as the new individual is the duplication of another individual in \(\textbf{a}\). 
 However, we can see that the standard formula yields \(p_{v,u}\) = 0 because
-there does not exist \(a_i \in \textbf{a}: a_i = b_{i^*}\). \\
+there does not exist \(a_i \in \textbf{a}: a_i = b_{i^*}\).
 
 We can now discuss one of the key ideas in the Moran process. As no new action types can be introduced to the population once they are fully removed, we have a set of absorbing states \textbf{a} such that \(a_1 = a_2 =...\), for which we have $p_{\textbf{a} \to\textbf{a}} = 1$. 
 We denote the set of absorbing states $S^{\gamma}$.
-We therefore have that the Moran process forms an absorbing Markov chain \cite{f66ea2a5-f1c3-3855-8dc0-e3047d83298e}, and we can investigate the probability of the population being absorbed into each absorbing state.\\
+We therefore have that the Moran process forms an absorbing Markov chain \cite{f66ea2a5-f1c3-3855-8dc0-e3047d83298e}, and we can investigate the probability of the population being absorbed into each absorbing state.
 
 Consider a game with two players, each playing one of two actions. We have a state space
 \(\textbf{a} = (0,0), \textbf{b} = (0,1), \textbf{c} = (1,0), \textbf{d} = (1,1)\), and our transition matrix \(T\) would take the form
@@ -217,7 +217,10 @@ Consider a game with two players, each playing one of two actions. We have a sta
 \end{center}
 
 Our transition matrix represents the probability of transitioning from the state represented by the row to the state represented by the column.
-Here our columns represent \textbf{a},\textbf{b}, \textbf{c} and \textbf{d} from left to right, and the rows represent these states in the same order from top to bottom.\\
+Here our columns represent \textbf{a},\textbf{b}, \textbf{c} and \textbf{d}
+from left to right, and the rows represent these states in the same order from
+top to bottom.
+
 Now, by taking the fundamental matrix of \(T\) and performing a right multiplication by \(R\), the matrix with entries which represent transitions from transitive states to absorbing states\cite{f66ea2a5-f1c3-3855-8dc0-e3047d83298e}, we can obtain the absorption matrix for this system.
 For the above game, we find the following equation:\\
 \begin{center}
@@ -401,7 +404,7 @@ Since we assume that all individuals have the same action set with size \(k\), w
 
 Now, Couto also calculated in \cite{Couto2022} the explicit strategy distribution for an asymmetric interaction between two players. 
 We can adapt these results to define our transition matrix for our example
-state space \textbf{a,b,c,d}:\\
+state space \textbf{a,b,c,d}:
 
 \begin{equation}
 \tiny
@@ -475,7 +478,8 @@ We see that players can only copy the actions present in the state, however they
 This models a behaviour where individuals learn from each other, but do not blindly trust that the strategy will work for themself just because it worked for another player.
 Instead, players look to others to see what action they \textit{could} play,
 but judge based on their own fitness to decide what action they \textit{should}
-play.\\
+play.
+
 Note that Introspective Imitation Dynamics takes into
 account both selection intensity and choice intensity. This means that both the
 level to which a player's fitness is considered when their strategy is being chosen for
@@ -523,7 +527,7 @@ However, these do offer a good model for biological processes such as the evolut
 The second are population dynamics which consider their own change in payoff in the case that they accept a new strategy. 
 These dynamics are more well suited to a heterogeneous population, modelling state changes where individuals make an active decision to change state in order to improve their own fitness.
 
-Below, we see a diagram showing the classification of the population dynamics shown in this section:\\
+Below, we see a diagram showing the classification of the population dynamics shown in this section:
 
 \begin{table}[h!]
 \centering
@@ -561,9 +565,10 @@ In this section, we shall see how different population dynamics can be applied
 to the public goods game. \cite{2bbcfd92-fcd5-38d1-b7a0-bc6a2aadbc64, hofbauer_sigmund_1998}
 In this game, individuals choose whether or not to contribute to a public resource pool. 
 In the end, the total resource is multiplied by some factor \(r > 1\) and distributed equally between each player. This model often encourages a behaviour known as ``free-riding" \cite{10.1257/aer.15000001}, where players refuse to contribute to the pool and simply take the benefit provided by other individuals' contribution. 
-The classic problem of a public goods game is to provide an environment where such free-riding is less profitable than contributing to the public good.\\
+The classic problem of a public goods game is to provide an environment where such free-riding is less profitable than contributing to the public good.
 
-We can model a public goods game by providing the following payoff function:\\
+We can model a public goods game by providing the following payoff function:
+
 \begin{large}
 \begin{equation}
    \pi_i(\textbf{a}) = \frac{r\sum_{j=1}^N{\alpha_j}}{N} - \alpha_i
@@ -571,12 +576,12 @@ We can model a public goods game by providing the following payoff function:\\
 \end{equation}
 \end{large}\\
 (where \(\alpha_j\) is the contribution by individual j.) 
-In the homogeneous public goods game, we have that \(\alpha_j\) can only take one of two values: some constant \(\alpha\) if individual j cooperates, and 0 if not. However, the heterogeneous game will require a more tailored \(\alpha_j\).\\
+In the homogeneous public goods game, we have that \(\alpha_j\) can only take one of two values: some constant \(\alpha\) if individual j cooperates, and 0 if not. However, the heterogeneous game will require a more tailored \(\alpha_j\).
 
 Note that \(\pi(v_j)\) can be negative, and such cannot be used as our fitness
 function for the Moran process. Therefore, we must look at some transformation
 of \(\pi\) to use as our fitness function \(f\). This is the \(f\) previously
-defined for the Moran process and Introspective Imitation Dynamics.\\
+defined for the Moran process and Introspective Imitation Dynamics.
 
 A common method \cite{568a8a9c-d8ae-3d24-9fc2-3d33340230e7} for this is to apply the exponential function to our payoff function. By using \(e^{\beta \sigma}\) as our fitness function we will have positive values, however this particular approach gives, in the case of the Moran process:
 
@@ -606,7 +611,7 @@ We may also consider the ``shifted linear" transformation. We take, for some sma
 This guarantees a positive value, with the lowest fitness taking the value \(\epsilon\), a parameter that can be chosen based on the system in question.
 However, in the homogeneous case, this mapping
 creates a fitness function which does not rely on \(r\), and so we cannot use
-this method.\\
+this method.
 
 %TODO - make appendix with the following:
 %\begin{large}
@@ -627,7 +632,7 @@ Another type of mapping that we can use is the ``Affine-linear mapping". In
 this, for some tunable \(\epsilon\), we take the following:
 
 As \(\epsilon\) is a selection intensity parameter, this method both provides us a strictly positive fitness function for a well defined \(\epsilon\), and also allows us to control the selection intensity of the Moran process. 
-This is the process by which we define \(f\) in this paper.\\
+This is the process by which we define \(f\) in this paper.
 
 
 \subsection{The Homogeneous Case}
@@ -640,11 +645,11 @@ In this case, we take the payoff function:
     \end{equation}
     \label{eqn:Homogeneous_fitness}
 \end{large}\\
-Where \(\delta_j = 1\) if j contributes and 0 if not, and \(\kappa_c(\textbf{a})\) is the fraction of the population who contribute.\\
+Where \(\delta_j = 1\) if j contributes and 0 if not, and \(\kappa_c(\textbf{a})\) is the fraction of the population who contribute.
 
 We will begin by looking at the state space with \(N=4\) and see how cooperation emerges based on different values of \(r \text{ and } \alpha\).
 
-We can assign the value 0 to non-contribution and 1 contribution in the state space \(\textbf{a},\textbf{b},\textbf{c},\textbf{d}\),  and in doing so obtain the following absorption matrices for each population dynamic:\\
+We can assign the value 0 to non-contribution and 1 contribution in the state space \(\textbf{a},\textbf{b},\textbf{c},\textbf{d}\),  and in doing so obtain the following absorption matrices for each population dynamic:
 
 \begin{table}[!h]
     \centering

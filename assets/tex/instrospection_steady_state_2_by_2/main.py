@@ -21,8 +21,8 @@ transition_matrix = main.generate_transition_matrix(
     fitness_function=fitness_functions.general_four_state_fitness_function,
     compute_transition_probability=main.compute_introspection_transition_probability,
     choice_intensity=beta,
-    number_of_strategies=2
-    )
+    number_of_strategies=2,
+)
 
 steady_state = main.calculate_steady_state(transition_matrix)
 

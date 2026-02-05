@@ -14,7 +14,7 @@ root_path = (file_path / "../../../../").resolve()
 
 sys.path.append(str(root_path))
 import src.main as main
-import src.fitness_functions as ff
+import src.fitness_functions as fitness_functions
 
 
 r = sym.Symbol("r")
@@ -28,7 +28,7 @@ beta = sym.Symbol("beta")
 
 imitation_introspection_transition_matrix = main.generate_transition_matrix(
     state_space=state_space,
-    fitness_function=ff.heterogeneous_contribution_pgg_fitness_function,
+    fitness_function=fitness_functions.heterogeneous_contribution_pgg_fitness_function,
     compute_transition_probability=main.compute_imitation_introspection_transition_probability,
     selection_intensity=epsilon,
     choice_intensity=beta,
@@ -40,7 +40,7 @@ imitation_introspection_transition_matrix = main.generate_transition_matrix(
 
 fermi_transition_matrix = main.generate_transition_matrix(
     state_space=state_space,
-    fitness_function=ff.heterogeneous_contribution_pgg_fitness_function,
+    fitness_function=fitness_functions.heterogeneous_contribution_pgg_fitness_function,
     compute_transition_probability=main.compute_fermi_transition_probability,
     choice_intensity=beta,
     number_of_strategies=2,
@@ -51,7 +51,7 @@ fermi_transition_matrix = main.generate_transition_matrix(
 
 moran_transition_matrix = main.generate_transition_matrix(
     state_space=state_space,
-    fitness_function=ff.heterogeneous_contribution_pgg_fitness_function,
+    fitness_function=fitness_functions.heterogeneous_contribution_pgg_fitness_function,
     compute_transition_probability=main.compute_moran_transition_probability,
     selection_intensity=epsilon,
     number_of_strategies=2,

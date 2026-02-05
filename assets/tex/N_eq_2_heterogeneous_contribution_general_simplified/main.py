@@ -9,7 +9,7 @@ root_path = (file_path / "../../../../").resolve()
 
 sys.path.append(str(root_path))
 import src.main as main
-import src.fitness_functions as ff
+import src.fitness_functions as fitness_functions
 
 r = sym.Symbol("r")
 epsilon = sym.Symbol("epsilon")
@@ -22,7 +22,7 @@ state_space = main.get_state_space(N=N, k=2)
 general_heterogeneous_contribution_transition_matrix_N_2 = (
     main.generate_transition_matrix(
         state_space=state_space,
-        fitness_function=ff.heterogeneous_contribution_pgg_fitness_function,
+        fitness_function=fitness_functions.heterogeneous_contribution_pgg_fitness_function,
         compute_transition_probability=main.compute_moran_transition_probability,
         r=r,
         selection_intensity=epsilon,

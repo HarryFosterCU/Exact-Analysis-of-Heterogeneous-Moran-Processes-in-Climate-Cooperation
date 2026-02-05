@@ -183,7 +183,12 @@ fig.text(
 
 axes[2].scatter(
     range(10),
-    np.array([contribution_rules.linear_contribution_rule(index=n, N=10, M=M) for n in range(10)]),
+    np.array(
+        [
+            contribution_rules.linear_contribution_rule(index=n, N=10, M=M)
+            for n in range(10)
+        ]
+    ),
     label="",
 )
 

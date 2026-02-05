@@ -19,8 +19,6 @@ import src.fitness_functions as fitness_functions
 import math
 
 
-
-
 def get_absorption_probability_vector_1_contributor_low(
     n_values, r, M, probability_function, **kwargs
 ):

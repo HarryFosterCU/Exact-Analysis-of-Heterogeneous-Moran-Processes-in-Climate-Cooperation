@@ -36,7 +36,9 @@ def get_state_space(N, k):
     return state_space
 
 
-def compute_moran_transition_probability(source, target, fitness_function, **kwargs):
+def compute_moran_transition_probability(
+    source, target, fitness_function, selection_intensity, **kwargs
+):
     """
     Given two states and a fitness function, returns the transition probability
 
@@ -58,9 +60,11 @@ def compute_moran_transition_probability(source, target, fitness_function, **kwa
 
     target: numpy.array, what the source transitions to
 
-    fitness_function: func, The fitness function which maps a state to a numpy.array
+    fitness_function: func, The fitness function which maps a state to a
+    numpy.array where each entry represents the fitness of the given individual
 
-    where each entry represents the fitness of the given individual
+    selection_intensity: float, the selection intensity $\epsilon$ of the
+    system
 
     Returns
     ---------
@@ -71,22 +75,22 @@ def compute_moran_transition_probability(source, target, fitness_function, **kwa
         return 0
     if len(different_indices[0]) == 0:
         return None
-    fitness = fitness_function(source, **kwargs)
+    fitness = 1 + (selection_intensity * fitness_function(source, **kwargs))
     denominator = fitness.sum() * len(source)
     numerator = fitness[source == target[different_indices]].sum()
     return numerator / denominator
 
 
-def fermi_imitation_function(delta, selection_intensity=0.5, **kwargs):
+def fermi_imitation_function(delta, choice_intensity=0.5, **kwargs):
     """
     Given the fitness of the focal individual who changes action type, and the
 
-    target individual who is being copied, as well as the selection intensity,
+    target individual who is being copied, as well as the choice intensity,
 
     returns $\phi(a_i, a_j) = \frac{1}{1 + \exp({\frac{f(a_{i}) - f(a_{j})
     }{\beta}})}$
 
-    Selection intensity is set to 0.5 by default, as is common according to:
+    choice intensity is set to 0.5 by default, as is common according to:
 
     Xiaojian Maa, Ji Quana, Xianjia Wang (2021): Effect of reputation-based
     heterogeneous investment on cooperation in spatial public goods games
@@ -95,26 +99,22 @@ def fermi_imitation_function(delta, selection_intensity=0.5, **kwargs):
     Parameters
     -----------
 
-    fitness_focal: float or sym.Symbol, the fitness of the individual who can
-    change action type
+    delta: float or sym.Symbol, the difference between the current fitness of
+    an individual and the considered fitness.
 
-    fitness_target: float or sym.Symbol, the fitness of the individual who may
-    have their action type copied
-
-    selection_intensity: float or sym.Symbol, a parameter which determines the
+    choice_intensity: float or sym.Symbol, a parameter which determines the
     effect the difference in fitness has on the transition probability. As
-    selection_intensity goes to infinity, the probability of transitioning goes
+    choice_intensity goes to infinity, the probability of transitioning goes
     to $\frac{1}{2}$
     """
-
-    return 1 / (1 + sym.E ** ((delta) / selection_intensity))
+    return 1 / (1 + sym.E ** (choice_intensity * (delta)))
 
 
 def compute_fermi_transition_probability(
-    source, target, fitness_function, selection_intensity, **kwargs
+    source, target, fitness_function, choice_intensity, **kwargs
 ):
     """
-    Given two states, a fitness function, and a selection intensity, returns
+    Given two states, a fitness function, and a choice intensity, returns
 
     the transition probability when moving from the source state to the target
 
@@ -144,7 +144,7 @@ def compute_fermi_transition_probability(
     fitness_function: func, The fitness function which maps a state to a
     numpy.array
 
-    selection_intensity: float or sympy.Symbol: the selection intensity of the
+    choice_intensity: float or sympy.Symbol: the choice intensity of the
     function. The lower the value, the higher the probability that a player
     will choose the higher fitness strategy in $\phi$
 
@@ -162,7 +162,7 @@ def compute_fermi_transition_probability(
     changes = [
         fermi_imitation_function(
             delta=fitness[different_indices] - fitness[i],
-            selection_intensity=selection_intensity,
+            choice_intensity=choice_intensity,
             **kwargs,
         )
         for i in np.where(source == target[different_indices])
@@ -173,10 +173,10 @@ def compute_fermi_transition_probability(
 
 
 def compute_imitation_introspection_transition_probability(
-    source, target, fitness_function, selection_intensity, **kwargs
+    source, target, fitness_function, choice_intensity, selection_intensity, **kwargs
 ):
     """
-    Given two states, a fitness function, and a selection intensity, returns
+    Given two states, a fitness function, and a choice intensity, returns
 
     the transition probability when moving from the source state to the target
 
@@ -203,9 +203,12 @@ def compute_imitation_introspection_transition_probability(
     fitness_function: func, The fitness function which maps a state to a
     numpy.array
 
-    selection_intensity: float or sympy.Symbol: the selection intensity of the
+    choice_intensity: float or sympy.Symbol: the choice intensity of the
     function. The lower the value, the higher the probability that a player
     will choose the higher fitness strategy in $\phi$
+
+    selection_intensity: float or sympy.Symbol: the selection intensity
+    $\epsilon$ of the system
 
     Returns
     ---------
@@ -217,9 +220,11 @@ def compute_imitation_introspection_transition_probability(
     if len(different_indices[0]) == 0:
         return None
 
-    fitness = fitness_function(source, **kwargs)
+    fitness = 1 + (selection_intensity * fitness_function(source, **kwargs))
     fitness_before = fitness[different_indices][0]
-    fitness_after = fitness_function(target, **kwargs)[different_indices][0]
+    fitness_after = 1 + (
+        selection_intensity * fitness_function(target, **kwargs)[different_indices][0]
+    )
 
     selection_denominator = fitness.sum() * len(source)
     selection_numerator = fitness[source == target[different_indices]].sum()
@@ -228,20 +233,15 @@ def compute_imitation_introspection_transition_probability(
     delta = fitness_before - fitness_after
 
     return selection_probability * fermi_imitation_function(
-        delta=delta, selection_intensity=selection_intensity
+        delta=delta, choice_intensity=choice_intensity
     )
 
 
 def compute_introspection_transition_probability(
-    source,
-    target,
-    fitness_function,
-    selection_intensity,
-    number_of_strategies,
-    **kwargs
+    source, target, fitness_function, choice_intensity, number_of_strategies, **kwargs
 ):
     """
-    Given two states, a fitness function, and a selection intensity, returns
+    Given two states, a fitness function, and a choice intensity, returns
 
     the transition probability when moving from the source state to the target
 
@@ -266,7 +266,7 @@ def compute_introspection_transition_probability(
     fitness_function: func, The fitness function which maps a state to a
     numpy.array
 
-    selection_intensity: float or sympy.Symbol: the selection intensity of the
+    choice_intensity: float or sympy.Symbol: the choice intensity of the
     function. The lower the value, the higher the probability that a player
     will choose the higher fitness strategy in $\phi$
 
@@ -292,7 +292,7 @@ def compute_introspection_transition_probability(
     delta = fitness_before - fitness_after
 
     return selection_probability * fermi_imitation_function(
-        delta=delta, selection_intensity=selection_intensity
+        delta=delta, choice_intensity=choice_intensity
     )
 
 

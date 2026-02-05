@@ -14,46 +14,11 @@ root_path = (file_path / "../../../../").resolve()
 
 sys.path.append(str(root_path))
 import src.main as main
-import src.contribution_rules as cr
+import src.contribution_rules as contribution_rules
+import src.fitness_functions as fitness_functions
 import math
 
 
-def heterogeneous_contribution_pgg_fitness_function(
-    state, epsilon, r, contribution_vector, **kwargs
-):
-    """Public goods fitness function where players contribute a different
-    amount. They then have a return of 1 + (payoff * selection_intensity). This
-    is the selection intensity $\epsilon$, which determines the effect of
-    payoff on a player's fitness.
-    Parameters
-    -----------
-    state: numpy.array, the ordered set of actions each player takes; 1 for
-    contributing, 0 for free-riding.
-    epsilon: float, the selection intensity determining the effect of payoff on
-    a player's fitness. Must satisfy $0 < \epsilon < max_i(\frac{N}{(N-r)\alpha_i})$ if r<N
-    r: float, the parameter which the public goods is multiplied by
-    contribution_vector: numpy.array, the value which each player contributes
-    Returns
-    -------
-    numpy.array: an ordered vector of each player's fitness."""
-
-    total_goods = (
-        r
-        * sum(
-            action * contribution
-            for action, contribution in zip(state, contribution_vector)
-        )
-        / len(state)
-    )
-
-    payoff_vector = np.array(
-        [
-            total_goods - (action * contribution)
-            for action, contribution in zip(state, contribution_vector)
-        ]
-    )
-
-    return 1 + (payoff_vector * epsilon)
 
 
 def get_absorption_probability_vector_1_contributor_low(
@@ -65,12 +30,13 @@ def get_absorption_probability_vector_1_contributor_low(
 
         transition_matrix = main.generate_transition_matrix(
             state_space=state_space,
-            fitness_function=heterogeneous_contribution_pgg_fitness_function,
+            fitness_function=fitness_functions.heterogeneous_contribution_pgg_fitness_function,
             r=1.8,
-            epsilon=0.1,
+            selection_intensity=0.1,
+            choice_intensity=0.5,
             compute_transition_probability=probability_function,
             contribution_vector=main.get_deterministic_contribution_vector(
-                cr.binomial_contribution_rule,
+                contribution_rules.binomial_contribution_rule,
                 N=N,
                 M=M,
                 n=math.ceil(N / 2),
@@ -101,12 +67,13 @@ def get_absorption_probability_vector_1_contributor_high(
 
         transition_matrix = main.generate_transition_matrix(
             state_space=state_space,
-            fitness_function=heterogeneous_contribution_pgg_fitness_function,
+            fitness_function=fitness_functions.heterogeneous_contribution_pgg_fitness_function,
             r=1.8,
-            epsilon=0.1,
+            selection_intensity=0.1,
+            choice_intensity=0.5,
             compute_transition_probability=probability_function,
             contribution_vector=main.get_deterministic_contribution_vector(
-                cr.binomial_contribution_rule,
+                contribution_rules.binomial_contribution_rule,
                 N=N,
                 M=M,
                 n=math.ceil(N / 2),
@@ -134,12 +101,13 @@ def get_absorption_probability_vector_n_minus_1_contributor_low(
 
         transition_matrix = main.generate_transition_matrix(
             state_space=state_space,
-            fitness_function=heterogeneous_contribution_pgg_fitness_function,
+            fitness_function=fitness_functions.heterogeneous_contribution_pgg_fitness_function,
             r=1.8,
-            epsilon=0.1,
+            selection_intensity=0.1,
+            choice_intensity=0.5,
             compute_transition_probability=probability_function,
             contribution_vector=main.get_deterministic_contribution_vector(
-                cr.binomial_contribution_rule,
+                contribution_rules.binomial_contribution_rule,
                 N=N,
                 M=M,
                 n=math.ceil(N / 2),
@@ -171,12 +139,13 @@ def get_absorption_probability_vector_n_minus_1_contributor_high(
 
         transition_matrix = main.generate_transition_matrix(
             state_space=state_space,
-            fitness_function=heterogeneous_contribution_pgg_fitness_function,
+            fitness_function=fitness_functions.heterogeneous_contribution_pgg_fitness_function,
             r=1.8,
-            epsilon=0.1,
+            selection_intensity=0.1,
+            choice_intensity=0.5,
             compute_transition_probability=probability_function,
             contribution_vector=main.get_deterministic_contribution_vector(
-                cr.binomial_contribution_rule,
+                contribution_rules.binomial_contribution_rule,
                 N=N,
                 M=M,
                 n=math.ceil(N / 2),
@@ -235,7 +204,7 @@ axes[2].scatter(
     range(10),
     np.array(
         [
-            cr.binomial_contribution_rule(
+            contribution_rules.binomial_contribution_rule(
                 index=n, N=10, n=math.ceil(10 / 2), M=M, alpha_h=1.5 * M / 10
             )
             for n in range(10)
@@ -253,7 +222,6 @@ fermi_contributor_low = get_absorption_probability_vector_1_contributor_low(
     r=r,
     M=M,
     probability_function=main.compute_fermi_transition_probability,
-    selection_intensity=beta,
 )
 moran_contributor_low = get_absorption_probability_vector_1_contributor_low(
     n_values=n_values,
@@ -266,7 +234,6 @@ II_contributor_low = get_absorption_probability_vector_1_contributor_low(
     r=r,
     M=M,
     probability_function=main.compute_imitation_introspection_transition_probability,
-    selection_intensity=beta,
 )
 
 axes[0].plot(
@@ -295,7 +262,6 @@ fermi_contributor_high = get_absorption_probability_vector_1_contributor_high(
     r=r,
     M=M,
     probability_function=main.compute_fermi_transition_probability,
-    selection_intensity=0.5,
 )
 
 moran_contributor_high = get_absorption_probability_vector_1_contributor_high(
@@ -310,7 +276,6 @@ II_contributor_high = get_absorption_probability_vector_1_contributor_high(
     r=r,
     M=M,
     probability_function=main.compute_imitation_introspection_transition_probability,
-    selection_intensity=0.5,
 )
 
 axes[3].plot(
@@ -350,7 +315,6 @@ fermi_defector_low = get_absorption_probability_vector_n_minus_1_contributor_low
     r=r,
     M=M,
     probability_function=main.compute_fermi_transition_probability,
-    selection_intensity=0.5,
 )
 moran_defector_low = get_absorption_probability_vector_n_minus_1_contributor_low(
     n_values=n_values,
@@ -363,7 +327,6 @@ II_defector_low = get_absorption_probability_vector_n_minus_1_contributor_low(
     r=r,
     M=M,
     probability_function=main.compute_imitation_introspection_transition_probability,
-    selection_intensity=0.5,
 )
 
 axes[1].plot(
@@ -392,7 +355,6 @@ fermi_defector_high = get_absorption_probability_vector_n_minus_1_contributor_hi
     r=r,
     M=M,
     probability_function=main.compute_fermi_transition_probability,
-    selection_intensity=0.5,
 )
 
 moran_defector_high = get_absorption_probability_vector_n_minus_1_contributor_high(
@@ -407,7 +369,6 @@ II_defector_high = get_absorption_probability_vector_n_minus_1_contributor_high(
     r=r,
     M=M,
     probability_function=main.compute_imitation_introspection_transition_probability,
-    selection_intensity=0.5,
 )
 
 axes[4].plot(

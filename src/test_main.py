@@ -32,8 +32,10 @@ def test_compute_moran_transition_probability_for_trivial_fitness_function():
     selection_intensity = 0.5
     assert (
         main.compute_moran_transition_probability(
-            source=source, target=target,fitness_function=trivial_fitness_function,
-            selection_intensity = 0.5
+            source=source,
+            target=target,
+            fitness_function=trivial_fitness_function,
+            selection_intensity=0.5,
         )
         == 1 / 9
     )
@@ -41,8 +43,10 @@ def test_compute_moran_transition_probability_for_trivial_fitness_function():
     target = np.array((1, 1, 1))
     assert (
         main.compute_moran_transition_probability(
-            source=source, target=target, fitness_function=trivial_fitness_function,
-            selection_intensity = 0.5
+            source=source,
+            target=target,
+            fitness_function=trivial_fitness_function,
+            selection_intensity=0.5,
         )
         == 0
     )
@@ -50,8 +54,10 @@ def test_compute_moran_transition_probability_for_trivial_fitness_function():
     target = np.array((0, 0, 0))
     assert (
         main.compute_moran_transition_probability(
-            source=source, target=target, fitness_function=trivial_fitness_function,
-            selection_intensity = 0.5
+            source=source,
+            target=target,
+            fitness_function=trivial_fitness_function,
+            selection_intensity=0.5,
         )
         is None
     )
@@ -88,17 +94,20 @@ def test_compute_moran_transition_probability_for_specific_fitness_function():
 
     source = np.array((0, 1, 0))
     target = np.array((1, 1, 0))
-    assert (
-        main.compute_moran_transition_probability(
-            source=source, target=target, fitness_function=fitness_function, selection_intensity=0.5
-        )
-        == 1.5 / (3 * 5.5)
-    )
+    assert main.compute_moran_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=fitness_function,
+        selection_intensity=0.5,
+    ) == 1.5 / (3 * 5.5)
     source = np.array((0, 1, 1))
     target = np.array((0, 0, 0))
     assert (
         main.compute_moran_transition_probability(
-            source=source, target=target, fitness_function=fitness_function, selection_intensity=0.5
+            source=source,
+            target=target,
+            fitness_function=fitness_function,
+            selection_intensity=0.5,
         )
         == 0
     )
@@ -106,7 +115,10 @@ def test_compute_moran_transition_probability_for_specific_fitness_function():
     target = np.array((1, 1, 0))
     assert (
         main.compute_moran_transition_probability(
-            source=source, target=target, fitness_function=fitness_function, selection_intensity=0.5
+            source=source,
+            target=target,
+            fitness_function=fitness_function,
+            selection_intensity=0.5,
         )
         is None
     )
@@ -155,18 +167,20 @@ def test_compute_moran_transition_probability_for_ordered_fitness_function():
 
     source = np.array((0, 1, 0))
     target = np.array((1, 1, 0))
-    assert (
-        main.compute_moran_transition_probability(
-            source=source, target=target, fitness_function=ordered_fitness_function, selection_intensity=0.5
-        )
-        == 2 / (3 * 5.5)
-    )
+    assert main.compute_moran_transition_probability(
+        source=source,
+        target=target,
+        fitness_function=ordered_fitness_function,
+        selection_intensity=0.5,
+    ) == 2 / (3 * 5.5)
     source = np.array((0, 1, 1))
     target = np.array((0, 0, 0))
     assert (
         main.compute_moran_transition_probability(
-            source=source, target=target, fitness_function=ordered_fitness_function,
-            selection_intensity=0.5
+            source=source,
+            target=target,
+            fitness_function=ordered_fitness_function,
+            selection_intensity=0.5,
         )
         == 0
     )
@@ -174,8 +188,10 @@ def test_compute_moran_transition_probability_for_ordered_fitness_function():
     target = np.array((1, 1, 0))
     assert (
         main.compute_moran_transition_probability(
-            source=source, target=target, fitness_function=ordered_fitness_function,
-            selection_intensity=0.5
+            source=source,
+            target=target,
+            fitness_function=ordered_fitness_function,
+            selection_intensity=0.5,
         )
         is None
     )
@@ -211,17 +227,21 @@ def test_compute_moran_transition_probability_for_symbolic_fitness_function():
     target = np.array((1, 1, 0))
     x = sym.symbols("x")
     y = sym.symbols("y")
-    epsilon = sym.Symbol('\epsilon')
+    epsilon = sym.Symbol("\epsilon")
     assert main.compute_moran_transition_probability(
-        source=source, target=target, fitness_function=symbolic_fitness_function, selection_intensity=epsilon
-    ) == (1 + epsilon *x) / ((3 * (1 + epsilon *x)) + (6 * (1 + epsilon *y)))
+        source=source,
+        target=target,
+        fitness_function=symbolic_fitness_function,
+        selection_intensity=epsilon,
+    ) == (1 + epsilon * x) / ((3 * (1 + epsilon * x)) + (6 * (1 + epsilon * y)))
     source = np.array((0, 1, 1))
     target = np.array((0, 0, 0))
     assert (
         main.compute_moran_transition_probability(
-            source=source, target=target, fitness_function=symbolic_fitness_function,
-            selection_intensity=epsilon
-
+            source=source,
+            target=target,
+            fitness_function=symbolic_fitness_function,
+            selection_intensity=epsilon,
         )
         == 0
     )
@@ -229,26 +249,39 @@ def test_compute_moran_transition_probability_for_symbolic_fitness_function():
     target = np.array((1, 1, 0))
     assert (
         main.compute_moran_transition_probability(
-            source=source, target=target, fitness_function=symbolic_fitness_function,
-            selection_intensity=epsilon
+            source=source,
+            target=target,
+            fitness_function=symbolic_fitness_function,
+            selection_intensity=epsilon,
         )
         is None
     )
     source = np.array((0, 1))
     target = np.array((0, 0))
     assert main.compute_moran_transition_probability(
-        source=source, target=target, fitness_function=symbolic_fitness_function, selection_intensity=epsilon
-    ) == (1 + epsilon *y) / (2 * (1 + epsilon *x) + 2 * (1 + epsilon *y))
+        source=source,
+        target=target,
+        fitness_function=symbolic_fitness_function,
+        selection_intensity=epsilon,
+    ) == (1 + epsilon * y) / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y))
 
     source = np.array((0, 1))
     target1 = np.array((0, 0))
     target2 = np.array((1, 1))
     assert 1 - main.compute_moran_transition_probability(
-        source=source, target=target1, fitness_function=symbolic_fitness_function, selection_intensity=epsilon
+        source=source,
+        target=target1,
+        fitness_function=symbolic_fitness_function,
+        selection_intensity=epsilon,
     ) - main.compute_moran_transition_probability(
-        source=source, target=target2, fitness_function=symbolic_fitness_function, selection_intensity=epsilon
+        source=source,
+        target=target2,
+        fitness_function=symbolic_fitness_function,
+        selection_intensity=epsilon,
     ) == (
-        1 - ((1 + epsilon *y) / (2 * (1 + epsilon *x) + 2 * (1 + epsilon *y))) - (1 + epsilon *x) / (2 * (1 + epsilon *x) + 2 * (1 + epsilon *y))
+        1
+        - ((1 + epsilon * y) / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y)))
+        - (1 + epsilon * x) / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y))
     )
 
 
@@ -274,7 +307,7 @@ def test_compute_moran_transition_probability_for_kwargs_fitness_function():
             source=source,
             target=target,
             fitness_function=kwargs_fitness_function,
-            selection_intensity = 0.5,
+            selection_intensity=0.5,
             c=c,
             r=r,
         )
@@ -370,22 +403,18 @@ def test_generate_transition_matrix_for_trivial_fitness_function():
             (1, 1, 1),
         ]
     )
-    expected_transition_matrix = np.array([[0.55555556, 0.        , 0.        , 0.11111111, 0.11111111,
-        0.        , 0.22222222, 0.        ],
-       [0.        , 0.55555556, 0.        , 0.11111111, 0.        ,
-        0.11111111, 0.22222222, 0.        ],
-       [0.        , 0.        , 0.55555556, 0.        , 0.11111111,
-        0.11111111, 0.22222222, 0.        ],
-       [0.11111111, 0.11111111, 0.        , 0.55555556, 0.        ,
-        0.        , 0.        , 0.22222222],
-       [0.11111111, 0.        , 0.11111111, 0.        , 0.55555556,
-        0.        , 0.        , 0.22222222],
-       [0.        , 0.11111111, 0.11111111, 0.        , 0.        ,
-        0.55555556, 0.        , 0.22222222],
-       [0.        , 0.        , 0.        , 0.        , 0.        ,
-        0.        , 1.        , 0.        ],
-       [0.        , 0.        , 0.        , 0.        , 0.        ,
-        0.        , 0.        , 1.        ]])
+    expected_transition_matrix = np.array(
+        [
+            [0.55555556, 0.0, 0.0, 0.11111111, 0.11111111, 0.0, 0.22222222, 0.0],
+            [0.0, 0.55555556, 0.0, 0.11111111, 0.0, 0.11111111, 0.22222222, 0.0],
+            [0.0, 0.0, 0.55555556, 0.0, 0.11111111, 0.11111111, 0.22222222, 0.0],
+            [0.11111111, 0.11111111, 0.0, 0.55555556, 0.0, 0.0, 0.0, 0.22222222],
+            [0.11111111, 0.0, 0.11111111, 0.0, 0.55555556, 0.0, 0.0, 0.22222222],
+            [0.0, 0.11111111, 0.11111111, 0.0, 0.0, 0.55555556, 0.0, 0.22222222],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+        ]
+    )
     np.testing.assert_array_almost_equal(
         main.generate_transition_matrix(
             state_space=state_space,
@@ -431,29 +460,25 @@ def test_generate_transition_matrix_for_ordered_fitness_function():
             (1, 1, 1),
         ]
     )
-    expected_transition_matrix = np.array([[0.57037037, 0.        , 0.        , 0.0962963 , 0.0962963 ,
-        0.        , 0.23703704, 0.        ],
-       [0.        , 0.54814815, 0.        , 0.11851852, 0.        ,
-        0.11851852, 0.21481481, 0.        ],
-       [0.        , 0.        , 0.57037037, 0.        , 0.0962963 ,
-        0.0962963 , 0.23703704, 0.        ],
-       [0.0962963 , 0.0962963 , 0.        , 0.57037037, 0.        ,
-        0.        , 0.        , 0.23703704],
-       [0.11851852, 0.        , 0.11851852, 0.        , 0.54814815,
-        0.        , 0.        , 0.21481481],
-       [0.        , 0.0962963 , 0.0962963 , 0.        , 0.        ,
-        0.57037037, 0.        , 0.23703704],
-       [0.        , 0.        , 0.        , 0.        , 0.        ,
-        0.        , 1.        , 0.        ],
-       [0.        , 0.        , 0.        , 0.        , 0.        ,
-        0.        , 0.        , 1.        ]])
-    
+    expected_transition_matrix = np.array(
+        [
+            [0.57037037, 0.0, 0.0, 0.0962963, 0.0962963, 0.0, 0.23703704, 0.0],
+            [0.0, 0.54814815, 0.0, 0.11851852, 0.0, 0.11851852, 0.21481481, 0.0],
+            [0.0, 0.0, 0.57037037, 0.0, 0.0962963, 0.0962963, 0.23703704, 0.0],
+            [0.0962963, 0.0962963, 0.0, 0.57037037, 0.0, 0.0, 0.0, 0.23703704],
+            [0.11851852, 0.0, 0.11851852, 0.0, 0.54814815, 0.0, 0.0, 0.21481481],
+            [0.0, 0.0962963, 0.0962963, 0.0, 0.0, 0.57037037, 0.0, 0.23703704],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+        ]
+    )
+
     np.testing.assert_allclose(
         main.generate_transition_matrix(
             state_space=state_space,
             fitness_function=ordered_fitness_function,
             compute_transition_probability=main.compute_moran_transition_probability,
-            selection_intensity = 0.3
+            selection_intensity=0.3,
         ),
         expected_transition_matrix,
     )
@@ -472,21 +497,25 @@ def test_generate_transition_matrix_for_different_state_space():
     state_space = np.array(
         [(0, 0), (0, 1), (1, 0), (1, 1), (0, 2), (2, 0), (1, 2), (2, 1), (2, 2)]
     )
-    expected_transition_matrix = np.array([[1.  , 0.  , 0.  , 0.  , 0.  , 0.  , 0.  , 0.  , 0.  ],
-       [0.25, 0.5 , 0.  , 0.25, 0.  , 0.  , 0.  , 0.  , 0.  ],
-       [0.25, 0.  , 0.5 , 0.25, 0.  , 0.  , 0.  , 0.  , 0.  ],
-       [0.  , 0.  , 0.  , 1.  , 0.  , 0.  , 0.  , 0.  , 0.  ],
-       [0.25, 0.  , 0.  , 0.  , 0.5 , 0.  , 0.  , 0.  , 0.25],
-       [0.25, 0.  , 0.  , 0.  , 0.  , 0.5 , 0.  , 0.  , 0.25],
-       [0.  , 0.  , 0.  , 0.25, 0.  , 0.  , 0.5 , 0.  , 0.25],
-       [0.  , 0.  , 0.  , 0.25, 0.  , 0.  , 0.  , 0.5 , 0.25],
-       [0.  , 0.  , 0.  , 0.  , 0.  , 0.  , 0.  , 0.  , 1.  ]])
+    expected_transition_matrix = np.array(
+        [
+            [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.25, 0.5, 0.0, 0.25, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.25, 0.0, 0.5, 0.25, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.25, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.25],
+            [0.25, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.25],
+            [0.0, 0.0, 0.0, 0.25, 0.0, 0.0, 0.5, 0.0, 0.25],
+            [0.0, 0.0, 0.0, 0.25, 0.0, 0.0, 0.0, 0.5, 0.25],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+        ]
+    )
     np.testing.assert_allclose(
         main.generate_transition_matrix(
             state_space=state_space,
             fitness_function=trivial_fitness_function,
             compute_transition_probability=main.compute_moran_transition_probability,
-            selection_intensity = 0.5
+            selection_intensity=0.5,
         ),
         expected_transition_matrix,
     )
@@ -520,14 +549,30 @@ def test_generate_transition_matrix_for_symbolic_fitness_function():
             [1, 0, 0, 0],
             [
                 (1 + epsilon * y) / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y)),
-                (1 - ((1 + epsilon * y) / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y))) - (1 + epsilon * x) / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y))),
+                (
+                    1
+                    - (
+                        (1 + epsilon * y)
+                        / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y))
+                    )
+                    - (1 + epsilon * x)
+                    / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y))
+                ),
                 0,
                 (1 + epsilon * x) / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y)),
             ],
             [
                 (1 + epsilon * y) / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y)),
                 0,
-                (1 - ((1 + epsilon * y) / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y))) - (1 + epsilon * x) / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y))),
+                (
+                    1
+                    - (
+                        (1 + epsilon * y)
+                        / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y))
+                    )
+                    - (1 + epsilon * x)
+                    / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y))
+                ),
                 (1 + epsilon * x) / (2 * (1 + epsilon * x) + 2 * (1 + epsilon * y)),
             ],
             [0, 0, 0, 1],
@@ -538,7 +583,7 @@ def test_generate_transition_matrix_for_symbolic_fitness_function():
             state_space=state_space,
             fitness_function=symbolic_fitness_function,
             compute_transition_probability=main.compute_moran_transition_probability,
-            selection_intensity=epsilon
+            selection_intensity=epsilon,
         ),
         expected_transition_matrix,
     )
@@ -564,10 +609,14 @@ def test_generate_transition_matrix_for_kwargs_fitness_function():
     )
     c = 1
     r = 4
-    expected_transition_matrix = np.array([[1.        , 0.        , 0.        , 0.        ],
-       [0.33333333, 0.5       , 0.        , 0.16666667],
-       [0.33333333, 0.        , 0.5       , 0.16666667],
-       [0.        , 0.        , 0.        , 1.        ]])
+    expected_transition_matrix = np.array(
+        [
+            [1.0, 0.0, 0.0, 0.0],
+            [0.33333333, 0.5, 0.0, 0.16666667],
+            [0.33333333, 0.0, 0.5, 0.16666667],
+            [0.0, 0.0, 0.0, 1.0],
+        ]
+    )
     np.testing.assert_array_almost_equal(
         expected_transition_matrix,
         main.generate_transition_matrix(
@@ -1101,8 +1150,16 @@ def test_generate_absorption_matrix_functions_accuracy_for_r_values():
 
     r_test_values = np.array([0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4])
 
-    expected_results = [0.2883263 , 0.28963365, 0.29085873, 0.29200983, 0.29309407,
-       0.29411765, 0.29508594, 0.29600366]
+    expected_results = [
+        0.2883263,
+        0.28963365,
+        0.29085873,
+        0.29200983,
+        0.29309407,
+        0.29411765,
+        0.29508594,
+        0.29600366,
+    ]
 
     state_space = main.get_state_space(N=3, k=2)
 
@@ -1676,7 +1733,7 @@ def test_compute_fermi_transition_probability_for_impossible_transition():
         target=target,
         fitness_function=trivial_fitness_function,
         choice_intensity=choice_intensity,
-        selection_intensity=selection_intensity
+        selection_intensity=selection_intensity,
     )
 
     expected_probability = 0.0
@@ -1703,7 +1760,7 @@ def test_compute_imitation_introspection_transition_probability_for_trivial_fite
         target=target,
         fitness_function=trivial_fitness_function,
         choice_intensity=choice_intensity,
-        selection_intensity=selection_intensity
+        selection_intensity=selection_intensity,
     )
 
     expected_probability = 0.06782469654
@@ -1729,7 +1786,7 @@ def test_compute_imitation_introspection_transition_probability_for_symbolic_fit
         target=target,
         fitness_function=symbolic_fitness_function,
         choice_intensity=beta,
-        selection_intensity=epsilon
+        selection_intensity=epsilon,
     )
 
     x = sym.Symbol("x")
@@ -1738,7 +1795,9 @@ def test_compute_imitation_introspection_transition_probability_for_symbolic_fit
     fx = 1 + epsilon * x
 
     expected_probability = (
-        (1 / 5) * (2 * fy) * (1 / ((2 * fy) + (3 * fx)))
+        (1 / 5)
+        * (2 * fy)
+        * (1 / ((2 * fy) + (3 * fx)))
         * (1 / (1 + sym.E ** ((fx - fy) * beta)))
     )
 

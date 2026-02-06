@@ -138,6 +138,8 @@ def binomial_contribution_rule(index, N, n, M, alpha_h):
     alpha_h: float, the "high" contribution according to the binomial
     contribution rule
 
+    n: the number of low contributing players
+
     returns:
     ---------
     float, the contribution of the player at (index) according to a binomial

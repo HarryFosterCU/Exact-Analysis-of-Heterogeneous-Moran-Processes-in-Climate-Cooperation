@@ -49,15 +49,16 @@ def get_absorption_probability_vector_1_contributor_low(
         print(state_space[np.where(state_index)[0]])
 
         if probability_function == main.compute_introspection_transition_probability:
-            absorption_probability = main.approximate_steady_state(transition_matrix=transition_matrix)
+            absorption_probability = main.approximate_steady_state(
+                transition_matrix=transition_matrix
+            )
             y.append(absorption_probability[-1])
         else:
             absorption_probability = main.approximate_absorption_matrix(
-            transition_matrix=transition_matrix
+                transition_matrix=transition_matrix
             )
             y.append(absorption_probability[np.where(state_index)[0] - 1, 1])
 
-        
     return np.array(y)
 
 
@@ -87,11 +88,13 @@ def get_absorption_probability_vector_1_contributor_high(
         print(state_space[1])
 
         if probability_function == main.compute_introspection_transition_probability:
-            absorption_probability = main.approximate_steady_state(transition_matrix=transition_matrix)
+            absorption_probability = main.approximate_steady_state(
+                transition_matrix=transition_matrix
+            )
             y.append(absorption_probability[-1])
         else:
             absorption_probability = main.approximate_absorption_matrix(
-            transition_matrix=transition_matrix
+                transition_matrix=transition_matrix
             )
             y.append(absorption_probability[0, 1])
 
@@ -128,11 +131,13 @@ def get_absorption_probability_vector_n_minus_1_contributor_low(
         print(state_space[np.where(state_index)[0]])
 
         if probability_function == main.compute_introspection_transition_probability:
-            absorption_probability = main.approximate_steady_state(transition_matrix=transition_matrix)
+            absorption_probability = main.approximate_steady_state(
+                transition_matrix=transition_matrix
+            )
             y.append(absorption_probability[-1])
         else:
             absorption_probability = main.approximate_absorption_matrix(
-            transition_matrix=transition_matrix
+                transition_matrix=transition_matrix
             )
             y.append(absorption_probability[np.where(state_index)[0] - 1, 1])
 
@@ -169,11 +174,13 @@ def get_absorption_probability_vector_n_minus_1_contributor_high(
         print(state_space[np.where(state_index)[0]])
 
         if probability_function == main.compute_introspection_transition_probability:
-            absorption_probability = main.approximate_steady_state(transition_matrix=transition_matrix)
+            absorption_probability = main.approximate_steady_state(
+                transition_matrix=transition_matrix
+            )
             y.append(absorption_probability[-1])
         else:
             absorption_probability = main.approximate_absorption_matrix(
-            transition_matrix=transition_matrix
+                transition_matrix=transition_matrix
             )
             y.append(absorption_probability[np.where(state_index)[0] - 1, 1])
 
@@ -211,7 +218,11 @@ fig.text(
     fontsize=12,
 )
 
-probability_functions = [main.compute_fermi_transition_probability,main.compute_moran_transition_probability,main.compute_imitation_introspection_transition_probability]
+probability_functions = [
+    main.compute_fermi_transition_probability,
+    main.compute_moran_transition_probability,
+    main.compute_imitation_introspection_transition_probability,
+]
 graph_functions = []
 
 axes[2].scatter(
@@ -254,7 +265,7 @@ Introspection_contributor_low = get_absorption_probability_vector_1_contributor_
     r=r,
     M=M,
     probability_function=main.compute_introspection_transition_probability,
-    number_of_strategies=2
+    number_of_strategies=2,
 )
 
 axes[0].plot(
@@ -273,10 +284,7 @@ axes[0].plot(
     label="Introspective Imitation Dynamics",
 )
 axes[0].plot(
-    n_values,
-    Introspection_contributor_low,
-    label="Introspection Dynamics",
-    color="red"
+    n_values, Introspection_contributor_low, label="Introspection Dynamics", color="red"
 )
 
 axes[0].set_title("1 low-contributing initial contributor")
@@ -310,7 +318,7 @@ Introspection_contributor_high = get_absorption_probability_vector_1_contributor
     r=r,
     M=M,
     probability_function=main.compute_introspection_transition_probability,
-    number_of_strategies=2
+    number_of_strategies=2,
 )
 
 axes[3].plot(
@@ -332,7 +340,7 @@ axes[3].plot(
     n_values,
     Introspection_contributor_high,
     label="Introspection Dynamics",
-    color="red"
+    color="red",
 )
 
 axes[3].set_title("1 high-contributing initial contributor")
@@ -370,12 +378,14 @@ II_defector_low = get_absorption_probability_vector_n_minus_1_contributor_low(
     M=M,
     probability_function=main.compute_imitation_introspection_transition_probability,
 )
-Introspection_defector_low = get_absorption_probability_vector_n_minus_1_contributor_low(
-    n_values=n_values,
-    r=r,
-    M=M,
-    probability_function=main.compute_introspection_transition_probability,
-    number_of_strategies=2
+Introspection_defector_low = (
+    get_absorption_probability_vector_n_minus_1_contributor_low(
+        n_values=n_values,
+        r=r,
+        M=M,
+        probability_function=main.compute_introspection_transition_probability,
+        number_of_strategies=2,
+    )
 )
 
 axes[1].plot(
@@ -394,10 +404,7 @@ axes[1].plot(
     label="Introspective Imitation Dynamics",
 )
 axes[1].plot(
-    n_values,
-    Introspection_defector_low,
-    label="Introspection Dynamics",
-    color="red"
+    n_values, Introspection_defector_low, label="Introspection Dynamics", color="red"
 )
 
 axes[1].set_title("1 low-contributing initial defector")
@@ -425,12 +432,14 @@ II_defector_high = get_absorption_probability_vector_n_minus_1_contributor_high(
     M=M,
     probability_function=main.compute_imitation_introspection_transition_probability,
 )
-Introspection_defector_high = get_absorption_probability_vector_n_minus_1_contributor_high(
-    n_values=n_values,
-    r=r,
-    M=M,
-    probability_function=main.compute_introspection_transition_probability,
-    number_of_strategies=2
+Introspection_defector_high = (
+    get_absorption_probability_vector_n_minus_1_contributor_high(
+        n_values=n_values,
+        r=r,
+        M=M,
+        probability_function=main.compute_introspection_transition_probability,
+        number_of_strategies=2,
+    )
 )
 
 axes[4].plot(
@@ -449,10 +458,7 @@ axes[4].plot(
     label="Introspective Imitation Dynamics",
 )
 axes[4].plot(
-    n_values,
-    Introspection_defector_high,
-    label="Introspection Dynamics",
-    color="red"
+    n_values, Introspection_defector_high, label="Introspection Dynamics", color="red"
 )
 axes[4].set_title("1 high-contributing initial defector")
 axes[4].set_xlabel(r"$N$")

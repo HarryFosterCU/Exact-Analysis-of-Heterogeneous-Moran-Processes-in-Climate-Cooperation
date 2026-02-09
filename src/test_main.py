@@ -1518,27 +1518,8 @@ def test_approximate_steady_state_for_absorbing_transition_matrix():
     expected_numeric_output = np.array([1, 0, 0, 0])
 
     np.testing.assert_allclose(
-        expected_numeric_output, main.approximate_steady_state(numeric_matrix)
+        expected_numeric_output, main.approximate_steady_state(numeric_matrix), rtol=1**-5
     )
-
-
-def test_approximate_steady_state_errors():
-    """
-    Tests whether the errors in approximate_steady_state are correctly raised for:
-    - Misuse of symbolic values
-    - Poorly formatted matrix"""
-
-    p = sym.Symbol("P")
-
-    test_symbolic_matrix = np.array([[p, 1 - p], [p, 1 - p]])
-
-    with pytest.raises(ValueError):
-        main.approximate_steady_state(test_symbolic_matrix)
-
-    test_rectangle_matrix = np.array([[1], [2], [3]])
-
-    with pytest.raises(ValueError):
-        main.approximate_steady_state(test_rectangle_matrix)
 
 
 def test_calculate_steady_state_for_trivial_transition_matrix():

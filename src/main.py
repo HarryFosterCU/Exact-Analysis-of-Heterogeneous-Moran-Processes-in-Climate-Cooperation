@@ -628,7 +628,7 @@ def get_dirichlet_contribution_vector(N, alpha_rule, M, **kwargs):
     return realisation * M
 
 
-def approximate_steady_state(transition_matrix):
+def approximate_steady_state(transition_matrix, tolerance=10 ** -6, initial_state=None):
     """
     Returns the steady state vector of a given transition matrix that is
     entirely numeric. The steady state is approximated as the left eigenvector
@@ -642,16 +642,14 @@ def approximate_steady_state(transition_matrix):
     Returns
     ----------
     numpy.array - steady state of transition_matrix."""
-    try:
-        vals, vecs = np.linalg.eig(transition_matrix.transpose())
-
-        one_eigenvector = vecs.transpose()[np.argmin(np.abs(vals - 1))]
-
-        return (one_eigenvector / np.sum(one_eigenvector)).transpose()
-    except:
-        raise ValueError(
-            "Error during runtime. Common errors include incorrect matrix formatting or symbolic values in the matrix"
-        )
+    N, _ = transition_matrix.shape
+    if initial_state is None:
+        pi = np.ones(N) / N
+    else:
+        pi = initial_state
+    while np.max(np.abs((next_pi := pi @ transition_matrix) - pi)) > tolerance:
+        pi = next_pi
+    return pi
 
 
 def calculate_steady_state(transition_matrix):

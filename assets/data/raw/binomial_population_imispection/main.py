@@ -40,8 +40,6 @@ while True:
                             id = uuid.uuid4()
                             approximate_state = np.zeros(N)
                             approximate_state[np.where(alphas==first_contribution)[0][0]] = 1
-                            print(approximate_state)
-                            print(absorption_matrix)
                             p_C = absorption_matrix[np.where(np.all(state_space == approximate_state, axis=1))[0] - 1, -1][0]
                             for i, alpha in enumerate(alphas):
                                 row = [id, alpha, i, first_contribution, N, r, selection_intensity, choice_intensity, p_C, "introspective imitation", "binomial", False]

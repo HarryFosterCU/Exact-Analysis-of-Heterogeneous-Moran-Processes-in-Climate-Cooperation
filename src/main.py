@@ -630,7 +630,7 @@ def get_dirichlet_contribution_vector(N, alpha_rule, M, scale, **kwargs):
     return realisation * M
 
 
-def approximate_steady_state(transition_matrix, tolerance=10 ** -6, initial_dist=None):
+def approximate_steady_state(transition_matrix, tolerance=10**-6, initial_dist=None):
     """
     Returns the steady state vector of a given transition matrix that is
     entirely numeric. The steady state is approximated as the left eigenvector
@@ -640,10 +640,10 @@ def approximate_steady_state(transition_matrix, tolerance=10 ** -6, initial_dist
     Parameters
     ----------
     transition_matrix - numpy.array, a transition matrix.
-    
+
     tolerance - float. The maximum change when taking next_pi = pi @
     transition_matrix
-    
+
     initial_dist - numpy.array: the starting state distribution.
 
     Returns

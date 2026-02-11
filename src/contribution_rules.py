@@ -23,7 +23,7 @@ def dirichlet_linear_alpha_rule(N):
     return np.array([i + 1 for i in range(N)])
 
 
-def dirichlet_binomial_alpha_rule(N, n, low_alpha, high_alpha):
+def dirichlet_binomial_alpha_rule(N, n, low_alpha, high_alpha, **kwargs):
     """
     Generates the alphas for a population contributing according to a binomial
     rule in the dirichlet distribution. We have a low alpha and a high alpha. n

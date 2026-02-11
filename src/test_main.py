@@ -1329,11 +1329,12 @@ def test_get_dirichlet_contribution_vector_for_trivial_alpha_rule_and_large_repi
     np.random.seed(1)
     M = 12
     N = 3
+    scale=1
 
     expected_return = np.array([4.14781218, 4.12911919, 3.72306863])
 
     actual_return = main.get_dirichlet_contribution_vector(
-        N=N, alpha_rule=trivial_alpha_rule, M=M
+        N=N, alpha_rule=trivial_alpha_rule, M=M, scale=scale
     )
 
     np.random.seed(5)
@@ -1346,6 +1347,7 @@ def test_get_dirichlet_contribution_vector_for_trivial_alpha_rule_and_large_repi
                 N=N,
                 alpha_rule=trivial_alpha_rule,
                 M=M,
+                scale=scale
             )
             for _ in range(100)
         ]
@@ -1381,11 +1383,12 @@ def test_get_dirichlet_contribution_vector_for_linear_alpha_rule_and_large_repit
     M = 12
     N = 3
     np.random.seed(1)
+    scale=1
 
     expected_return = np.array([1.9269376, 3.90995069, 6.16311171])
 
     actual_return = main.get_dirichlet_contribution_vector(
-        N=N, alpha_rule=linear_alpha_rule, M=M
+        N=N, alpha_rule=linear_alpha_rule, M=M, scale=1
     )
 
     np.testing.assert_allclose(actual_return, expected_return)
@@ -1400,6 +1403,7 @@ def test_get_dirichlet_contribution_vector_for_linear_alpha_rule_and_large_repit
                 N=N,
                 alpha_rule=linear_alpha_rule,
                 M=M,
+                scale=scale
             )
             for _ in range(100)
         ]
@@ -1436,10 +1440,11 @@ def test_get_dirichlet_contribution_vector_for_kwargs_alpha_rule_and_large_repit
     bonus = 3
     N = 3
     np.random.seed(1)
+    scale=1
 
     expected_return = np.array([6.59821129, 11.40493245, 17.99685625])
     actual_return = main.get_dirichlet_contribution_vector(
-        N=N, alpha_rule=kwargs_alpha_rule, M=M, bonus=bonus
+        N=N, alpha_rule=kwargs_alpha_rule, M=M, scale=scale,bonus=bonus
     )
 
     np.testing.assert_allclose(actual_return, expected_return)
@@ -1451,7 +1456,7 @@ def test_get_dirichlet_contribution_vector_for_kwargs_alpha_rule_and_large_repit
     actual_return_iteration = np.array(
         [
             main.get_dirichlet_contribution_vector(
-                N=N, alpha_rule=kwargs_alpha_rule, M=M, bonus=bonus
+                N=N, alpha_rule=kwargs_alpha_rule, M=M, scale=scale,bonus=bonus
             )
             for _ in range(100)
         ]
@@ -1471,9 +1476,10 @@ def test_get_dirichlet_contribution_vector_raises_type_error_for_few_alphas():
         return np.array([2 for _ in range(N - 1)])
 
     N = 3
+    scale = 1
 
     with pytest.raises(ValueError):
-        main.get_dirichlet_contribution_vector(N=N, alpha_rule=small_alpha_rule, M=15)
+        main.get_dirichlet_contribution_vector(N=N, alpha_rule=small_alpha_rule,scale=scale, M=15)
 
 
 def test_get_dirichlet_contribution_vector_raises_type_error_for_many_alphas():
@@ -1487,9 +1493,10 @@ def test_get_dirichlet_contribution_vector_raises_type_error_for_many_alphas():
         return np.array([2 for _ in range(N + 1)])
 
     N = 5
+    scale = 1
 
     with pytest.raises(ValueError):
-        main.get_dirichlet_contribution_vector(N=N, alpha_rule=small_alpha_rule, M=15)
+        main.get_dirichlet_contribution_vector(N=N, alpha_rule=small_alpha_rule,scale=scale, M=15)
 
 
 def test_approximate_steady_state_for_trivial_transition_matrix():
@@ -1978,3 +1985,24 @@ def test_compute_introspection_transition_probability_for_infeasible_states_and_
     assert actual_probability2 is None
 
     _ = trivial_fitness_function(source1)  # prevents unused function warning
+
+def test_approximate_steady_state_for_different_initial_dist():
+    """tests that the approximate_steady_state function correctly
+    approximates a system's steady state for a different initial distribution"""
+
+    initial_dist_1 = np.array([1,0,0,0])
+    initial_dist_2 = np.array([0,0,0,1])
+
+    transition_matrix = np.array([
+        [1,0,0,0],
+        [0.25,0.25,0.25,0.25],
+        [0.25,0.25,0.25,0.25],
+        [0,0,0,1]
+    ])
+
+    steady_state_1 = np.array([1,0,0,0])
+    steady_state_2 = np.array([0,0,0,1])
+
+    np.testing.assert_array_equal(main.approximate_steady_state(transition_matrix=transition_matrix, initial_dist=initial_dist_1), steady_state_1)
+
+    np.testing.assert_array_equal(main.approximate_steady_state(transition_matrix=transition_matrix, initial_dist=initial_dist_2), steady_state_2)

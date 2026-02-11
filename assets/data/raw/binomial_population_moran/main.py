@@ -36,7 +36,7 @@ while True:
                         data = []
                         id = uuid.uuid4()
                         approximate_state = np.zeros(N)
-                        approximate_state[np.where(alphas==first_contribution)[0]] = 1
+                        approximate_state[np.where(alphas==first_contribution)[0][0]] = 1
                         p_C = absorption_matrix[np.where(np.all(state_space == approximate_state, axis=1))[0] - 1, -1][0]
                         for i, alpha in enumerate(alphas):
                             row = [id, alpha, i, first_contribution, N, r, selection_intensity, p_C, "moran", "binomial", False]

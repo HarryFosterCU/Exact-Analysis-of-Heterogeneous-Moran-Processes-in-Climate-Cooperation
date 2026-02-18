@@ -100,7 +100,7 @@ def linear_contribution_rule(index, N, M):
     """
     Players contribute according to a linear contribution rule. As stated in main.tex, this corresponds to the equation
     $\sum_{i=1}^{N} \lambda i = M$. Here, we calculate a lambda value
-    $\frac{2M}{N(N+1)$ (proof in main.tex)
+    $\frac{2M}{N(N+1)}$ (proof in main.tex)
 
     Parameters:
     ------------

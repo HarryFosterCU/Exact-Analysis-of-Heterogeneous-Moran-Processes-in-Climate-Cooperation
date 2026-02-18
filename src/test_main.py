@@ -1765,7 +1765,9 @@ def test_compute_imitation_introspection_transition_probability_for_trivial_fite
 
     expected_probability = 0.08999667145
 
-    np.testing.assert_almost_equal(actual_probability, expected_probability, err_msg=actual_probability)
+    np.testing.assert_almost_equal(
+        actual_probability, expected_probability, err_msg=actual_probability
+    )
 
 
 def test_compute_imitation_introspection_transition_probability_for_symbolic_fitness_function():
@@ -1894,7 +1896,9 @@ def test_compute_imitation_introspection_for_global_transition():
     )
 
     expected_probability = 0.115558109
-    np.testing.assert_almost_equal(actual_probability, expected_probability, err_msg=actual_probability)
+    np.testing.assert_almost_equal(
+        actual_probability, expected_probability, err_msg=actual_probability
+    )
 
 
 def test_compute_introspection_transition_probability_for_trivial_fitness_function():

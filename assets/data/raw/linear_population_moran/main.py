@@ -17,7 +17,7 @@ import src.contribution_rules as contribution_rules
 
 r_min = 0.5
 
-df = pd.DataFrame(columns=["UID", "alpha_i", "i", "first_alpha", "N", "r", "epsilon", "p_C", "process", "population", "stochastic"])
+df = pd.DataFrame(columns=["UID", "alpha_i", "i", "mutant_alpha", "N", "r", "epsilon", "p_C", "process", "population", "stochastic"])
 df.to_csv(file_path.parent / "main.csv", index=False)
 N = 3
 while True:

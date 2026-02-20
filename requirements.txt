@@ -5,3 +5,4 @@ numpy==2.3.3
 sympy==1.14.0
 scipy==1.16.3
 pytest-benchmark==5.2.3
+pandas==3.0.0

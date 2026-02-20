@@ -582,7 +582,7 @@ def get_deterministic_contribution_vector(contribution_rule, N, **kwargs):
     return np.array([contribution_rule(index=x, N=N, **kwargs) for x in range(N)])
 
 
-def get_dirichlet_contribution_vector(N, alpha_rule, M, **kwargs):
+def get_dirichlet_contribution_vector(N, alpha_rule, M, scale, **kwargs):
     """
     Given the number of players and a function to generate a set of alpha
     values, returns the contribution vector for a population according to a
@@ -611,13 +611,15 @@ def get_dirichlet_contribution_vector(N, alpha_rule, M, **kwargs):
     M: the population maximum contribution - the contribution when all players
     give to the public good.
 
+    scale: float - alphas are multiplied by this value. Controls variance.
+
 
     Returns
     ---------
 
     numpy.array: a vector of contributions by player"""
 
-    alphas = alpha_rule(N=N, **kwargs)
+    alphas = np.array(alpha_rule(N=N, **kwargs)) * scale
 
     if len(alphas) != N:
         raise ValueError("Expected alphas of length", N, "but received ", len(alphas))
@@ -627,7 +629,7 @@ def get_dirichlet_contribution_vector(N, alpha_rule, M, **kwargs):
     return realisation * M
 
 
-def approximate_steady_state(transition_matrix):
+def approximate_steady_state(transition_matrix, tolerance=10**-6, initial_dist=None):
     """
     Returns the steady state vector of a given transition matrix that is
     entirely numeric. The steady state is approximated as the left eigenvector
@@ -636,21 +638,24 @@ def approximate_steady_state(transition_matrix):
 
     Parameters
     ----------
-    transition_matrix - numpy.array or sympy.Matrix, a transition matrix.
+    transition_matrix - numpy.array, a transition matrix.
+
+    tolerance - float. The maximum change when taking next_pi = pi @
+    transition_matrix
+
+    initial_dist - numpy.array: the starting state distribution.
 
     Returns
     ----------
     numpy.array - steady state of transition_matrix."""
-    try:
-        vals, vecs = np.linalg.eig(transition_matrix.transpose())
-
-        one_eigenvector = vecs.transpose()[np.argmin(np.abs(vals - 1))]
-
-        return (one_eigenvector / np.sum(one_eigenvector)).transpose()
-    except:
-        raise ValueError(
-            "Error during runtime. Common errors include incorrect matrix formatting or symbolic values in the matrix"
-        )
+    N, _ = transition_matrix.shape
+    if initial_dist is None:
+        pi = np.ones(N) / N
+    else:
+        pi = initial_dist
+    while np.max(np.abs((next_pi := pi @ transition_matrix) - pi)) > tolerance:
+        pi = next_pi
+    return pi
 
 
 def calculate_steady_state(transition_matrix):

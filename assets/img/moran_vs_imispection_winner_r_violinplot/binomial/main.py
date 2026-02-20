@@ -9,7 +9,6 @@ assets_path = here.parents[3]
 df = pd.read_csv(assets_path / "data/processed/comparison_tables/binomial/moran_against_imispection/main.csv")
 
 for N, N_frame in df.groupby("N"):
-    print(N)
     sns.violinplot(data=N_frame, x="winner", y="r")
     plt.axhline(y=N)
 

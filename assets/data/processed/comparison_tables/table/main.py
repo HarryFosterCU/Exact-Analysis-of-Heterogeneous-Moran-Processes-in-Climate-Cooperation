@@ -10,16 +10,9 @@ data_paths = [
     [comparison_path / "binomial/imispection_against_fermi/main.csv", "introspective imitation", "fermi"],
     [comparison_path / "binomial/moran_against_imispection/main.csv", "moran", "introspective imitation"],
     [comparison_path / "binomial/moran_against_fermi/main.csv", "moran", "fermi"],
-    [comparison_path / "binomial/introspection_against_fermi/main.csv", "introspection", "fermi"],
-    [comparison_path / "binomial/introspection_against_imispection/main.csv", "introspection", "introspective imitation"],
-    [comparison_path / "binomial/introspection_against_moran/main.csv", "introspection","moran"],
-
     [comparison_path / "linear/moran_against_fermi/main.csv", "moran", "fermi"],
     [comparison_path / "linear/moran_against_imispection/main.csv", "moran", "introspective imitation"],
     [comparison_path / "linear/imispection_against_fermi/main.csv", "introspective imitation", "fermi"],
-    [comparison_path / "linear/introspection_against_fermi/main.csv", "introspection", "fermi"],
-    [comparison_path / "linear/introspection_against_imispection/main.csv", "introspection", "introspective imitation"],
-    [comparison_path / "linear/introspection_against_moran/main.csv", "introspection","moran"],
 ]
 
 
@@ -38,8 +31,9 @@ for (df_path, process_1, process_2) in data_paths:
     row = [process_1, process_2, population, wins, total_compared, win_ratio]
     data.append(row)
 
-    win_ratio_2 = (total_compared - wins) / total_compared
-    row = [process_2, process_1, population, total_compared - wins, total_compared, win_ratio_2]
+    wins_2 = (df["winner"] == process_2).sum()
+    win_ratio_2 = wins_2 / total_compared
+    row = [process_2, process_1, population, wins_2, total_compared, win_ratio_2]
     data.append(row)
 
 df = pd.DataFrame(data)

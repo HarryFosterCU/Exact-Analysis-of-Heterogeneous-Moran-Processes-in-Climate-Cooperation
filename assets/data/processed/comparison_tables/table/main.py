@@ -10,9 +10,15 @@ data_paths = [
     [comparison_path / "binomial/imispection_against_fermi/main.csv", "introspective imitation", "fermi"],
     [comparison_path / "binomial/moran_against_imispection/main.csv", "moran", "introspective imitation"],
     [comparison_path / "binomial/moran_against_fermi/main.csv", "moran", "fermi"],
+    [comparison_path / "binomial/introspection_against_fermi/main.csv", "introspection", "fermi"],
+    [comparison_path / "binomial/introspection_against_moran/main.csv", "introspection", "moran"],
+    [comparison_path / "binomial/introspection_against_imispection/main.csv", "introspection", "introspective imitation"],
     [comparison_path / "linear/moran_against_fermi/main.csv", "moran", "fermi"],
     [comparison_path / "linear/moran_against_imispection/main.csv", "moran", "introspective imitation"],
     [comparison_path / "linear/imispection_against_fermi/main.csv", "introspective imitation", "fermi"],
+    [comparison_path / "linear/introspection_against_fermi/main.csv", "introspection", "fermi"],
+    [comparison_path / "linear/introspection_against_imispection/main.csv", "introspection", "introspective imitation"],
+    [comparison_path / "linear/introspection_against_moran/main.csv", "introspection", "moran"],
 ]
 
 

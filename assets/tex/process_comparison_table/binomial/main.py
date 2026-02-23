@@ -41,6 +41,7 @@ with open(
             print(entry)
             f.write(entry)
             f.write("&")
+        f.write("\\\\")
         f.write("\n")
     f.write("\end{tabular}")
 

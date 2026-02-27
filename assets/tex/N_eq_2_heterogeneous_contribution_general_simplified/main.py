@@ -29,8 +29,11 @@ def heterogeneous_contribution_fitness_function(
         ]
     )
 
-    return 1 + (omega * payoff_vector)
+root_path = (file_path / "../../../../").resolve()
 
+sys.path.append(str(root_path))
+import src.main as main
+import src.fitness_functions as fitness_functions
 
 r = sym.Symbol("r")
 omega = sym.Symbol("w")

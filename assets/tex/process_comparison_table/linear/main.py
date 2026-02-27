@@ -8,7 +8,7 @@ here = Path(__file__).resolve()
 asset_path = here.parents[3]
 
 df = pd.read_csv(asset_path / "data/processed/comparison_tables/table/main.csv")
-df = df[df["population"] =='linear']
+df = df[df["population"] == "linear"]
 
 table_columns = df["process_numerator"].unique()
 
@@ -20,16 +20,19 @@ for i, process_1 in enumerate(table_columns):
         if i == j:
             data.append("N/A")
             continue
-        
+
         df_row = df[df["process_numerator"] == process_1]
         df_row = df_row[df_row["process_other"] == process_2]
-        data.append(f"\\frac{{ {df_row["wins"].iloc[0]} }}{{ {df_row["total_compared"].iloc[0]} }}")
+        data.append(
+            f"\\frac{{ {df_row["wins"].iloc[0]} }}{{ {df_row["total_compared"].iloc[0]} }}"
+        )
     table[process_1] = data
 
 with open(
-    here.parent / "main.tex","w",
+    here.parent / "main.tex",
+    "w",
 ) as f:
-    f.write("\begin{tabular}")
+    f.write(r"\begin{tabular}")
     f.write("{c|c|c|c|c}\n")
     header = " & " + " & ".join(table_columns) + "\\\\"
     f.write(header)
@@ -44,6 +47,3 @@ with open(
         f.write("\\\\")
         f.write("\n")
     f.write("\end{tabular}")
-
-
-

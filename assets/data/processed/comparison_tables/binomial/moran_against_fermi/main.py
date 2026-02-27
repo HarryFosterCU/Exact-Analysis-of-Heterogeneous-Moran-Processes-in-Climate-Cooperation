@@ -33,26 +33,28 @@ df_fermi["std_alpha"] = data_group.transform("std")
 df_fermi = df_fermi.groupby("UID").first()
 
 
-df_compare = (
-    df_moran.merge(
-        df_fermi,
-        on=["mutant_alpha", "N", "r", "population", "alpha_range", "std_alpha"],
-        how="inner",
-        suffixes=("_in_moran", "_in_fermi")
-    )
+df_compare = df_moran.merge(
+    df_fermi,
+    on=["mutant_alpha", "N", "r", "population", "alpha_range", "std_alpha"],
+    how="inner",
+    suffixes=("_in_moran", "_in_fermi"),
 )
 
-df_compare = df_compare.drop(columns=["alpha_i_in_moran", "i_in_moran", "alpha_i_in_fermi", "i_in_fermi"])
+df_compare = df_compare.drop(
+    columns=["alpha_i_in_moran", "i_in_moran", "alpha_i_in_fermi", "i_in_fermi"]
+)
 
 conditions = [
     df_compare["p_C_in_moran"] > df_compare["p_C_in_fermi"],
     df_compare["p_C_in_moran"] < df_compare["p_C_in_fermi"],
-    df_compare["p_C_in_moran"] == df_compare["p_C_in_fermi"]
+    df_compare["p_C_in_moran"] == df_compare["p_C_in_fermi"],
 ]
 
 choices = ["moran", "fermi", "draw"]
 
 df_compare["winner"] = np.select(conditions, choices, default="draw")
-df_compare["winner_margin"] = np.abs(df_compare["p_C_in_moran"] - df_compare["p_C_in_fermi"])
+df_compare["winner_margin"] = np.abs(
+    df_compare["p_C_in_moran"] - df_compare["p_C_in_fermi"]
+)
 
 df_compare.to_csv(here.parent / "main.csv")
